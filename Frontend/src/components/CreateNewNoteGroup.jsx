@@ -18,7 +18,7 @@ function CreateNoteGroup(props) {
     })
       .then((res) => {
         if (res.status === 200) {
-          toast.success("New Note Create\n Redirecting");
+          toast.success("New Note Create Redirecting");
         } else if (res.status == 400) {
           toast.warning("Check Inputs And Try Again");
         } else {

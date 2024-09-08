@@ -18,6 +18,10 @@ function Dashboard() {
     fetch("/app/notesgroup/getAll")
       .then((res) => res.json())
       .then((res) => {
+         if(res.status == 401){
+          toast.error("Session Expired, Please Login Again");
+          return false;
+        }
         setUserNotes(res);
       })
       .catch((error) => {
@@ -45,19 +49,21 @@ function Dashboard() {
       } else if (res.status == 400) {
         toast.warning("Check Inputs And Try Again");
         return false; // Return false for input error
-      } else {
+      } else if(res.status == 401){
+        toast.error("Session Expired, Please Login Again");
+        return false;
+      }
+       else {
         toast.error("Some Error Occurred");
         return false; // Return false for other errors
       }
     },
     [setUserNotes, userNotes]
   );
-  const favouriteSet = async (event, isFav) => {
+  const favouriteSet = async (groupID, isFav) => {
     let res = await fetch("/app/notesgroup/editFavourite", {
       body: JSON.stringify({
-        id: event.target.parentElement.parentElement.parentElement.getAttribute(
-          "id"
-        ),
+        id: groupID,
         favStatus: isFav,
       }),
       method: "POST",
@@ -75,9 +81,7 @@ function Dashboard() {
     }
   };
 
-  const deleteNoteGroup = async (event) => {
-    const groupID =
-      event.target.parentElement.parentElement.parentElement.getAttribute("id");
+  const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
       await fetch("/app/notesgroup/deleteNoteGroup", {
         body: JSON.stringify({
@@ -90,23 +94,31 @@ function Dashboard() {
       }).then((res) => {
         if (res.status == 200) {
           toast.success("Note Group Deleted.");
-          setUserNotes(userNotes.filter(group=>group.groupID != inpid))
+          setUserNotes(userNotes.filter((group) => group.groupID != inpid));
         }
       });
     };
 
-    toast(
+    var id = toast(
       <>
         <div>Confirm Delete?</div>
         <button
           className="bg-gray-800 py-2 my-2 px-3"
           onClick={() => {
             deleteInnerFunc(groupID);
+            toast.dismiss(id);
           }}
         >
           Delete
         </button>
-        <button className="bg-gray-800 py-2 my-2 px-3 ml-7">Cancel</button>
+        <button
+          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          onClick={() => {
+            toast.dismiss(id);
+          }}
+        >
+          Cancel
+        </button>
       </>
     );
   };
@@ -146,6 +158,11 @@ function Dashboard() {
             isFav={note.favourite}
             favFunction={favouriteSet}
             delFunction={deleteNoteGroup}
+            color={
+              ["orange", "blue", "yellow", "green", "pink"][
+                Math.floor(Math.random() * 5)
+              ]
+            }
           />
         ))}
       </div>

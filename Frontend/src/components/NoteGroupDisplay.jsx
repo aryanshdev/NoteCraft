@@ -9,11 +9,10 @@ const NoteGroupDisplay = ({
   updateFunc,
   isFav,
   favFunction,
-  delFunction
+  delFunction,
+  color
 }) => {
-  const color = ["orange", "blue", "yellow", "green", "pink"][
-    Math.floor(Math.random() * 5)
-  ];
+  
 
   const [title, setTitle] = useState(_title);
   const [description, setDescription] = useState(_description);
@@ -85,7 +84,7 @@ const NoteGroupDisplay = ({
         </p>
       </div>
       <div className="flex flex-row justify-end h-1/6 px-3 gap-8 bg-black bg-opacity-45 rounded-b-md">
-        <button onClick={delFunction}>
+        <button onClick={()=>{delFunction(id)}}>
           {/* Delete Button */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,8 +100,8 @@ const NoteGroupDisplay = ({
           </svg>
         </button>
         <button
-          onClick={async (event) => {
-            let success = await favFunction(event, !isFavourite);
+          onClick={async () => {
+            let success = await favFunction(id, !isFavourite);
             if (success){
               setIsFavourite(!isFavourite)
             }

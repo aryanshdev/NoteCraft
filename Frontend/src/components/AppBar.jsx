@@ -63,7 +63,7 @@ function AppBar() {
             </div>
             <div className="w-full text-left">
               <Link
-                to="/"
+                to="/dashboard"
                 className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center sidemenu-active"
               >
                 <svg

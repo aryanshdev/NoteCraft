@@ -51,7 +51,6 @@ router.post("/editFavourite", async (req, res) => {
 );
 
 router.delete("/deleteNoteGroup" , async (req, res) => {
-  console.log(req.body)
   notesGroupCol
     .deleteOne(
       { ownerID: "120", groupID: req.body.id }

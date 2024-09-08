@@ -1,7 +1,7 @@
 const mongo = require("mongodb");
-
+require("dotenv").config();
 const URI =
-  "mongodb+srv://aryanshdev:qwertyasdf123+-@notecraft.co24v.mongodb.net/";
+  process.env.DBURL;
 const client = new mongo.MongoClient(URI, {});
 
 client.connect();

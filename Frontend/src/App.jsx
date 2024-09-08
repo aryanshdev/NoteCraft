@@ -3,23 +3,23 @@ import AppBar from "./components/AppBar";
 import Dashboard from "./components/Dashboard";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MyAccount from "./components/MyAccount";
+import Index from "./Index";
+import MainLayout from "./MainInAppLayout";
 
 function App() {
-  const [openPage, setOpenPage] = useState("/");
   return (
-    
-      <Router>
-       <div className="flex flex-row">
-       <AppBar />
-        <div className="w-full h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0">
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
+    <Router>
+      <Routes>
+        {/* Separate route for Home Page */}
+        <Route path="/" element={<Index />} />
+
+        {/* Routes with the MainLayout wrapper */}
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/account" element={<MyAccount />} />
-        </Routes>
-        </div>
-       </div>
-      </Router>
-    
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
