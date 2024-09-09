@@ -1,4 +1,5 @@
 import NoteGroupDisplay from "./components/NoteGroupDisplay";
+import { Link } from "react-router-dom";
 
 function Index() {
   return (
@@ -16,8 +17,8 @@ function Index() {
           </ul>
         </div>
       </header>
-      <section className="flex justify-center align-middle flex-col md:flex-row !w-screen h-screen overflow-hidden ">
-        <div className="bg-gradient-to-br w-56 h-56 from-green-700 to-gray-700 rounded-full absolute bg-opacity-20 -z-20 top-0 left-1/2 blur-2xl overflow-hidden"></div> 
+      <section className="flex justify-center align-middle flex-col md:flex-row !w-screen h-screen overflow-hidden  relative ">
+        <div className="bg-gradient-to-br w-56 h-56 from-yellow-500 to-gray-700 rounded-full absolute opacity-40 -z-20 top-0 left-1/2 blur-3xl overflow-hidden"></div>
         <div className="flex flex-col gap-2 justify-center align-middle h-[60vh] w-full md:w-2/3 p-5 md:px-10 md:py-16 md:h-full">
           <h1 className="text-4xl font-semibold w-full">NoteCraft</h1>
           <h3>AI Integrated Digital Sticky Notes!!</h3>
@@ -31,7 +32,7 @@ function Index() {
               color={"blue"}
             ></NoteGroupDisplay>
           </div>
-        
+
           <div className="absolute -right-2  z-[1] w-48 -rotate-6">
             <NoteGroupDisplay
               isFav={true}
@@ -49,6 +50,11 @@ function Index() {
             ></NoteGroupDisplay>
           </div>
         </div>
+      </section>
+      <section>
+        <Link to="/login">
+          <button className="bg-white rounded-sm px-4 py-2">Get Started</button>
+        </Link>
       </section>
     </>
   );

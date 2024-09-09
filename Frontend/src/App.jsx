@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MyAccount from "./components/MyAccount";
 import Index from "./Index";
 import MainLayout from "./MainInAppLayout";
+import Login from "./Login";
+
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
       <Routes>
         {/* Separate route for Home Page */}
         <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Routes with the MainLayout wrapper */}
         <Route element={<MainLayout />}>

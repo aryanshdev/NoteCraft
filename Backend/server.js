@@ -6,8 +6,9 @@ const passport = require("passport");
 const session = require("express-session");
 require("dotenv").config();
 const GoogleStrategy = require("passport-google-oauth20");
-const GithubStrategy = require("passport-github2");
-
+const GitHubStrategy = require("passport-github2");
+const { usersCol } = require("./db/dbconnection");
+const ShortUniqueId = require("short-unique-id");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -18,6 +19,8 @@ app.use(
   })
 );
 
+idgen = new ShortUniqueId({ length: 15 });
+
 passport.use(
   new GoogleStrategy(
     {
@@ -25,21 +28,47 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/process-login",
     },
-    (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
+    async (accessToken, refreshToken, profile, done) => {
+      userData = await usersCol.findOne({ email: profile._json.email });
+      if (userData) {
+        return done(null, {uuid : userData.uuid});
+      } else {
+        let id = idgen.rnd();
+        await usersCol.insertOne({
+          email: profile._json.email,
+          name: profile._json.name,
+          uuid: id,
+          pfp: profile._json.picture,
+        });
+        return done(null,{uuid : id});
+      }
     }
   )
 );
 
 passport.use(
-  new GithubStrategy(
+  new GitHubStrategy(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_ID,
-      callbackURL: "http://localhost:10000/auth/github/process-login",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "/auth/github/process-login",
+      scope: ["user:email"],
     },
-    (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
+     async (accessToken, refreshToken, profile, done) => {
+      console.log(profile.emails[0].value)
+      userData = await usersCol.findOne({ email: profile.emails[0].value });
+      if (userData) {
+        return done(null, {uuid : userData.uuid});
+      } else {
+        let id = idgen.rnd();
+        await usersCol.insertOne({
+          email: profile.emails[0].value,
+          name: profile._json.name,
+          uuid: id,
+          pfp: profile._json.avatar_url,
+        });
+        return done(null,{uuid : id});
+      }
     }
   )
 );
@@ -70,26 +99,25 @@ app.listen(10000, () => {
 
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile"] })
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 app.get(
   "/auth/google/process-login",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  function (req, res) {
+  passport.authenticate("google", { failureRedirect: "https://localhost:5173/login" }),
+  async function (req, res) {
+    req.session.loggedinUserUUID = req.user.uuid;
     res.redirect("http://localhost:5173/dashboard");
   }
 );
 
-app.get(
-  "/auth/github",
-  passport.authenticate("github")
-);
+app.get("/auth/github", passport.authenticate("github"));
 
 app.get(
   "/auth/github/process-login",
   passport.authenticate("github", { failureRedirect: "/login" }),
   function (req, res) {
+    req.session.loggedinUserUUID = req.user.uuid;
     res.redirect("http://localhost:5173/dashboard");
   }
 );
