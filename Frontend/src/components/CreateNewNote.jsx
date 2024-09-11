@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-function CreateNoteGroup(props) {
+function CreateNote(props) {
   const showHideAddArea = () => {
     addMode.classList.toggle("hidden");
     displayMode.classList.toggle("hidden");
   };
   const addNewGroup = () => {
-    fetch("/app/notesgroup/new", {
+    fetch("/app/notes/new", {
       method: "POST",
       body: JSON.stringify({
         title: document.getElementById("newTitle").value,
         description: document.getElementById("newDesc").value,
+        gid: props.gid
       }), // Use JSON.stringify
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +31,7 @@ function CreateNoteGroup(props) {
 
   return (
     <div
-      className={`w-full h-52  rounded-md border-2 border-dotted  bg-blue-800 bg-opacity-10`}
+      className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10`}
     >
       <div
         className="flex justify-center items-center flex-col w-full text-center gap-1 h-full"
@@ -55,11 +56,11 @@ function CreateNoteGroup(props) {
             ></path>
           </svg>
         </div>
-        <span className="font-semibold"> Add New Note Group</span>
+        <span className="font-semibold"> Add New Note</span>
 
         <span className="italic">
           {" "}
-          You Can Add {8 - props.already} More Groups
+          You Can Add {20 - props.already} More Notes In This Group
         </span>
         <div></div>
       </div>
@@ -117,4 +118,4 @@ function CreateNoteGroup(props) {
   );
 }
 
-export default CreateNoteGroup;
+export default CreateNote;

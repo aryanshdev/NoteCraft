@@ -7,7 +7,7 @@ const session = require("express-session");
 require("dotenv").config();
 const GoogleStrategy = require("passport-google-oauth20");
 const GitHubStrategy = require("passport-github2");
-const { usersCol } = require("./db/dbconnection");
+const { usersCol, notesGroupCol } = require("./db/dbconnection");
 const ShortUniqueId = require("short-unique-id");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,12 +26,12 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/process-login",
+      callbackURL: "https://98nhd68r-5173.inc1.devtunnels.ms/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       userData = await usersCol.findOne({ email: profile._json.email });
       if (userData) {
-        return done(null, {uuid : userData.uuid});
+        return done(null, {userName : userData.name, loggedinUserUUID : userData.uuid});
       } else {
         let id = idgen.rnd();
         await usersCol.insertOne({
@@ -40,7 +40,7 @@ passport.use(
           uuid: id,
           pfp: profile._json.picture,
         });
-        return done(null,{uuid : id});
+        return done(null,{userName : profile._json.name, loggedinUserUUID : id});
       }
     }
   )
@@ -51,14 +51,14 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "/auth/github/process-login",
+      callbackURL: "https://98nhd68r-5173.inc1.devtunnels.ms/auth/github/process-login",
       scope: ["user:email"],
     },
      async (accessToken, refreshToken, profile, done) => {
       console.log(profile.emails[0].value)
       userData = await usersCol.findOne({ email: profile.emails[0].value });
       if (userData) {
-        return done(null, {uuid : userData.uuid});
+        return done(null, { userName : userData.name, loggedinUserUUID : userData.uuid});
       } else {
         let id = idgen.rnd();
         await usersCol.insertOne({
@@ -67,7 +67,7 @@ passport.use(
           uuid: id,
           pfp: profile._json.avatar_url,
         });
-        return done(null,{uuid : id});
+        return done(null,{userName : profile._json.name, loggedinUserUUID : id});
       }
     }
   )
@@ -89,7 +89,7 @@ function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.status(401).redirect("http://localhost:5173/");
+    res.status(401).redirect("https://98nhd68r-5173.inc1.devtunnels.ms/");
   }
 }
 
@@ -106,8 +106,10 @@ app.get(
   "/auth/google/process-login",
   passport.authenticate("google", { failureRedirect: "https://localhost:5173/login" }),
   async function (req, res) {
-    req.session.loggedinUserUUID = req.user.uuid;
-    res.redirect("http://localhost:5173/dashboard");
+    res.redirect("https://98nhd68r-5173.inc1.devtunnels.ms/dashboard");
+    req.session.userGIDs = await notesGroupCol.find({
+      ownerID: req.user.loggedinUserUUID}, {groupID:1,_id:0}).toArray()
+      
   }
 );
 
@@ -116,10 +118,10 @@ app.get("/auth/github", passport.authenticate("github"));
 app.get(
   "/auth/github/process-login",
   passport.authenticate("github", { failureRedirect: "/login" }),
-  function (req, res) {
-    req.session.loggedinUserUUID = req.user.uuid;
-    res.redirect("http://localhost:5173/dashboard");
+  async function (req, res) {
+    res.redirect("https://98nhd68r-5173.inc1.devtunnels.ms/dashboard");
+    req.session.userGIDs = await notesGroupCol.find({ownerID: req.user.loggedinUserUUID}, {groupID:1,_id:0}).toArray()
   }
 );
 
-app.use("/app/", ensureAuthenticated, appRoute);
+app.use("/app", appRoute);

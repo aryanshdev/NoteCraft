@@ -7,7 +7,7 @@ const client = new mongo.MongoClient(URI, {});
 client.connect();
 let db = client.db("Main");
 let notesGroupCollection = db.collection("notegroups");
-let notesCollection = db.collection("note");
+let notesCollection = db.collection("notes");
 let usersCollection = db.collection("users");
 module.exports = {
   notesCol: notesCollection,

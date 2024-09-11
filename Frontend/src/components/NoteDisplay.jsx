@@ -3,7 +3,7 @@ import React from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
-const NoteGroupDisplay = ({
+const NoteDisplay = ({
   _title,
   _description,
   id,
@@ -178,4 +178,4 @@ const NoteGroupDisplay = ({
   );
 };
 
-export default NoteGroupDisplay;
+export default NoteDisplay;
