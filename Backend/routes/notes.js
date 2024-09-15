@@ -4,11 +4,15 @@ const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
 
 router.post("/getAll", async (req, res) => {
-  var cur = await notesCol.find({
+  if (Array.from(req.session.userGIDs).indexOf(req.body.id) !== -1)
+{  var cur = await notesCol.find({
     ownerID: req.user.loggedinUserUUID,
-    groupid: req.body.id,
+    groupID: req.body.id,
   });
-  res.send(await cur.toArray());
+  res.send(await cur.toArray());}
+  else{
+    res.sendStatus(404)
+  }
 });
 
 router.post("/new", async (req, res) => {
@@ -22,11 +26,18 @@ router.post("/new", async (req, res) => {
       noteID: idgen.rnd(),
     })
     .then(() => {
-      res.status(200).send("OK");
+      res.sendStatus(200);
     })
     .catch(() => {
       res.sendStatus(500);
     });
 });
 
-module.exports = router;
+async function deleteAllOfGroup(loggedinUserUUID,id){
+  let ans =  (await notesCol.deleteMany({ownerID: loggedinUserUUID, groupID: id})).acknowledged
+  console.log(ans
+  )
+  return ans;
+}
+
+module.exports = {router , deleteAllOfGroup};

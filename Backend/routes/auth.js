@@ -1,0 +1,64 @@
+const router = require("express").Router();
+const passport = require("passport");
+const { notesGroupCol } = require("../db/dbconnection");
+
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/google/process-login",
+  passport.authenticate("google", {
+    failureRedirect: "https://localhost:5173/login",
+  }),
+  async function (req, res) {
+    res.redirect("https://98nhd68r-5173.inc1.devtunnels.ms/dashboard");
+    req.session.userGIDs = (
+      await notesGroupCol
+        .find(
+          {
+            ownerID: req.user.loggedinUserUUID,
+          },
+          { groupID: 1, _id: 0 }
+        )
+        .toArray()
+    ).map((ele) => ele.groupID);
+
+    req.session.save();
+  }
+);
+
+router.get("/github", passport.authenticate("github"));
+
+router.get(
+  "/github/process-login",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  async function (req, res) {
+    res.redirect("https://98nhd68r-5173.inc1.devtunnels.ms/dashboard");
+    req.session.userGIDs = (
+      await notesGroupCol
+        .find(
+          {
+            ownerID: req.user.loggedinUserUUID,
+          },
+          { groupID: 1, _id: 0 }
+        )
+        .toArray()
+    ).map((ele) => ele.groupID);
+    console.log(req.session.userGIDs);
+    req.session.save();
+  }
+);
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.sendStatus(401);
+  }
+}
+
+router.get("/logout", (req, res) => {req.logout()});
+
+module.exports = { router, ensureAuthenticated };

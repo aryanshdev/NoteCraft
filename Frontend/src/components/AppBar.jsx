@@ -2,12 +2,16 @@ import "../style.css";
 import { Link } from "react-router-dom";
 
 function AppBar() {
-  const showSideBar = () => {
+  const showHideSideBar = () => {
     document.getElementById("sidebar").classList.toggle("-left-56");
   };
 
-  const highlightItem = (target) => {
-    target.classList.add("sidemenu-active");
+  const clickOperation = (event) => {
+    Array.from(event.target.parentNode.parentNode.children).forEach((ele) =>
+      ele.firstElementChild.classList.remove("sidemenu-active")
+    );
+    event.target.classList.add("sidemenu-active");
+    showHideSideBar();
   };
 
   return (
@@ -19,7 +23,7 @@ function AppBar() {
             data-drawer-toggle="default-sidebar"
             aria-controls="default-sidebar"
             type="button"
-            onClick={showSideBar}
+            onClick={showHideSideBar}
             className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden"
           >
             <span className="sr-only">Open sidebar</span>
@@ -41,10 +45,10 @@ function AppBar() {
 
         <aside
           id="sidebar"
-          className="xl:w-[17.5vw] w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
+          className="z-20 xl:w-[17.5vw] w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
         >
           <div className="fixed md:relative dark:bg-[#2c2c2c] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl">
-            <button onClick={showSideBar} className="md:hidden">
+            <button onClick={showHideSideBar} className="md:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -58,7 +62,10 @@ function AppBar() {
                 />
               </svg>
             </button>
-            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center">
+            <div
+              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
+              onClick={clickOperation}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -75,7 +82,7 @@ function AppBar() {
               </svg>
               New Board
             </div>
-            <div className="w-full text-left">
+            <button className="w-full text-left " onClick={clickOperation}>
               <Link
                 to="/dashboard"
                 className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center sidemenu-active"
@@ -91,8 +98,8 @@ function AppBar() {
                 </svg>
                 Dashboard
               </Link>
-            </div>
-            <div className="w-full text-left">
+            </button>
+            <button className="w-full text-left" onClick={clickOperation}>
               <Link
                 to="/account"
                 className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
@@ -111,24 +118,29 @@ function AppBar() {
                 </svg>
                 Account
               </Link>
-            </div>
-            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                stroke-width="2.5"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="size-6"
+            </button>
+            <button className="w-full text-left" onClick={clickOperation}>
+              <Link
+                to="/auth/logout"
+                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              Logout
-            </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  stroke-width="2.5"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Logout
+              </Link>
+            </button>
           </div>
         </aside>
       </div>

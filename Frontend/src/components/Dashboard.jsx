@@ -3,10 +3,13 @@ import NoteGroupDisplay from "./NoteGroupDisplay";
 import CreateNoteGroup from "./CreateNewNoteGroup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import LoaderDisplay from "../LoaderDisplay";
 
 function Dashboard() {
   const [userNotes, setUserNotes] = useState([]);
-  console.log("Render");
+  const navigate = useNavigate();
+  const [Loading, setLoading] = useState(true);
   const Greeting =
     new Date().getHours() < 12
       ? "Morning"
@@ -16,18 +19,21 @@ function Dashboard() {
 
   useEffect(() => {
     fetch("/app/notesgroup/getAll")
-      .then((res) => res.json())
       .then((res) => {
-         if(res.status == 401){
-          toast.error("Session Expired, Please Login Again");
+        if (res.status == 401) {
+          navigate("/401");
           return false;
         }
+        return res.json();
+      })
+      .then((res) => {
         setUserNotes(res);
+        setLoading(false);
       })
       .catch((error) => {
-        toast.error("Failed to fetch notes");
+        toast.error("Failed To Fetch Notes");
       });
-  }, []);
+  }, [navigate]);
 
   const updateGroupInfo = useCallback(
     async (event) => {
@@ -49,11 +55,10 @@ function Dashboard() {
       } else if (res.status == 400) {
         toast.warning("Check Inputs And Try Again");
         return false; // Return false for input error
-      } else if(res.status == 401){
+      } else if (res.status == 401) {
         toast.error("Session Expired, Please Login Again");
         return false;
-      }
-       else {
+      } else {
         toast.error("Some Error Occurred");
         return false; // Return false for other errors
       }
@@ -123,51 +128,58 @@ function Dashboard() {
     );
   };
 
-  return (
-    <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition:Bounce
-      />
-      <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
-      <h1 className="font-semibold text-3xl mb-3">Good {Greeting}, Aryansh</h1>
-      <h3>Take a look at your Notes or Create More Below</h3>
-      <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
-        {userNotes.length < 8 ? (
-          <CreateNoteGroup already={userNotes.length}></CreateNoteGroup>
-        ) : (
-          " "
-        )}
+  if (Loading) {
+    return <LoaderDisplay />;
+  } else {
+    return (
+      <>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          transition:Bounce
+        />
+        <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
 
-        {userNotes.map((note, index) => (
-          <NoteGroupDisplay
-            updateFunc={updateGroupInfo}
-            id={note.groupID}
-            key={note.groupID}
-            _title={note.title}
-            _description={note.description}
-            isFav={note.favourite}
-            favFunction={favouriteSet}
-            delFunction={deleteNoteGroup}
-            color={
-              ["orange", "blue", "yellow", "green", "pink"][
-                Math.floor(Math.random() * 5)
-              ]
-            }
-          />
-        ))}
-      </div>
-    </>
-  );
+        <h1 className="font-semibold text-3xl mb-3">
+          Good {Greeting}, Aryansh
+        </h1>
+        <h3>Take a look at your Notes or Create More Below</h3>
+        <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
+          {userNotes.length < 8 ? (
+            <CreateNoteGroup already={userNotes.length}></CreateNoteGroup>
+          ) : (
+            " "
+          )}
+
+          {userNotes.map((note, index) => (
+            <NoteGroupDisplay
+              updateFunc={updateGroupInfo}
+              id={note.groupID}
+              key={note.groupID}
+              _title={note.title}
+              _description={note.description}
+              isFav={note.favourite}
+              favFunction={favouriteSet}
+              delFunction={deleteNoteGroup}
+              color={
+                ["orange", "blue", "yellow", "green", "pink"][
+                  Math.floor(Math.random() * 5)
+                ]
+              }
+            />
+          ))}
+        </div>
+      </>
+    );
+  }
 }
 
 export default Dashboard;

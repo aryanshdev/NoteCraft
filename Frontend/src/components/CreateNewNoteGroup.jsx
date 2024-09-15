@@ -17,8 +17,22 @@ function CreateNoteGroup(props) {
       },
     })
       .then((res) => {
+        alert(res.status)
         if (res.status === 200) {
-          toast.success("New Note Create Redirecting");
+          toast.success(
+            <>
+              New Note Group Created
+              <br />
+              <em>
+                {" "}
+                <ul>Redirecting</ul>{" "}
+              </em>
+            </>,
+            {
+              onClose: async () =>
+                (document.location.href = "/notes/" + (await res.text())),
+            }
+          );
         } else if (res.status == 400) {
           toast.warning("Check Inputs And Try Again");
         } else {

@@ -1,37 +1,46 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import CreateNote from "./CreateNewNote";
 import NotesPageSideBar from "./NotesPageSideBar.jsx";
 import NoteDisplay from "./NoteDisplay.jsx";
+import LoaderDisplay from "../LoaderDisplay.jsx";
 
 function NotesPage() {
   const [userNotes, setUserNotes] = useState([]);
   const gid = useParams();
-  const Greeting =
-    new Date().getHours() < 12
-      ? "Morning"
-      : new Date().getHours() < 16
-      ? "Afternoon"
-      : "Evening";
+  const navigate = useNavigate();
+
+  const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/app/notes/getAll", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ id: gid.groupid }),
     })
-      .then((res) => res.json())
       .then((res) => {
-        if (res.status == 401) {
-          toast.error("Session Expired, Please Login Again");
-        }
         console.log(res);
+        if (res.status == 401) {
+          navigate("/401");
+          return false;
+        }
+        if (res.status == 404) {
+          navigate("/404");
+          return false;
+        }
+        return res.json();
+      })
+      .then((res) => {
         setUserNotes(res);
+        setLoading(false);
       })
       .catch((error) => {
         toast.error("Failed to fetch notes");
       });
-  }, []);
+  }, [navigate]);
 
   const updateGroupInfo = useCallback(
     async (event) => {
@@ -125,54 +134,56 @@ function NotesPage() {
       </>
     );
   };
+  if (Loading) {
+    return <LoaderDisplay />;
+  } else {
+    return (
+      <>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          transition:Bounce
+        />
+        <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
+        <div className="flex flex-row">
+          <NotesPageSideBar />
+          <div className="w-full h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0">
+            <h3>Take a look at your Notes or Create More Below</h3>
 
-  return (
-    <>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        transition:Bounce
-      />
-      <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
-      <div className="flex flex-row">
-        <NotesPageSideBar />
-        <div className="w-full h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0">
-          <h3>Take a look at your Notes or Create More Below</h3>
-
-          <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
-            <CreateNote
-              already={userNotes.length}
-              gid={gid.groupid}
-            ></CreateNote>
-            {userNotes.map((note, index) => (
-              <NoteDisplay
-                _title={note.title}
-                _description={note.body}
-                id={note.noteID}
-                updateFunc={updateGroupInfo}
-                isFav={true}
-                favFunction={favouriteSet}
-                delFunction={deleteNoteGroup}
-                color={
-                  ["orange", "blue", "yellow", "green", "pink"][
-                    Math.floor(Math.random() * 5)
-                  ]
-                }
-              ></NoteDisplay>
-            ))}
+            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
+              <CreateNote
+                already={userNotes.length}
+                gid={gid.groupid}
+              ></CreateNote>
+              {userNotes.map((note, index) => (
+                <NoteDisplay
+                  _title={note.title}
+                  _description={note.body}
+                  id={note.noteID}
+                  updateFunc={updateGroupInfo}
+                  isFav={note.favourite}
+                  favFunction={favouriteSet}
+                  delFunction={deleteNoteGroup}
+                  color={
+                    ["orange", "blue", "yellow", "green", "pink"][
+                      Math.floor(Math.random() * 5)
+                    ]
+                  }
+                ></NoteDisplay>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
-
 export default NotesPage;

@@ -1,6 +1,7 @@
 const router = require("express").Router();
-const notesRouter = require("./notes");
+const {router: notesRouter } = require("./notes");
 const notesGroupRouter = require("./notesGroup");
+const userRouter = require("./account")
 
 router.get("/", (req, res) => {
   res.send("Hiiii");
@@ -8,5 +9,6 @@ router.get("/", (req, res) => {
 
 router.use("/notesgroup", notesGroupRouter);
 router.use("/notes", notesRouter);
+router.use("/account", userRouter)
 
 module.exports = router;

@@ -7,8 +7,11 @@ const session = require("express-session");
 require("dotenv").config();
 const GoogleStrategy = require("passport-google-oauth20");
 const GitHubStrategy = require("passport-github2");
-const { usersCol, notesGroupCol } = require("./db/dbconnection");
+const { usersCol } = require("./db/dbconnection");
 const ShortUniqueId = require("short-unique-id");
+const {router : authRouter, ensureAuthenticated} = require("./routes/auth");
+const helmet = require("helmet");
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -18,6 +21,7 @@ app.use(
     saveUninitialized: true,
   })
 );
+app.use(helmet())
 
 idgen = new ShortUniqueId({ length: 15 });
 
@@ -26,12 +30,16 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://98nhd68r-5173.inc1.devtunnels.ms/auth/google/process-login",
+      callbackURL:
+        "https://98nhd68r-5173.inc1.devtunnels.ms/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       userData = await usersCol.findOne({ email: profile._json.email });
       if (userData) {
-        return done(null, {userName : userData.name, loggedinUserUUID : userData.uuid});
+        return done(null, {
+          userName: userData.name,
+          loggedinUserUUID: userData.uuid,
+        });
       } else {
         let id = idgen.rnd();
         await usersCol.insertOne({
@@ -40,7 +48,10 @@ passport.use(
           uuid: id,
           pfp: profile._json.picture,
         });
-        return done(null,{userName : profile._json.name, loggedinUserUUID : id});
+        return done(null, {
+          userName: profile._json.name,
+          loggedinUserUUID: id,
+        });
       }
     }
   )
@@ -51,14 +62,17 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://98nhd68r-5173.inc1.devtunnels.ms/auth/github/process-login",
+      callbackURL:
+        "https://98nhd68r-5173.inc1.devtunnels.ms/auth/github/process-login",
       scope: ["user:email"],
     },
-     async (accessToken, refreshToken, profile, done) => {
-      console.log(profile.emails[0].value)
+    async (accessToken, refreshToken, profile, done) => {
       userData = await usersCol.findOne({ email: profile.emails[0].value });
       if (userData) {
-        return done(null, { userName : userData.name, loggedinUserUUID : userData.uuid});
+        return done(null, {
+          userName: userData.name,
+          loggedinUserUUID: userData.uuid,
+        });
       } else {
         let id = idgen.rnd();
         await usersCol.insertOne({
@@ -67,7 +81,10 @@ passport.use(
           uuid: id,
           pfp: profile._json.avatar_url,
         });
-        return done(null,{userName : profile._json.name, loggedinUserUUID : id});
+        return done(null, {
+          userName: profile._json.name,
+          loggedinUserUUID: id,
+        });
       }
     }
   )
@@ -84,44 +101,12 @@ passport.deserializeUser(function (obj, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-function ensureAuthenticated(req, res, next) {
-  console.log(req.isAuthenticated());
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    res.status(401).redirect("https://98nhd68r-5173.inc1.devtunnels.ms/");
-  }
-}
+
 
 app.listen(10000, () => {
   console.log("Server Up");
 });
 
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
 
-app.get(
-  "/auth/google/process-login",
-  passport.authenticate("google", { failureRedirect: "https://localhost:5173/login" }),
-  async function (req, res) {
-    res.redirect("https://98nhd68r-5173.inc1.devtunnels.ms/dashboard");
-    req.session.userGIDs = await notesGroupCol.find({
-      ownerID: req.user.loggedinUserUUID}, {groupID:1,_id:0}).toArray()
-      
-  }
-);
-
-app.get("/auth/github", passport.authenticate("github"));
-
-app.get(
-  "/auth/github/process-login",
-  passport.authenticate("github", { failureRedirect: "/login" }),
-  async function (req, res) {
-    res.redirect("https://98nhd68r-5173.inc1.devtunnels.ms/dashboard");
-    req.session.userGIDs = await notesGroupCol.find({ownerID: req.user.loggedinUserUUID}, {groupID:1,_id:0}).toArray()
-  }
-);
-
-app.use("/app", appRoute);
+app.use("/auth", authRouter)
+app.use("/app", ensureAuthenticated, appRoute);
