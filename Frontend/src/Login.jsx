@@ -1,15 +1,22 @@
+import NoteGroupDisplay from "./components/NoteGroupDisplay";
 function Login() {
-  return (
-    <>
-      <div className="flex justify-center align-middle h-screen w-screen flex-col gap-5 text-center">
-        <h1 className="text-3xl font-bold mb-4">Login To NoteCraft</h1>
-        <a href="/auth/google">
-          <button className="bg-white px-3 py-2 text-black font-semibold flex flex-row gap-3 h-auto mx-auto items-center text-xl rounded-lg">
+return <>
+
+<section className="flex justify-center align-middle flex-col md:flex-row h-screen overflow-hidden  relative ">
+        <div className="bg-gradient-to-br w-56 h-56 from-yellow-500 to-gray-700 rounded-full absolute opacity-40 -z-20 top-0 left-1/2 blur-3xl overflow-hidden"></div>
+        <div className="flex flex-col gap-4 justify-center align-middle h-[60vh] w-full md:w-2/5 p-5 md:px-7 lg:px-10 md:py-16 md:h-full">
+          <h1 className="text-4xl font-semibold w-full">Login</h1>
+          <h3 className="flex flex-row align-middle items-center gap-2 text-xl mb-5">
+            Login / Signup To Continue To NoteCraft
+          </h3>
+          
+          <a href="/auth/google">
+          <button className="bg-white px-3 py-2 text-black font-semibold flex flex-row gap-3 h-auto mx-auto items-center text-lg rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
-              width="48px"
-              height="48px"
+              width="42px"
+              height="42px"
             >
               <path
                 fill="#FFC107"
@@ -32,12 +39,12 @@ function Login() {
           </button>
         </a>
         <a href="/auth/github">
-          <button className="bg-white px-3 py-1 text-black font-semibold flex flex-row gap-3 h-auto mx-auto items-center text-xl rounded-lg">
+          <button className="bg-white px-3 py-1 text-black font-semibold flex flex-row gap-3 h-auto mx-auto items-center text-lg rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 48 48"
-              width="48px"
-              height="48px"
+              width="42px"
+              height="42px"
             >
               <linearGradient
                 id="rL2wppHyxHVbobwndsT6Ca"
@@ -70,9 +77,81 @@ function Login() {
             Continue With Github
           </button>
         </a>
-      </div>
-    </>
-  );
+
+        </div>
+        <div className="flex flex-col gap-2 justify-center align-middle h-[30vh] md:h-full w-full md:w-3/5 relative ">
+          <div className="absolute md:left-8  -rotate-6 z-[2] w-52">
+            <NoteGroupDisplay
+              isFav={true}
+              _description="What is OAuth? - Why We Need? Where We Need? - PassportJS"
+              _title="OAuth Basics"
+              color={"blue"}
+            ></NoteGroupDisplay>
+          </div>
+
+          <div className="absolute hidden lg:block md:right-44 xl:right-52 -rotate-6 z-[4] w-52">
+            <NoteGroupDisplay
+              isFav={false}
+              _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
+              _title="Web Dev Notes"
+              color={"pink"}
+            ></NoteGroupDisplay>
+          </div>
+
+          <div className="absolute hidden xl:block md:right-44 xl:left-56 -rotate-12 z-[3] w-52">
+            <NoteGroupDisplay
+              isFav={true}
+              _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
+              _title="Web Dev Notes"
+              color={"green"}
+            ></NoteGroupDisplay>
+          </div>
+
+          <div className="absolute hidden xl:block md:right-36 xl:left-80 rotate-6 z-[3] w-52">
+            <NoteGroupDisplay
+              isFav={true}
+              _description="TOC-CD Basics, NFA-DFA, "
+              _title="Theory Of Computation"
+              color={"blue"}
+            ></NoteGroupDisplay>
+          </div>
+
+          <div className="absolute hidden md:block md:-right-14 rotate-3 z-[1] w-52">
+            <NoteGroupDisplay
+              isFav={false}
+              _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
+              _title="Web Dev Notes"
+              color={"yellow"}
+            ></NoteGroupDisplay>
+          </div>
+
+          <div className="absolute -right-2 md:right-6 z-[1] w-52 -rotate-6">
+            <NoteGroupDisplay
+              isFav={false}
+              _description="NodeJS Notes - JS Basics, Async Await"
+              _title="Learning NodeJS"
+              color={"green"}
+            ></NoteGroupDisplay>
+          </div>
+          <div className="absolute rotate-3 right-16  md:left-32 z-[1] md:z-[2] w-52">
+            <NoteGroupDisplay
+              isFav={false}
+              _description="To-Do For JAVA DSA - Basic, Intermediate and Advance DS and Basic Algorithms"
+              _title="DSA To-Do"
+              color={"orange"}
+            ></NoteGroupDisplay>
+          </div>
+          <div className="absolute -rotate-12 md:right-14 left-32 z-[1] w-52 hidden md:visible">
+            <NoteGroupDisplay
+              isFav={false}
+              _description="My Personal Notes"
+              _title="Important Notes"
+              color={"yellow"}
+            ></NoteGroupDisplay>
+          </div>
+        </div>
+      </section>
+</>
 }
 
 export default Login;

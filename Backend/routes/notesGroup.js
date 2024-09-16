@@ -34,7 +34,11 @@ router.post("/new", async (req, res) => {
         description: req.body.description,
         favourite: false,
       })
-      .then(() => res.status(200).send(id))
+      .then(() => {
+        req.session.userGIDs = Array.from(req.session.userGIDs).concat([id]);
+        req.session.save();
+        res.status(200).send(id);
+      })
       .catch(() => res.sendStatus(500));
   } else {
     res.sendStatus(400);
@@ -52,13 +56,16 @@ router.post("/editFavourite", async (req, res) => {
 });
 
 router.delete("/deleteNoteGroup", async (req, res) => {
-
   notesGroupCol
     .deleteOne({ ownerID: req.user.loggedinUserUUID, groupID: req.body.id })
     .then(async () => {
-      var resl = await deleteAllOfGroup(req.user.loggedinUserUUID,req.body.id);
-      if (resl) res.sendStatus(200);
-      else res.sendStatus(500);
+      var resl = await deleteAllOfGroup(req.user.loggedinUserUUID, req.body.id);
+      if (resl) {
+        req.session.userGIDs = req.session.userGIDs.filter(
+          (id) => id !== req.body.id
+        );
+        res.sendStatus(200);
+      } else res.sendStatus(500);
     })
     .catch(() => res.sendStatus(500));
 });

@@ -59,6 +59,12 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-router.get("/logout", (req, res) => {req.logout()});
+router.post("/logout", (req, res) => {req.logout(err=>{
+  if (err){
+    res.sendStatus(500)
+    return
+  }
+  res.sendStatus(200)
+})});
 
 module.exports = { router, ensureAuthenticated };

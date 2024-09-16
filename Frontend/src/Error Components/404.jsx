@@ -1,5 +1,6 @@
 import { ToastContainer, toast } from "react-toastify";
-function Display404(fullScreen = false) {
+function Display404({fullScreen = false}) {
+  console.log(fullScreen)
   return (
     <>
       <div

@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function CreateNoteGroup(props) {
+  const nav = useNavigate();
   const showHideAddArea = () => {
     addMode.classList.toggle("hidden");
     displayMode.classList.toggle("hidden");
   };
+  
   const addNewGroup = () => {
     fetch("/app/notesgroup/new", {
       method: "POST",
@@ -17,29 +20,34 @@ function CreateNoteGroup(props) {
       },
     })
       .then((res) => {
-        alert(res.status)
-        if (res.status === 200) {
-          toast.success(
-            <>
-              New Note Group Created
-              <br />
-              <em>
-                {" "}
-                <ul>Redirecting</ul>{" "}
-              </em>
-            </>,
-            {
-              onClose: async () =>
-                (document.location.href = "/notes/" + (await res.text())),
-            }
-          );
-        } else if (res.status == 400) {
-          toast.warning("Check Inputs And Try Again");
-        } else {
-          toast.error("Some Error Occured");
+        switch (res.status) {
+          case 200:
+            toast.success(
+              <>
+                New Note Group Created
+                <br />
+                <em>
+                  {" "}
+                  <ul>Redirecting</ul>{" "}
+                </em>
+              </>,
+              {
+                onClose: async () =>
+                  (nav("/notes/" + (await res.text()))),
+              }
+            );
+            break;
+          case 400:
+            toast.warning("Check Inputs And Try Again");
+            break;
+          case 500:
+            toast.error("Something Went Wrong");
+            break;
+          case 401:
+            nav("/401");
+            break;
         }
-      })
-      .finally(showHideAddArea());
+      }).finally(showHideAddArea());
   };
 
   return (

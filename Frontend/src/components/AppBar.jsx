@@ -1,7 +1,9 @@
+import { toast } from "react-toastify";
 import "../style.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function AppBar() {
+  const nav = useNavigate();
   const showHideSideBar = () => {
     document.getElementById("sidebar").classList.toggle("-left-56");
   };
@@ -12,6 +14,21 @@ function AppBar() {
     );
     event.target.classList.add("sidemenu-active");
     showHideSideBar();
+  };
+  const logout = () => {
+    fetch("/auth/logout", { method: "POST" }).then((res) => {
+      switch (res.status) {
+        case 200:
+          nav("/");
+          break;
+        case 500:
+          toast.error("Something Went Wrong");
+          break;
+        case 401:
+          nav("/");
+          break;
+      }
+    });
   };
 
   return (
@@ -119,11 +136,7 @@ function AppBar() {
                 Account
               </Link>
             </button>
-            <button className="w-full text-left" onClick={clickOperation}>
-              <Link
-                to="/auth/logout"
-                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
-              >
+            <button className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center" onClick={logout}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   stroke-width="2.5"
@@ -139,7 +152,7 @@ function AppBar() {
                   />
                 </svg>
                 Logout
-              </Link>
+          
             </button>
           </div>
         </aside>
