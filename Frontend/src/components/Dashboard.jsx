@@ -20,9 +20,12 @@ function Dashboard() {
   useEffect(() => {
     fetch("/app/notesgroup/getAll")
       .then((res) => {
-        if (res.status == 401) {
-          navigate("/401");
-          return false;
+        switch (res.status) {
+          case 401:
+            navigate("/401");
+            return false;
+          case 500:
+            navigate("/500")
         }
         return res.json();
       })
@@ -133,19 +136,7 @@ function Dashboard() {
   } else {
     return (
       <>
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-          transition:Bounce
-        />
+
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
 
         <h1 className="font-semibold text-3xl mb-3">

@@ -9,8 +9,35 @@ const GoogleStrategy = require("passport-google-oauth20");
 const GitHubStrategy = require("passport-github2");
 const { usersCol } = require("./db/dbconnection");
 const ShortUniqueId = require("short-unique-id");
-const {router : authRouter, ensureAuthenticated} = require("./routes/auth");
+const { router: authRouter, ensureAuthenticated } = require("./routes/auth");
+const sharingRouter = require("./routes/Sharing")
 const helmet = require("helmet");
+const chatServer = require("http").createServer(app);
+
+const { Server } = require("socket.io");
+const io = new Server(chatServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.listen(5656);
+io.on("connection", (socket) => {
+  socket.on("createRoom", ([roomID, name]) => {
+    socket.join(roomID);
+    socket.roomID = roomID;
+    socket.userName = String(name).split(" ")[0];
+    socket.emit("SYSTEM", "Welcome !!"); // to user joining the room
+    socket.to(roomID).emit("SYSTEM", `${name} has joined the room`); // to everyone else
+  });
+  socket.on("msgToServer", (message) => {
+    console.log(message);
+    socket
+      .to(socket.roomID)
+      .emit("USER", { message: message, name: socket.userName }); // to user joining the room
+  });
+});
+io.on("disconnection",()=>{})
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,7 +48,7 @@ app.use(
     saveUninitialized: true,
   })
 );
-app.use(helmet())
+app.use(helmet());
 
 idgen = new ShortUniqueId({ length: 15 });
 
@@ -101,12 +128,10 @@ passport.deserializeUser(function (obj, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
 app.listen(10000, () => {
   console.log("Server Up");
 });
 
-
-app.use("/auth", authRouter)
+app.use("/auth", authRouter);
+app.use("/sharing", sharingRouter)
 app.use("/app", ensureAuthenticated, appRoute);

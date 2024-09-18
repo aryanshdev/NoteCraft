@@ -17,9 +17,11 @@ function CreateNote(props) {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
+      .then(async (res) => {
+        console.log(res)
         if (res.status === 200) {
-          toast.success("New Note Create Redirecting");
+          toast.success("New Note Added");
+          props.addNewNote(document.getElementById("newTitle").value,document.getElementById("newDesc").value, await res.text())
         } else if (res.status == 400) {
           toast.warning("Check Inputs And Try Again");
         } else {

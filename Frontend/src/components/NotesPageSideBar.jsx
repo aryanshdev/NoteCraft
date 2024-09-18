@@ -1,13 +1,18 @@
 import "../style.css";
 import { Link } from "react-router-dom";
 
-function AppBar() {
+function AppBar({shareFunction}) {
   const showSideBar = () => {
     document.getElementById("sidebar").classList.toggle("-left-56");
   };
 
   const highlightItem = (target) => {
     target.classList.add("sidemenu-active");
+  };
+  const showChatSectionMobile = () => {
+    document
+      .getElementById("chatSectionContainer")
+      .classList.toggle("-right-[100vw]");
   };
 
   return (
@@ -45,7 +50,7 @@ function AppBar() {
             data-drawer-toggle="default-sidebar"
             aria-controls="default-sidebar"
             type="button"
-            onClick={showSideBar}
+            onClick={showChatSectionMobile}
             className="inline-flex items-center mt-2 px-4 text-sm text-gray-300 rounded-lg sm:hidden"
           >
             {" "}
@@ -121,6 +126,22 @@ function AppBar() {
                 Account
               </Link>
             </div>
+            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center" onClick={shareFunction}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="size-6"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Share Notes
+            </div>
+
             <div className="w-full text-left">
               <Link
                 to="/dashboard"

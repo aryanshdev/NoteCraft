@@ -4,18 +4,38 @@ const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
 
 router.post("/getAll", async (req, res) => {
-  if (Array.from(req.session.userGIDs).indexOf(req.body.id) !== -1)
-{  var cur = await notesCol.find({
-    ownerID: req.user.loggedinUserUUID,
-    groupID: req.body.id,
-  });
-  res.send(await cur.toArray());}
-  else{
-    res.sendStatus(404)
+  if (Array.from(req.session.userGIDs).indexOf(req.body.id) !== -1) {
+    var cur = await notesCol.find({
+      ownerID: req.user.loggedinUserUUID,
+      groupID: req.body.id,
+    });
+    res.send(await cur.toArray());
+  } else {
+    res.sendStatus(404);
   }
 });
 
+router.get("/getSharingInfo", async (req, res) => {
+  res.json({ user: req.user.loggedinUserUUID });
+});
+
+router.post("/editFavourite", async (req, res) => {
+  console.log(req.body);
+  notesCol
+    .updateOne(
+      {
+        ownerID: req.user.loggedinUserUUID,
+        groupID: req.body.gid,
+        noteID: req.body.nid,
+      },
+      { $set: { favourite: req.body.favStatus } }
+    )
+    .then(() => res.sendStatus(200))
+    .catch(() => res.sendStatus(500));
+});
+
 router.post("/new", async (req, res) => {
+  id = idgen.rnd();
   notesCol
     .insertOne({
       ownerID: req.user.loggedinUserUUID,
@@ -23,21 +43,35 @@ router.post("/new", async (req, res) => {
       title: req.body.title,
       body: req.body.description,
       favourite: false,
-      noteID: idgen.rnd(),
+      noteID: id,
     })
     .then(() => {
-      res.sendStatus(200);
+      res.status(200).send(id);
     })
     .catch(() => {
       res.sendStatus(500);
     });
 });
 
-async function deleteAllOfGroup(loggedinUserUUID,id){
-  let ans =  (await notesCol.deleteMany({ownerID: loggedinUserUUID, groupID: id})).acknowledged
-  console.log(ans
-  )
+router.delete("/deleteNote", async (req, res) => {
+  notesCol
+    .deleteOne({
+      ownerID: req.user.loggedinUserUUID,
+      groupID: req.body.gid,
+      noteID: req.body.nid,
+    })
+    .then(async () => {
+      res.sendStatus(200);
+    })
+    .catch(() => res.sendStatus(500));
+});
+
+async function deleteAllOfGroup(loggedinUserUUID, id) {
+  let ans = (
+    await notesCol.deleteMany({ ownerID: loggedinUserUUID, groupID: id })
+  ).acknowledged;
+  console.log(ans);
   return ans;
 }
 
-module.exports = {router , deleteAllOfGroup};
+module.exports = { router, deleteAllOfGroup };

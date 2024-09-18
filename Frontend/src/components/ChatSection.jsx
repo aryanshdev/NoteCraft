@@ -1,91 +1,173 @@
-function ChatSection() {
-  return (
-    <>
-      <aside
-        id="sidebar"
-        className="z-20 xl:w-[17.5vw] w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
-      >
-        <div className="fixed md:relative dark:bg-[#2c2c2c] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl">
-          <button onClick={showHideSideBar} className="md:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class="size-6"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
-                clip-rule="evenodd"
+import { useEffect, useState } from "react";
+import { socket } from "../lib/socket";
+import SystemMSG from "./SystemMSG";
+import UserMSG from "./UserMSG";
+import { useNavigate, Link } from "react-router-dom";
+
+function ChatSection({ id, openFunction }) {
+  const [messages, setMessages] = useState([]);
+  const [WSCon, setWSCon] = useState(null);
+  const navigate = useNavigate();
+  const [name, setName] = useState();
+  useEffect(() => {
+    fetch("/app/account/getName", { method: "GET" }).then(async (res) => {
+      switch (res.status) {
+        case 401:
+          setName(null);
+          return false;
+        case 500:
+          navigate("/500");
+        case 200:
+          let uname = await res.text();
+          setName(uname.split(" ")[0]);
+          socket.connect();
+          socket.emit("createRoom", [id, uname]);
+          break;
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("SYSTEM", (msg) => {
+      setMessages((prevMessages) => [...prevMessages, ["SYSTEM", msg]]);
+    });
+
+    socket.on("USER", (msgObject) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        ["USER", msgObject.message, msgObject.name],
+      ]);
+    });
+  }, []);
+
+  const showHideSideBar = () => {
+    document.getElementById("sidebar").classList.toggle("-right-56");
+  };
+
+  const sendMessage = () => {
+    const inpEle = document.getElementById("chatMSG");
+    socket.emit("msgToServer", inpEle.value);
+    setMessages((prevMessages) => [...prevMessages, ["SELF", inpEle.value]]);
+  };
+  const showChatSectionMobile = () => {
+    document
+      .getElementById("chatSectionContainer")
+      .classList.toggle("-right-[100vw]");
+  };
+  const clearChat = () => {
+    setMessages([]);
+  };
+
+  if (name) {
+    return (
+      <>
+        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative p-4 transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#262626]">
+          <div className="flex flex-col gap-4 h-full ">
+            <header className="flex flex-row text-sm justify-around">
+              {/* Close Chat Area Button */}
+              <button
+                className="mr-auto flex flex-row gap-1 items-center "
+                onClick={openFunction}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="size-5"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Close
+              </button>
+              <button
+                className="ml-auto flex flex-row gap-1 items-center"
+                onClick={clearChat}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="size-4"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Clear Chat
+              </button>
+            </header>
+            {/* Message Display Area */}
+            <div className="flex overflow-y-auto w-full bg-white bg-opacity-5 rounded-lg px-3 py-2 flex-1 flex-col gap-5">
+              {messages.map((msgItem, index) => {
+                switch (msgItem[0]) {
+                  case "SYSTEM":
+                    return <SystemMSG msg={msgItem[1]}></SystemMSG>;
+                  case "USER":
+                    return (
+                      <UserMSG msg={msgItem[1]} name={msgItem[2]}></UserMSG>
+                    );
+                  case "SELF":
+                    return (
+                      <UserMSG
+                        msg={msgItem[1]}
+                        name={name}
+                        sending={true}
+                      ></UserMSG>
+                    );
+                }
+              })}
+            </div>
+
+            {/* Message Sending Area */}
+            <div className="flex w-full flex-row gap-3 items-center">
+              <input
+                type="text"
+                className=" w-full bg-white h-fit bg-opacity-5 px-4 py-2 outline-none focus:outline-none rounded-md"
+                id="chatMSG"
               />
-            </svg>
-          </button>
-          <div
-            className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
-            onClick={clickOperation}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="3"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-            New Board
+              <button id="sendButton" onClick={sendMessage}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentcolor"
+                  class="size-6"
+                >
+                  <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <button className="w-full text-left " onClick={clickOperation}>
-            <Link
-              to="/dashboard"
-              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center sidemenu-active"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="size-6"
-              >
-                <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
-                <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
-              </svg>
-              Dashboard
+        </aside>
+      </>
+    );
+  } else {
+    return (
+      <>
+        {" "}
+        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#262626]">
+          <div className="h-full w-full text-lg font-semibold p-5 flex flex-col justify-center align-middle text-center gap-5">
+            <h2 className="text-2xl text-red-600 font-bold">
+              Sign In Required
+            </h2>
+            You Need To Sign In to Chat
+            <Link to={"/login"}>
+              <button className="bg-white px-4 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md">
+                Login
+              </button>
             </Link>
-          </button>
-          <button className="w-full text-left" onClick={clickOperation}>
-            <Link
-              to="/account"
-              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
+            OR
+            <button
+              className="bg-white text-lg font-semibold text-black px-5 py-2 rounded-lg mx-auto flex flex-row gap-3 items-center"
+              onClick={openFunction}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="size-6"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              Account
-            </Link>
-          </button>
-          <button className="w-full text-left" onClick={clickOperation}>
-            <Link
-              to="/auth/logout"
-              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                stroke-width="2.5"
-                stroke="currentColor"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 class="size-6"
@@ -96,13 +178,13 @@ function ChatSection() {
                   clip-rule="evenodd"
                 />
               </svg>
-              Logout
-            </Link>
-          </button>
-        </div>
-      </aside>
-    </>
-  );
+              Close Chat Section
+            </button>
+          </div>
+        </aside>
+      </>
+    );
+  }
 }
 
 export default ChatSection;

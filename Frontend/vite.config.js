@@ -14,6 +14,10 @@ export default defineConfig({
         target: 'http://localhost:10000',
         changeOrigin: true,
      },
+     '/sharing': {
+        target: 'http://localhost:10000',
+        changeOrigin: true,
+     },
      "/auth":{
       target: 'http://localhost:10000/',
       changeOrigin: true,

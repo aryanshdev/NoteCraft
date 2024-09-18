@@ -9,9 +9,12 @@ function MyAccount() {
   useEffect(() => {
     fetch("/app/account/getInfo")
       .then((res) => {
-        if (res.status == 401) {
-          navigate("/401");
-          return false;
+        switch (res.status) {
+          case 401:
+            navigate("/401");
+            return false;
+          case 500:
+            navigate("/500");
         }
         return res.json();
       })
@@ -50,15 +53,16 @@ function MyAccount() {
           {/* Functions */}
           <div className="flex flex-col gap-3 items-start ">
             <h4 className="text-xl font-semibold">Reset Account</h4>
-            Resetting Account will delete all your Notes and NoteGroups, giving you a fresh start.
+            Resetting Account will delete all your Notes and NoteGroups, giving
+            you a fresh start.
             <button className="bg-red-600 text-white font-semibold px-4 py-2 rounded-md">
               Reset Account
             </button>
           </div>
-
           <div className="flex flex-col gap-3 items-start">
-            <h4 className="text-xl font-semibold">Delete Your Account </h4> 
-            Deleting Account will clear all your data and you won't be able to use NoteCraft. To use it again, you'll have to Sign-up again.
+            <h4 className="text-xl font-semibold">Delete Your Account </h4>
+            Deleting Account will clear all your data and you won't be able to
+            use NoteCraft. To use it again, you'll have to Sign-up again.
             <button className="bg-red-600 text-white font-semibold px-4 py-2 rounded-md">
               Delete Account
             </button>
