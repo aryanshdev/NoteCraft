@@ -13,7 +13,6 @@ const NoteDisplay = ({
   delFunction,
   aiChatFunction,
   color,
-  isSharingMode,
 }) => {
   const [title, setTitle] = useState(_title);
   const [description, setDescription] = useState(_description);
@@ -158,7 +157,7 @@ const NoteDisplay = ({
         </button>
 
         {/* AI BUTTON */}
-        <button onClick={aiChatFunction}>
+        <button onClick={()=>{aiChatFunction(title+"|"+description)}}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

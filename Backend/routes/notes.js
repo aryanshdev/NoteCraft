@@ -53,6 +53,24 @@ router.post("/new", async (req, res) => {
     });
 });
 
+router.post("/update", async (req, res) => {
+  if (req.body.title && req.body.description) {
+    notesCol
+      .updateOne(
+        {
+          ownerID: req.user.loggedinUserUUID,
+          groupID: req.body.gid,
+          noteID: req.body.nid,
+        },
+        { $set: { title: req.body.title, body: req.body.description } }
+      )
+      .then(() => res.sendStatus(200))
+      .catch(() => res.sendStatus(500));
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 router.delete("/deleteNote", async (req, res) => {
   notesCol
     .deleteOne({

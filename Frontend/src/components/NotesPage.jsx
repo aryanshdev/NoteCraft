@@ -6,6 +6,7 @@ import NotesPageSideBar from "./NotesPageSideBar.jsx";
 import NoteDisplay from "./NoteDisplay.jsx";
 import LoaderDisplay from "../LoaderDisplay.jsx";
 import ChatSection from "./ChatSection.jsx";
+import { socket } from "../lib/socket.js";
 
 function NotesPage() {
   const [userNotes, setUserNotes] = useState([]);
@@ -23,7 +24,6 @@ function NotesPage() {
       body: JSON.stringify({ id: gid.groupID }),
     })
       .then((res) => {
-        console.log(res);
         if (res.status == 401) {
           navigate("/401");
           return false;
@@ -43,15 +43,15 @@ function NotesPage() {
       });
   }, [navigate]);
 
-  const updateGroupInfo = useCallback(
+  const updateNote = useCallback(
     async (event) => {
       var ele = event.target.parentElement.parentElement.parentElement;
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("/app/notesgroup/update?id=" + id, {
+      const res = await fetch("/app/notes/update", {
         method: "POST",
-        body: JSON.stringify({ title: title, description: desc }), // Use JSON.stringify
+        body: JSON.stringify({ title: title, description: desc , gid: gid.groupID , nid : id }), // Use JSON.stringify
         headers: {
           "Content-Type": "application/json",
         },
@@ -94,6 +94,18 @@ function NotesPage() {
       return false;
     }
   };
+
+
+  const showChatAndAsk = (task) => {
+    document
+      .getElementById("chatSectionContainer")
+      .classList.toggle("-right-[100vw]");
+    document
+      .getElementById("chatSectionContainer")
+      .classList.toggle("md:right-0");
+    socket.emit("ASKAI", task);
+  };
+
   const showChatSection = () => {
     document
       .getElementById("chatSectionContainer")
@@ -109,19 +121,21 @@ function NotesPage() {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         let url = `https://98nhd68r-5173.inc1.devtunnels.ms/shared/${res["user"]}/${gid.groupID}`;
         alert(url);
       });
   };
   const addNewNote = (title, bodyContent, newNoteID) => {
-    setUserNotes((userNotes) => [...userNotes, {
-      body: bodyContent,
-      favourite: false,
-      groupID: gid.groupID,
-      noteID: newNoteID,
-      title: title
-    }])
+    setUserNotes((userNotes) => [
+      ...userNotes,
+      {
+        body: bodyContent,
+        favourite: false,
+        groupID: gid.groupID,
+        noteID: newNoteID,
+        title: title,
+      },
+    ]);
   };
   const deleteNoteGroup = async (noteID) => {
     const deleteInnerFunc = async (inpid) => {
@@ -206,11 +220,11 @@ function NotesPage() {
                   _title={note.title}
                   _description={note.body}
                   id={note.noteID}
-                  updateFunc={updateGroupInfo}
+                  updateFunc={updateNote}
                   isFav={note.favourite}
                   favFunction={favouriteSet}
                   delFunction={deleteNoteGroup}
-                  aiChatFunction={showChatSection}
+                  aiChatFunction={showChatAndAsk}
                   color={
                     ["orange", "blue", "yellow", "green", "pink"][
                       Math.floor(Math.random() * 5)

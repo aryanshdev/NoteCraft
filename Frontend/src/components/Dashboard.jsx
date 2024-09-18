@@ -44,9 +44,9 @@ function Dashboard() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("/app/notesgroup/update?id=" + id, {
+      const res = await fetch("/app/notesgroup/update", {
         method: "POST",
-        body: JSON.stringify({ title: title, description: desc }), // Use JSON.stringify
+        body: JSON.stringify({ title: title, description: desc , id : id}), // Use JSON.stringify
         headers: {
           "Content-Type": "application/json",
         },

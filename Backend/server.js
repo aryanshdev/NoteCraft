@@ -10,9 +10,13 @@ const GitHubStrategy = require("passport-github2");
 const { usersCol } = require("./db/dbconnection");
 const ShortUniqueId = require("short-unique-id");
 const { router: authRouter, ensureAuthenticated } = require("./routes/auth");
-const sharingRouter = require("./routes/Sharing")
+const sharingRouter = require("./routes/Sharing");
 const helmet = require("helmet");
 const chatServer = require("http").createServer(app);
+
+const Groq = require('groq-sdk');
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
 
 const { Server } = require("socket.io");
 const io = new Server(chatServer, {
@@ -30,14 +34,28 @@ io.on("connection", (socket) => {
     socket.emit("SYSTEM", "Welcome !!"); // to user joining the room
     socket.to(roomID).emit("SYSTEM", `${name} has joined the room`); // to everyone else
   });
-  socket.on("msgToServer", (message) => {
-    console.log(message);
+  socket.on("UserToServer", (message) => {
     socket
       .to(socket.roomID)
       .emit("USER", { message: message, name: socket.userName }); // to user joining the room
   });
+  socket.on("ASKAI", async (message) => {
+    socket.emit("SELF", "@NC-AI " + message.split("|")[1]); // to user joining the room
+    socket
+      .to(socket.roomID)
+      .emit("AIQUESTION", {
+        message: "@NC-AI " + message.split("|")[1],
+        name: socket.userName,
+      });
+      let reply = await AskAIGroq(message)
+      io
+      .to(socket.roomID)
+      .emit("AIMessage", {
+        message:  reply,
+      });
+  });
 });
-io.on("disconnection",()=>{})
+io.on("disconnection", () => {});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -133,5 +151,32 @@ app.listen(10000, () => {
 });
 
 app.use("/auth", authRouter);
-app.use("/sharing", sharingRouter)
+app.use("/sharing", sharingRouter);
 app.use("/app", ensureAuthenticated, appRoute);
+
+async function AskAIGroq(input) {
+  const chatCompletion = await groq.chat.completions.create({
+    "messages": [
+      {
+        "role": "system",
+        "content": "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their \"TITLE|DESCRIPTION\" inputs. Respond only to related follow-up queries; ignore unrelated questions. answer In short"
+      },
+      {
+        "role": "user",
+        "content": input
+      }
+    ],
+    "model": "llama3-8b-8192",
+    "temperature": 1,
+    "max_tokens": 1024,
+    "top_p": 1,
+    "stream": true,
+    "stop": null
+  });
+  let reply = ""
+  for await (const chunk of chatCompletion) {
+    reply += (chunk.choices[0]?.delta?.content || '');
+  }
+  return reply;
+}
+

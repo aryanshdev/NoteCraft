@@ -13,7 +13,7 @@ router.post("/update", async (req, res) => {
   if (req.body.title && req.body.description) {
     notesGroupCol
       .updateOne(
-        { ownerID: req.user.loggedinUserUUID, groupID: req.query.id },
+        { ownerID: req.user.loggedinUserUUID, groupID: req.body.id },
         { $set: { title: req.body.title, description: req.body.description } }
       )
       .then(() => res.sendStatus(200))

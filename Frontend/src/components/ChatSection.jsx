@@ -3,6 +3,7 @@ import { socket } from "../lib/socket";
 import SystemMSG from "./SystemMSG";
 import UserMSG from "./UserMSG";
 import { useNavigate, Link } from "react-router-dom";
+import AIMSG from "./AIMSG.jsx";
 
 function ChatSection({ id, openFunction }) {
   const [messages, setMessages] = useState([]);
@@ -38,6 +39,23 @@ function ChatSection({ id, openFunction }) {
         ["USER", msgObject.message, msgObject.name],
       ]);
     });
+    socket.on("ServerToUser", (message) => {
+      socket.emit("UserToServer", inpEle.value);
+      setMessages((prevMessages) => [...prevMessages, ["SELF", inpEle.value]]);
+    });
+    socket.on("AIQUESTION", (msgObject) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        ["USER", msgObject.message, msgObject.name],
+      ]);
+    });
+
+    socket.on("AIMessage", (msgObject) => {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        ["AI", msgObject.message],
+      ]);
+    });
   }, []);
 
   const showHideSideBar = () => {
@@ -45,9 +63,13 @@ function ChatSection({ id, openFunction }) {
   };
 
   const sendMessage = () => {
-    const inpEle = document.getElementById("chatMSG");
-    socket.emit("msgToServer", inpEle.value);
-    setMessages((prevMessages) => [...prevMessages, ["SELF", inpEle.value]]);
+    const inpEleVal = document.getElementById("chatMSG").value;
+    if (!inpEleVal) {
+      return;
+    }
+    socket.emit("UserToServer", inpEleVal);
+    setMessages((prevMessages) => [...prevMessages, ["SELF", inpEleVal]]);
+    document.getElementById("chatMSG").value = "";
   };
   const showChatSectionMobile = () => {
     document
@@ -120,6 +142,8 @@ function ChatSection({ id, openFunction }) {
                         sending={true}
                       ></UserMSG>
                     );
+                  case "AI":
+                    return <AIMSG msg={msgItem[1]}></AIMSG>;
                 }
               })}
             </div>
@@ -130,6 +154,9 @@ function ChatSection({ id, openFunction }) {
                 type="text"
                 className=" w-full bg-white h-fit bg-opacity-5 px-4 py-2 outline-none focus:outline-none rounded-md"
                 id="chatMSG"
+                onKeyDown={(key) => {
+                  key.key == "Enter" ? sendMessage() : null;
+                }}
               />
               <button id="sendButton" onClick={sendMessage}>
                 <svg

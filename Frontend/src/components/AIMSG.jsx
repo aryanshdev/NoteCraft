@@ -1,12 +1,11 @@
-function UserMSG({ msg, name = "User", sending = false }) {
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+function AIMSG({ msg }) {
+  console.log(msg);
   return (
     <>
       <div className="w-full h-fit rounded-2xl flex flex-col text-white text-center bg-opacity-35 gap-2">
-        <div
-          className={`flex ${
-            sending ? "flex-row-reverse" : "flex-row"
-          } text-sm font-bold text-gray-400 flex-1 items-center gap-2`}
-        >
+        <div className="flex flex-row text-sm font-bold text-gray-400 flex-1 items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -19,20 +18,19 @@ function UserMSG({ msg, name = "User", sending = false }) {
               clip-rule="evenodd"
             />
           </svg>
-          {name}
+          NodeCraft AI
         </div>
-        <div className="bg-white bg-opacity-10 text-left flex-1 text-base px-3 py-2 rounded-lg">
-          {String(msg).startsWith("@NC-AI") ? (
-            <>
-              <span className="bg-indigo-700 px-1 py-[2px] font-bold rounded-lg">@NC-AI</span> {String(msg).replace("@NC-AI ", "")}
-            </>
-          ) : (
-            msg
-          )}
+        <div className="bg-white bg-opacity-10 text-left flex-1 text-base px-3 py-2 rounded-lg break-words AICHAT">
+          <ReactMarkdown
+            className="w-full break-words"
+            remarkPlugins={[remarkGfm]}
+          >
+            {msg}
+          </ReactMarkdown>
         </div>
       </div>
     </>
   );
 }
 
-export default UserMSG;
+export default AIMSG;
