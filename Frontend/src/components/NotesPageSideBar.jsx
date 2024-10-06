@@ -15,6 +15,8 @@ function AppBar({shareFunction}) {
       .classList.toggle("-right-[100vw]");
   };
 
+  const setAlertMode = ()=>{}
+
   return (
     <>
       <div className="flex flex-row h-screen w-fit m-0 p-0 text-lg md:text-xl">
@@ -26,7 +28,7 @@ function AppBar({shareFunction}) {
             aria-controls="default-sidebar"
             type="button"
             onClick={showSideBar}
-            className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-400 rounded-lg sm:hidden"
+            className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-400 rounded-lg md:hidden"
           >
             <span className="sr-only">Open sidebar</span>
             <svg
@@ -51,7 +53,7 @@ function AppBar({shareFunction}) {
             aria-controls="default-sidebar"
             type="button"
             onClick={showChatSectionMobile}
-            className="inline-flex items-center mt-2 px-4 text-sm text-gray-300 rounded-lg sm:hidden"
+            className="inline-flex items-center mt-2 px-4 text-sm text-gray-300 rounded-lg md:hidden"
           >
             {" "}
             <svg
@@ -88,22 +90,25 @@ function AppBar({shareFunction}) {
                 />
               </svg>
             </button>
-            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="3"
-                stroke="currentColor"
-                class="size-6"
+            
+
+            
+            <div className="w-full text-left">
+              <Link
+                to="/dashboard"
+                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-              New Note
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="size-6"
+                >
+                  <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                  <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+                </svg>
+                Dashboard
+              </Link>
             </div>
 
             <div className="w-full text-left">
@@ -141,23 +146,29 @@ function AppBar({shareFunction}) {
               </svg>
               Share Notes
             </div>
-
-            <div className="w-full text-left">
-              <Link
-                to="/dashboard"
-                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center sidemenu-active"
+            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center" onClick={()=>{
+              document.getElementById("addNotButton").click();
+              showSideBar();
+            }}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="3"
+                stroke="currentColor"
+                class="size-6"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="size-6"
-                >
-                  <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
-                  <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
-                </svg>
-                Dashboard
-              </Link>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              New Note
+            </div>
+            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center text-lg">
+             <input type="checkbox" name="alertMode" className="bg-[#121212] checked:bg-green-500 w-4 h-4 rounded-lg" onChange={setAlertMode}/>
+              Update PopUps
             </div>
           </div>
         </aside>

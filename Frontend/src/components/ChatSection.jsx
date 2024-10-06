@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { socket } from "../lib/socket";
 import SystemMSG from "./SystemMSG";
 import UserMSG from "./UserMSG";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import AIMSG from "./AIMSG.jsx";
 
 function ChatSection({ id, openFunction }) {
   const [messages, setMessages] = useState([]);
-  const [WSCon, setWSCon] = useState(null);
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
@@ -29,6 +29,11 @@ function ChatSection({ id, openFunction }) {
   }, []);
 
   useEffect(() => {
+    socket.on("shared_EDITFAV", (name,nid) => {
+      toast(name + " Changed Favourities");
+      document.getElementById(nid).querySelectorAll("svg")[1].setAttribute("fill",(document.getElementById(nid).querySelectorAll("svg")[1].getAttribute("fill") == "#FFD700" ? "white" : "#FFD700") )
+    });
+
     socket.on("SYSTEM", (msg) => {
       setMessages((prevMessages) => [...prevMessages, ["SYSTEM", msg]]);
     });
@@ -43,6 +48,7 @@ function ChatSection({ id, openFunction }) {
       socket.emit("UserToServer", inpEle.value);
       setMessages((prevMessages) => [...prevMessages, ["SELF", inpEle.value]]);
     });
+
     socket.on("AIQUESTION", (msgObject) => {
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -68,9 +74,16 @@ function ChatSection({ id, openFunction }) {
       return;
     }
     socket.emit("UserToServer", inpEleVal);
+
     setMessages((prevMessages) => [...prevMessages, ["SELF", inpEleVal]]);
     document.getElementById("chatMSG").value = "";
+
+    if (String(inpEleVal).startsWith("@NC-AI")) {
+      console.log("sdf");
+      socket.emit("ASKAI", inpEleVal.slice(6));
+    }
   };
+
   const showChatSectionMobile = () => {
     document
       .getElementById("chatSectionContainer")
@@ -129,21 +142,26 @@ function ChatSection({ id, openFunction }) {
               {messages.map((msgItem, index) => {
                 switch (msgItem[0]) {
                   case "SYSTEM":
-                    return <SystemMSG msg={msgItem[1]}></SystemMSG>;
+                    return <SystemMSG key={index} msg={msgItem[1]}></SystemMSG>;
                   case "USER":
                     return (
-                      <UserMSG msg={msgItem[1]} name={msgItem[2]}></UserMSG>
+                      <UserMSG
+                        key={index}
+                        msg={msgItem[1]}
+                        name={msgItem[2]}
+                      ></UserMSG>
                     );
                   case "SELF":
                     return (
                       <UserMSG
+                        key={index}
                         msg={msgItem[1]}
                         name={name}
                         sending={true}
                       ></UserMSG>
                     );
                   case "AI":
-                    return <AIMSG msg={msgItem[1]}></AIMSG>;
+                    return <AIMSG key={index} msg={msgItem[1]}></AIMSG>;
                 }
               })}
             </div>

@@ -41,7 +41,7 @@ function AppBar() {
             aria-controls="default-sidebar"
             type="button"
             onClick={showHideSideBar}
-            className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden"
+            className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg md:hidden"
           >
             <span className="sr-only">Open sidebar</span>
             <svg
@@ -62,7 +62,7 @@ function AppBar() {
 
         <aside
           id="sidebar"
-          className="z-20 xl:w-[17.5vw] w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
+          className="z-20 xl:w-[17.5vw] w-[20vw] md:w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
         >
           <div className="fixed md:relative dark:bg-[#2c2c2c] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl">
             <button onClick={showHideSideBar} className="md:hidden">
@@ -79,26 +79,7 @@ function AppBar() {
                 />
               </svg>
             </button>
-            <div
-              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
-              onClick={clickOperation}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="3"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-              New Board
-            </div>
+           
             <button className="w-full text-left " onClick={clickOperation}>
               <Link
                 to="/dashboard"

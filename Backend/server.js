@@ -13,15 +13,16 @@ const { router: authRouter, ensureAuthenticated } = require("./routes/auth");
 const sharingRouter = require("./routes/Sharing");
 const helmet = require("helmet");
 const chatServer = require("http").createServer(app);
-
-const Groq = require('groq-sdk');
+const cors = require("cors");
+const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
 
 const { Server } = require("socket.io");
 const io = new Server(chatServer, {
   cors: {
-    origin: "*",
+    origin: "*", // Allow all origins or specify a list of allowed origins
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
   },
 });
 
@@ -39,20 +40,21 @@ io.on("connection", (socket) => {
       .to(socket.roomID)
       .emit("USER", { message: message, name: socket.userName }); // to user joining the room
   });
+
+  socket.on("shared_EDITFAV", (loggedName,nid) => {
+    socket.broadcast.emit("shared_EDITFAV", loggedName,nid);
+  });
+
   socket.on("ASKAI", async (message) => {
     socket.emit("SELF", "@NC-AI " + message.split("|")[1]); // to user joining the room
-    socket
-      .to(socket.roomID)
-      .emit("AIQUESTION", {
-        message: "@NC-AI " + message.split("|")[1],
-        name: socket.userName,
-      });
-      let reply = await AskAIGroq(message)
-      io
-      .to(socket.roomID)
-      .emit("AIMessage", {
-        message:  reply,
-      });
+    socket.to(socket.roomID).emit("AIQUESTION", {
+      message: "@NC-AI " + message.split("|")[1],
+      name: socket.userName,
+    });
+    let reply = await AskAIGroq(message);
+    io.to(socket.roomID).emit("AIMessage", {
+      message: reply,
+    });
   });
 });
 io.on("disconnection", () => {});
@@ -67,6 +69,14 @@ app.use(
   })
 );
 app.use(helmet());
+
+app.use(
+  cors({
+    origin: "*", // Allow all origins, or replace with specific origins if necessary
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
 
 idgen = new ShortUniqueId({ length: 15 });
 
@@ -84,6 +94,7 @@ passport.use(
         return done(null, {
           userName: userData.name,
           loggedinUserUUID: userData.uuid,
+          loggedUserEmail: profile._json.email,
         });
       } else {
         let id = idgen.rnd();
@@ -96,6 +107,7 @@ passport.use(
         return done(null, {
           userName: profile._json.name,
           loggedinUserUUID: id,
+          loggedUserEmail: profile._json.email,
         });
       }
     }
@@ -117,6 +129,8 @@ passport.use(
         return done(null, {
           userName: userData.name,
           loggedinUserUUID: userData.uuid,
+
+          loggedUserEmail: profile.emails[0].value,
         });
       } else {
         let id = idgen.rnd();
@@ -129,6 +143,7 @@ passport.use(
         return done(null, {
           userName: profile._json.name,
           loggedinUserUUID: id,
+          loggedUserEmail: profile.emails[0].value,
         });
       }
     }
@@ -156,27 +171,29 @@ app.use("/app", ensureAuthenticated, appRoute);
 
 async function AskAIGroq(input) {
   const chatCompletion = await groq.chat.completions.create({
-    "messages": [
+    messages: [
       {
-        "role": "system",
-        "content": "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their \"TITLE|DESCRIPTION\" inputs. Respond only to related follow-up queries; ignore unrelated questions. answer In short"
+        role: "system",
+        content:
+          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their \"TITLE|DESCRIPTION\" inputs or a follow up question. Respond only to related follow-up queries; stictly ignore unrelated questions. answer In short - prefer pointwise style, if you think it's useless or some link or anything that you can't help with, reject it simply in the shortest message possible",
       },
       {
-        "role": "user",
-        "content": input
-      }
+        role: "user",
+        content: input,
+      },
     ],
-    "model": "llama3-8b-8192",
-    "temperature": 1,
-    "max_tokens": 1024,
-    "top_p": 1,
-    "stream": true,
-    "stop": null
+    model: "llama3-8b-8192",
+    temperature: 1,
+    max_tokens: 1024,
+    top_p: 1,
+    stream: true,
+    stop: null,
   });
-  let reply = ""
+  let reply = "";
   for await (const chunk of chatCompletion) {
-    reply += (chunk.choices[0]?.delta?.content || '');
+    reply += chunk.choices[0]?.delta?.content || "";
   }
   return reply;
 }
 
+function AlertOthersOnShared_Favourite() {}

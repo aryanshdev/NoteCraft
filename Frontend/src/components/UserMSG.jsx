@@ -1,4 +1,5 @@
 function UserMSG({ msg, name = "User", sending = false }) {
+
   return (
     <>
       <div className="w-full h-fit rounded-2xl flex flex-col text-white text-center bg-opacity-35 gap-2">
@@ -24,7 +25,10 @@ function UserMSG({ msg, name = "User", sending = false }) {
         <div className="bg-white bg-opacity-10 text-left flex-1 text-base px-3 py-2 rounded-lg">
           {String(msg).startsWith("@NC-AI") ? (
             <>
-              <span className="bg-indigo-700 px-1 py-[2px] font-bold rounded-lg">@NC-AI</span> {String(msg).replace("@NC-AI ", "")}
+              <span className="bg-indigo-700 px-1 py-[2px] font-bold rounded-lg">
+                @NC-AI
+              </span>{" "}
+              {String(msg).slice(6)}
             </>
           ) : (
             msg

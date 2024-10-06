@@ -150,14 +150,14 @@ function Dashboard() {
             " "
           )}
 
-          {userNotes.map((note, index) => (
+          {userNotes.map((noteGroup, index) => (
             <NoteGroupDisplay
               updateFunc={updateGroupInfo}
-              id={note.groupID}
-              key={note.groupID}
-              _title={note.title}
-              _description={note.description}
-              isFav={note.favourite}
+              id={noteGroup.groupID}
+              key={noteGroup.groupID}
+              _title={noteGroup.title}
+              _description={noteGroup.description}
+              isFav={noteGroup.favourite}
               favFunction={favouriteSet}
               delFunction={deleteNoteGroup}
               color={

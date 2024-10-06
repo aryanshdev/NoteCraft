@@ -5,7 +5,7 @@ const { notesGroupCol } = require("../db/dbconnection");
 const { deleteAllOfGroup } = require("./notes");
 
 router.get("/getAll", async (req, res) => {
-  var cur = await notesGroupCol.find({ ownerID: req.user.loggedinUserUUID });
+  var cur = notesGroupCol.find({ ownerID: req.user.loggedinUserUUID });
   res.send(await cur.toArray());
 });
 
@@ -33,6 +33,7 @@ router.post("/new", async (req, res) => {
         title: req.body.title,
         description: req.body.description,
         favourite: false,
+        editors: [],
       })
       .then(() => {
         req.session.userGIDs = Array.from(req.session.userGIDs).concat([id]);
@@ -43,6 +44,53 @@ router.post("/new", async (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+
+router.post("/addEditor", async (req, res) => {
+  notesGroupCol
+    .updateOne(
+      {
+        ownerID: req.user.loggedinUserUUID,
+        groupID: req.body.gid,
+      },
+      { $push: { editors: req.body.email } }
+    )
+    .then(() => res.sendStatus(200))
+    .catch(() => res.sendStatus(500));
+});
+
+router.get("/getEditors/:gid", async (req, res) => {
+  try {
+    var data = await notesGroupCol
+      .find(
+        {
+          ownerID: req.user.loggedinUserUUID,
+          groupID: req.params.gid,
+        },
+        { projection: { editors: 1, _id: 0 } }
+      )
+      .toArray();
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
+router.delete("/removeEditor", async (req, res) => {
+  notesGroupCol
+    .updateOne(
+      {
+        ownerID: req.user.loggedinUserUUID,
+        groupID: req.body.gid,
+      },
+      { $pull: { editors: req.body.email } }
+    )
+    .then(() => res.sendStatus(200))
+    .catch((e) => {
+      res.sendStatus(500);
+    });
 });
 
 router.post("/editFavourite", async (req, res) => {

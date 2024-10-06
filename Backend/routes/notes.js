@@ -20,7 +20,6 @@ router.get("/getSharingInfo", async (req, res) => {
 });
 
 router.post("/editFavourite", async (req, res) => {
-  console.log(req.body);
   notesCol
     .updateOne(
       {
@@ -35,22 +34,27 @@ router.post("/editFavourite", async (req, res) => {
 });
 
 router.post("/new", async (req, res) => {
-  id = idgen.rnd();
-  notesCol
-    .insertOne({
-      ownerID: req.user.loggedinUserUUID,
-      groupID: req.body.gid,
-      title: req.body.title,
-      body: req.body.description,
-      favourite: false,
-      noteID: id,
-    })
-    .then(() => {
-      res.status(200).send(id);
-    })
-    .catch(() => {
-      res.sendStatus(500);
-    });
+  if(req.body.title && req.body.description){
+    id = idgen.rnd();
+    notesCol
+      .insertOne({
+        ownerID: req.user.loggedinUserUUID,
+        groupID: req.body.gid,
+        title: req.body.title,
+        body: req.body.description,
+        favourite: false,
+        noteID: id,
+      })
+      .then(() => {
+        res.status(200).send(id);
+      })
+      .catch(() => {
+        res.sendStatus(500);
+      });
+  }
+  else{
+    res.sendStatus(400)
+  }
 });
 
 router.post("/update", async (req, res) => {
@@ -88,7 +92,6 @@ async function deleteAllOfGroup(loggedinUserUUID, id) {
   let ans = (
     await notesCol.deleteMany({ ownerID: loggedinUserUUID, groupID: id })
   ).acknowledged;
-  console.log(ans);
   return ans;
 }
 

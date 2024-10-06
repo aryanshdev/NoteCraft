@@ -8,11 +8,11 @@ function Display401() {
           401{" "}
           <span className="text-3xl block mt-2 text-red-500">Unauthorized</span>
         </h1>
-       You Session Has Expired. Please Re-Login To Conitnue Using NoteCraft
+        You Session Has Expired. Please Re-Login To Conitnue Using NoteCraft
         <Link to={"/login"}>
-        <button className="bg-white px-4 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md">
-          Re-Login
-        </button>
+          <button className="bg-white px-4 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md">
+            Re-Login
+          </button>
         </Link>
       </div>
     </>

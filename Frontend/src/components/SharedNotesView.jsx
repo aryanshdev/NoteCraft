@@ -1,15 +1,17 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { socket } from "../lib/socket.js";
 import CreateNote from "./CreateNewNote";
 import { Link } from "react-router-dom";
 import NoteDisplay from "./NoteDisplay.jsx";
 import LoaderDisplay from "../LoaderDisplay.jsx";
 import ChatSection from "./ChatSection.jsx";
-
+import AppBar from "./AppBar.jsx";
 function SharedNotes() {
   const [userNotes, setUserNotes] = useState([]);
   const [loggedName, setLoggedName] = useState({});
+  const [isEditor, setIsEditor] = useState(false);
   const getids = useParams();
   const navigate = useNavigate();
 
@@ -52,7 +54,8 @@ function SharedNotes() {
         return res.json();
       })
       .then((res) => {
-        setUserNotes(res);
+        setUserNotes(res["notes"]);
+        setIsEditor(res["editor"]);
         setLoading(false);
       })
       .catch((error) => {
@@ -60,15 +63,21 @@ function SharedNotes() {
       });
   }, [navigate]);
 
-  const updateGroupInfo = useCallback(
+  const updateNoteInfo = useCallback(
     async (event) => {
       var ele = event.target.parentElement.parentElement.parentElement;
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("/app/notesgroup/update?id=" + id, {
+      const res = await fetch("/sharing/updateShared", {
         method: "POST",
-        body: JSON.stringify({ title: title, description: desc }), // Use JSON.stringify
+        body: JSON.stringify({
+          title: title,
+          description: desc,
+          gid: getids.groupID,
+          uid: getids.userID,
+          nid: id,
+        }), // Use JSON.stringify
         headers: {
           "Content-Type": "application/json",
         },
@@ -94,7 +103,7 @@ function SharedNotes() {
     let res = await fetch("/sharing/editFavouriteShared", {
       body: JSON.stringify({
         gid: getids.groupID,
-        uid : getids.userID,
+        uid: getids.userID,
         nid: noteID,
         favStatus: isFav,
       }),
@@ -106,12 +115,14 @@ function SharedNotes() {
 
     if (res.status == 200) {
       toast.success(isFav ? "Favourite Added" : "Favourite Removed");
+      socket.emit("shared_EDITFAV", loggedName, noteID)
       return true;
     } else {
       toast.error("Something Went Wrong");
       return false;
     }
   };
+
   const showChatSection = () => {
     document
       .getElementById("chatSectionContainer")
@@ -121,15 +132,29 @@ function SharedNotes() {
       .classList.toggle("md:right-0");
   };
 
+  
+  const showChatAndAsk = (task) => {
+    document
+      .getElementById("chatSectionContainer")
+      .classList.remove("-right-[100vw]");
+    document
+      .getElementById("chatSectionContainer")
+      .classList.add("md:right-0");
+    socket.emit("ASKAI", task);
+  };
   const loginWarning = () => {
     toast.warning("You Need To Login To Make Changes");
   };
-
-  const deleteNoteGroup = async (groupID) => {
+  const editorWarning = () => {
+    toast.warning("Ask Note Group Owner To Add You As Editor ");
+  };
+  const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("/app/notesgroup/deleteNoteGroup", {
+      await fetch("/sharing/deleteShared", {
         body: JSON.stringify({
-          id: inpid,
+          gid: getids.groupID,
+          uid: getids.userID,
+          nid: inpid,
         }),
         method: "DELETE",
         headers: {
@@ -137,8 +162,9 @@ function SharedNotes() {
         },
       }).then((res) => {
         if (res.status == 200) {
-          toast.success("Note Group Deleted.");
-          setUserNotes(userNotes.filter((group) => group.groupID != inpid));
+          toast.success("Note Deleted.");
+
+          setUserNotes(userNotes.filter((note) => note.noteID !== inpid));
         }
       });
     };
@@ -149,7 +175,7 @@ function SharedNotes() {
         <button
           className="bg-gray-800 py-2 my-2 px-3"
           onClick={() => {
-            deleteInnerFunc(groupID);
+            deleteInnerFunc(nid);
             toast.dismiss(id);
           }}
         >
@@ -190,7 +216,8 @@ function SharedNotes() {
           transition:Bounce
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
-        <div className="flex flex-row overflow-x-clip w-screen ">
+
+        <div className="flex flex-row overflow-x-clip w-auto ">
           <header className=" dark:bg-[#2c2c2c] h-auto flex fixed dark:text-white text-black py-2 px-5 w-full md:hidden flex-row ">
             {/* AI CHAT BUTTON */}
             <p className="font-semibold my-auto text-lg"> NodeCraft</p>
@@ -199,7 +226,7 @@ function SharedNotes() {
               data-drawer-toggle="default-sidebar"
               aria-controls="default-sidebar"
               type="button"
-              onClick={() => {}}
+              onClick={showChatSection}
               className="inline-flex items-center m-1 px-4 text-sm text-gray-300 rounded-lg sm:hidden ml-auto mr-0"
             >
               {" "}
@@ -224,10 +251,25 @@ function SharedNotes() {
 
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4">
               {loggedName ? (
-                <CreateNote
-                  already={userNotes.length}
-                  getids={getids.groupID}
-                ></CreateNote>
+                isEditor ? (
+                  <CreateNote
+                    already={userNotes.length}
+                    getids={getids.groupID}
+                    navigator={navigate}
+                  ></CreateNote>
+                ) : (
+                  <div
+                    className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10 text-center flex items-center gap-6 flex-col justify-center`}
+                  >
+                    <h2 className="text-lg font-semibold m-auto">
+                      You Need To Be An Editor To Create New Notes
+                    </h2>
+                    <p className="h-auto m-auto">
+                      {" "}
+                      Ask Note Group Owner To Add Your Email In Editors List
+                    </p>
+                  </div>
+                )
               ) : (
                 <div
                   className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10 text-center flex items-center gap-7 flex-col justify-center`}
@@ -247,11 +289,30 @@ function SharedNotes() {
                   _title={note.title}
                   _description={note.body}
                   id={note.noteID}
-                  updateFunc={loggedName ? updateGroupInfo : loginWarning}
+                  key={note.noteID}
+                  updateFunc={
+                    loggedName
+                      ? isEditor
+                        ? updateNoteInfo
+                        : editorWarning
+                      : loginWarning
+                  }
                   isFav={note.favourite}
-                  favFunction={loggedName ? favouriteSet : loginWarning}
-                  delFunction={loggedName ? deleteNoteGroup : loginWarning}
-                  aiChatFunction={showChatSection}
+                  favFunction={
+                    loggedName
+                      ? isEditor
+                        ? favouriteSet
+                        : editorWarning
+                      : loginWarning
+                  }
+                  delFunction={
+                    loggedName
+                      ? isEditor
+                        ? deleteNote
+                        : editorWarning
+                      : loginWarning
+                  }
+                  aiChatFunction={showChatAndAsk}
                   color={
                     ["orange", "blue", "yellow", "green", "pink"][
                       Math.floor(Math.random() * 5)

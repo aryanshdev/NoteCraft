@@ -46,7 +46,6 @@ router.get(
         )
         .toArray()
     ).map((ele) => ele.groupID);
-    console.log(req.session.userGIDs);
     req.session.save();
   }
 );

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 function CreateNote(props) {
   const showHideAddArea = () => {
     addMode.classList.toggle("hidden");
@@ -24,6 +26,8 @@ function CreateNote(props) {
           props.addNewNote(document.getElementById("newTitle").value,document.getElementById("newDesc").value, await res.text())
         } else if (res.status == 400) {
           toast.warning("Check Inputs And Try Again");
+        }else if (res.status == 401) {
+          props.navigator("/401")
         } else {
           toast.error("Some Error Occured");
         }
@@ -41,6 +45,7 @@ function CreateNote(props) {
       >
         <div
           className=" rounded-full border-2 border-dotted w-24 h-24 flex justify-center align-middle items-center hover:bg-white hover:bg-opacity-10"
+          id="addNotButton"
           onClick={showHideAddArea}
         >
           <svg
@@ -74,9 +79,12 @@ function CreateNote(props) {
               placeholder="Title"
               id="newTitle"
               className="focus:outline-none outline-none bg-transparent border-b-[1px] border-solid border-gray-500 focus:border-white transition-all duration-150  placeholder:text-gray-300 text-xl w-full mb-2"
+              autoFocus={true}
+              required
             />
 
             <textarea
+            required
               type="text"
               id="newDesc"
               placeholder="Description"

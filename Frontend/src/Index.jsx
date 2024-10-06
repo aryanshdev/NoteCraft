@@ -5,10 +5,11 @@ import WordRotate from "./components/word-rotate";
 function Index() {
   return (
     <>
-      <header className="h-auto fixed top-2 mx-auto flex w-screen justify-center">
-        <div className="w-1/2 bg-white bg-opacity-10 backdrop-blur-sm px-4 py-2 rounded-full flex flex-row">
-          <img></img>
-          <ul className="flex flex-row gap-4 mr-0 ml-auto">
+      <header className="h-auto fixed top-2 mx-auto flex w-screen justify-center z-[100]">
+        <div className="w-4/5 md:w-1/2 bg-white bg-opacity-10 backdrop-blur-sm px-4 py-2 rounded-full flex flex-row z-[100] align-middle items-center font-semibold text-lg">
+          <img src="./notecraft-icon-transparent.png" className="h-10 w-10 md:h-12 md:w-12 -mt-2 -mb-1 mr-2"></img>
+          NoteCraft
+          <ul className="hidden md:flex flex-row gap-4 mr-0 ml-auto z-[100]">
             <li>
               <a href="#about">About</a>
             </li>
@@ -16,6 +17,9 @@ function Index() {
               <a href="/Dashboard">Dashboard</a>
             </li>
           </ul>
+          <button>
+
+          </button>
         </div>
       </header>
       <section className="flex justify-center align-middle flex-col md:flex-row h-screen overflow-hidden  relative ">

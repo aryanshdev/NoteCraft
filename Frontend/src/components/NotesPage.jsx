@@ -7,6 +7,7 @@ import NoteDisplay from "./NoteDisplay.jsx";
 import LoaderDisplay from "../LoaderDisplay.jsx";
 import ChatSection from "./ChatSection.jsx";
 import { socket } from "../lib/socket.js";
+import ShareNote_AddUsers from "./ShareNote_AddUsers.jsx";
 
 function NotesPage() {
   const [userNotes, setUserNotes] = useState([]);
@@ -51,7 +52,12 @@ function NotesPage() {
       var id = ele.getAttribute("id");
       const res = await fetch("/app/notes/update", {
         method: "POST",
-        body: JSON.stringify({ title: title, description: desc , gid: gid.groupID , nid : id }), // Use JSON.stringify
+        body: JSON.stringify({
+          title: title,
+          description: desc,
+          gid: gid.groupID,
+          nid: id,
+        }), // Use JSON.stringify
         headers: {
           "Content-Type": "application/json",
         },
@@ -95,16 +101,17 @@ function NotesPage() {
     }
   };
 
-
   const showChatAndAsk = (task) => {
     document
       .getElementById("chatSectionContainer")
-      .classList.toggle("-right-[100vw]");
+      .classList.remove("-right-[100vw]");
     document
       .getElementById("chatSectionContainer")
-      .classList.toggle("md:right-0");
+      .classList.add("md:right-0");
     socket.emit("ASKAI", task);
   };
+
+
 
   const showChatSection = () => {
     document
@@ -115,16 +122,10 @@ function NotesPage() {
       .classList.toggle("md:right-0");
   };
 
-  const shareNote = () => {
-    fetch("/app/notes/getSharingInfo")
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        let url = `https://98nhd68r-5173.inc1.devtunnels.ms/shared/${res["user"]}/${gid.groupID}`;
-        alert(url);
-      });
+  const showSharing = () => {
+    document.getElementById("shareOverlay").classList.toggle("!hidden");
   };
+
   const addNewNote = (title, bodyContent, newNoteID) => {
     setUserNotes((userNotes) => [
       ...userNotes,
@@ -137,7 +138,7 @@ function NotesPage() {
       },
     ]);
   };
-  const deleteNoteGroup = async (noteID) => {
+  const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
       await fetch("/app/notes/deleteNote", {
         body: JSON.stringify({
@@ -150,8 +151,8 @@ function NotesPage() {
         },
       }).then((res) => {
         if (res.status == 200) {
-          toast.success("Note Group Deleted.");
-          setUserNotes(userNotes.filter((group) => group.noteID != inpid));
+          toast.success("Note Deleted.");
+          setUserNotes(userNotes.filter((note) => note.noteID !== inpid));
         }
       });
     };
@@ -162,7 +163,7 @@ function NotesPage() {
         <button
           className="bg-gray-800 py-2 my-2 px-3"
           onClick={() => {
-            deleteInnerFunc(noteID);
+            deleteInnerFunc(nid);
             toast.dismiss(id);
           }}
         >
@@ -203,7 +204,11 @@ function NotesPage() {
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
         <div className="flex flex-row overflow-x-clip w-screen">
-          <NotesPageSideBar shareFunction={shareNote} />
+          <ShareNote_AddUsers
+            gid={gid.groupID}
+            closeFunction={showSharing}
+          ></ShareNote_AddUsers>
+          <NotesPageSideBar shareFunction={showSharing} />
           <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0">
             <h3 className="text-lg font-semibold">
               Take a look at your Notes or Create More Below
@@ -214,16 +219,18 @@ function NotesPage() {
                 already={userNotes.length}
                 gid={gid.groupID}
                 addNewNote={addNewNote}
+                navigator={navigate}
               ></CreateNote>
               {userNotes.map((note, index) => (
                 <NoteDisplay
                   _title={note.title}
                   _description={note.body}
                   id={note.noteID}
+                  key={note.noteID}
                   updateFunc={updateNote}
                   isFav={note.favourite}
                   favFunction={favouriteSet}
-                  delFunction={deleteNoteGroup}
+                  delFunction={deleteNote}
                   aiChatFunction={showChatAndAsk}
                   color={
                     ["orange", "blue", "yellow", "green", "pink"][
