@@ -86,7 +86,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
-        "https://98nhd68r-5173.inc1.devtunnels.ms/auth/google/process-login",
+        "https://notecraftai-xct5.onrender.com/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       userData = await usersCol.findOne({ email: profile._json.email });
@@ -120,7 +120,7 @@ passport.use(
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       callbackURL:
-        "https://98nhd68r-5173.inc1.devtunnels.ms/auth/github/process-login",
+        "https://notecraftai-xct5.onrender.com/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {

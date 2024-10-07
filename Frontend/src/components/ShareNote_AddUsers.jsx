@@ -63,7 +63,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `https://98nhd68r-5173.inc1.devtunnels.ms/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   };
@@ -73,7 +73,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `https://98nhd68r-5173.inc1.devtunnels.ms/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   }, []);
