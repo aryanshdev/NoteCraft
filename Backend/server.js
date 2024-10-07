@@ -20,8 +20,8 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const { Server } = require("socket.io");
 const io = new Server(chatServer, {
   cors: {
-    origin: "*", // Allow all origins or specify a list of allowed origins
-    methods: ["GET", "POST"],
+    origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.onrender.com/"], // Allow all origins or specify a list of allowed origins
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
 });
