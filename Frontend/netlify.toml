@@ -1,4 +1,21 @@
 [[redirects]]
+  from = "/app/:route"
+  to = "https://notecraftai-xct5.onrender.com/app/:route"
+  force=true
+
+[[redirects]]
+  from = "/auth/:route"
+  to = "https://notecraftai-xct5.onrender.com/auth/:route"
+  force=true
+
+[[redirects]]
+  from = "/sharing/:route"
+  to = "https://notecraftai-xct5.onrender.com/sharing/:route"
+  force=true
+
+
+[[redirects]]
     from = "/*"
     to = "/index.html"
     status = 200
+

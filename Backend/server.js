@@ -20,7 +20,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const { Server } = require("socket.io");
 const io = new Server(chatServer, {
   cors: {
-    origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.onrender.com/"], // Allow all origins or specify a list of allowed origins
+    origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.netlify.app/"], // Allow all origins or specify a list of allowed origins
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
@@ -72,7 +72,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "*", // Allow all origins, or replace with specific origins if necessary
+    origin:  "https://notecraft-ai.netlify.app/", // Allow all origins, or replace with specific origins if necessary
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   })
