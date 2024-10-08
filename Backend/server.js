@@ -80,7 +80,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "https://notecraft-ai.netlify.app",
+    origin: "https://notecraft-ai.onrender.com",
     credentials: true,
   })
 );
