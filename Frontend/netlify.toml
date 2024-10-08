@@ -1,17 +1,22 @@
 [[redirects]]
   from = "/app/*"
-  to = "https://notecraftai-xct5.onrender.com/app/:route"
-  force=true
+  to = "https://notecraftai-xct5.onrender.com/app/:splat"
+  status = 200
+  force = true
+
 
 [[redirects]]
-  from = "/auth/:route"
-  to = "https://notecraftai-xct5.onrender.com/auth/:route"
-  force=true
+  from = "/auth/*"
+  to = "https://notecraftai-xct5.onrender.com/auth/:splat"
+  status = 200
+  force = true
+
 
 [[redirects]]
-  from = "/sharing/:route"
-  to = "https://notecraftai-xct5.onrender.com/sharing/:route"
-  force=true
+  from = "/sharing/*"
+  to = "https://notecraftai-xct5.onrender.com/sharing/:splat"
+  status = 200
+  force = true
 
 
 [[redirects]]
