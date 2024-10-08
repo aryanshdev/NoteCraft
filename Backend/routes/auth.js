@@ -10,10 +10,10 @@ router.get(
 router.get(
   "/google/process-login",
   passport.authenticate("google", {
-    failureRedirect: "https://notecraft-ai.netlify.app/login",
+    failureRedirect: "https://notecraft-ai.onrender.com/login",
   }), 
   async function (req, res) {
-    res.redirect("https://notecraft-ai.netlify.app/dashboard");
+    res.redirect("https://notecraft-ai.onrender.com/dashboard");
     req.session.userGIDs = (
       await notesGroupCol
         .find(
@@ -34,9 +34,9 @@ router.get("/github", passport.authenticate("github"));
 
 router.get(
   "/github/process-login",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  passport.authenticate("github", { failureRedirect: "https://notecraft-ai.onrender.com/login" }),
   async function (req, res) {
-    res.redirect("https://notecraft-ai.netlify.app/dashboard");
+    res.redirect("https://notecraft-ai.onrender.com/dashboard");
     req.session.userGIDs = (
       await notesGroupCol
         .find(
