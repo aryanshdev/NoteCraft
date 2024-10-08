@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "/app/:route"
+  from = "/app/*"
   to = "https://notecraftai-xct5.onrender.com/app/:route"
   force=true
 
