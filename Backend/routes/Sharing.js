@@ -8,17 +8,21 @@ router.post("/sharedGetAll", async (req, res) => {
     ownerID: req.body.uid,
     groupID: req.body.gid,
   });
-  data = (
-    await notesGroupCol
-      .find(
-        {
-          ownerID: req.body.uid,
-          groupID: req.body.gid,
-        },
-        { projection: { editors: 1, _id: 0 } }
-      )
-      .toArray()
-  )[0]["editors"];
+  try {
+    data = (
+      await notesGroupCol
+        .find(
+          {
+            ownerID: req.body.uid,
+            groupID: req.body.gid,
+          },
+          { projection: { editors: 1, _id: 0 } }
+        )
+        .toArray()
+    )[0]["editors"];
+  } catch (error) {
+    data = []
+  }
   var isEditor = req.user ? data.includes(req.user.loggedUserEmail) : false;
   try {
     req.session.sharedOpened[req.body.gid] = isEditor;
