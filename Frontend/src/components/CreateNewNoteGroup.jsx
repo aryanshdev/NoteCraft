@@ -7,9 +7,10 @@ function CreateNoteGroup(props) {
     addMode.classList.toggle("hidden");
     displayMode.classList.toggle("hidden");
   };
-  
+
   const addNewGroup = () => {
     fetch("/app/notesgroup/new", {
+      credentials: "include",
       method: "POST",
       body: JSON.stringify({
         title: document.getElementById("newTitle").value,
@@ -32,8 +33,7 @@ function CreateNoteGroup(props) {
                 </em>
               </>,
               {
-                onClose: async () =>
-                  (nav("/notes/" + (await res.text()))),
+                onClose: async () => nav("/notes/" + (await res.text())),
               }
             );
             break;
@@ -47,7 +47,8 @@ function CreateNoteGroup(props) {
             nav("/401");
             break;
         }
-      }).finally(showHideAddArea());
+      })
+      .finally(showHideAddArea());
   };
 
   return (

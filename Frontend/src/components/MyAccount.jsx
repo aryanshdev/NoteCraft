@@ -8,6 +8,7 @@ function MyAccount() {
   const navigate = useNavigate();
   const changeToGravatarImage = () => {
     fetch("/app/account/updateProfileImage", {
+      credentials: "include",
       method: "PUT",
     }).then(async (res) => {
       switch (res.status) {
@@ -25,7 +26,7 @@ function MyAccount() {
     });
   };
   useEffect(() => {
-    fetch("/app/account/getInfo")
+    fetch("/app/account/getInfo", { credentials: "include" })
       .then((res) => {
         switch (res.status) {
           case 401:
@@ -48,6 +49,7 @@ function MyAccount() {
   const resetAccount = async () => {
     const resetInnerFunc = async () => {
       await fetch("/app/account/resetAccount", {
+        credentials: "include",
         method: "DELETE",
       }).then((res) => {
         if (res.status == 200) {
@@ -82,6 +84,7 @@ function MyAccount() {
   const deleteAccount = async () => {
     const resetInnerFunc = async () => {
       await fetch("/app/account/deleteAccount", {
+        credentials: "include",
         method: "DELETE",
       }).then((res) => {
         switch (res.status) {

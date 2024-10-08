@@ -18,7 +18,10 @@ function SharedNotes() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/app/account/getName", { method: "GET" }).then(async (res) => {
+    fetch("/app/account/getName", {
+      method: "GET",
+      credentials: "include",
+    }).then(async (res) => {
       switch (res.status) {
         case 401:
           setLoggedName(null);
@@ -36,6 +39,7 @@ function SharedNotes() {
   useEffect(() => {
     fetch("/sharing/sharedGetAll", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -70,6 +74,7 @@ function SharedNotes() {
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
       const res = await fetch("/sharing/updateShared", {
+        credentials: "include",
         method: "POST",
         body: JSON.stringify({
           title: title,
@@ -101,6 +106,7 @@ function SharedNotes() {
   );
   const favouriteSet = async (noteID, isFav) => {
     let res = await fetch("/sharing/editFavouriteShared", {
+      credentials: "include",
       body: JSON.stringify({
         gid: getids.groupID,
         uid: getids.userID,
@@ -115,7 +121,7 @@ function SharedNotes() {
 
     if (res.status == 200) {
       toast.success(isFav ? "Favourite Added" : "Favourite Removed");
-      socket.emit("shared_EDITFAV", loggedName, noteID)
+      socket.emit("shared_EDITFAV", loggedName, noteID);
       return true;
     } else {
       toast.error("Something Went Wrong");
@@ -132,14 +138,11 @@ function SharedNotes() {
       .classList.toggle("md:right-0");
   };
 
-  
   const showChatAndAsk = (task) => {
     document
       .getElementById("chatSectionContainer")
       .classList.remove("-right-[100vw]");
-    document
-      .getElementById("chatSectionContainer")
-      .classList.add("md:right-0");
+    document.getElementById("chatSectionContainer").classList.add("md:right-0");
     socket.emit("ASKAI", task);
   };
   const loginWarning = () => {
@@ -151,6 +154,7 @@ function SharedNotes() {
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
       await fetch("/sharing/deleteShared", {
+        credentials: "include",
         body: JSON.stringify({
           gid: getids.groupID,
           uid: getids.userID,
@@ -216,7 +220,6 @@ function SharedNotes() {
           transition:Bounce
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
-
         <div className="flex flex-row overflow-x-clip w-auto ">
           <header className=" dark:bg-[#2c2c2c] h-auto flex fixed dark:text-white text-black py-2 px-5 w-full md:hidden flex-row ">
             {/* AI CHAT BUTTON */}

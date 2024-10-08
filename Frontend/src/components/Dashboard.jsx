@@ -18,14 +18,14 @@ function Dashboard() {
       : "Evening";
 
   useEffect(() => {
-    fetch("/app/notesgroup/getAll")
+    fetch("/app/notesgroup/getAll", { credentials: "include" })
       .then((res) => {
         switch (res.status) {
           case 401:
             navigate("/401");
             return false;
           case 500:
-            navigate("/500")
+            navigate("/500");
         }
         return res.json();
       })
@@ -45,8 +45,9 @@ function Dashboard() {
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
       const res = await fetch("/app/notesgroup/update", {
+        credentials: "include",
         method: "POST",
-        body: JSON.stringify({ title: title, description: desc , id : id}), // Use JSON.stringify
+        body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
         headers: {
           "Content-Type": "application/json",
         },
@@ -70,6 +71,7 @@ function Dashboard() {
   );
   const favouriteSet = async (groupID, isFav) => {
     let res = await fetch("/app/notesgroup/editFavourite", {
+      credentials: "include",
       body: JSON.stringify({
         id: groupID,
         favStatus: isFav,
@@ -92,6 +94,7 @@ function Dashboard() {
   const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
       await fetch("/app/notesgroup/deleteNoteGroup", {
+        credentials: "include",
         body: JSON.stringify({
           id: inpid,
         }),
@@ -136,7 +139,6 @@ function Dashboard() {
   } else {
     return (
       <>
-
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
 
         <h1 className="font-semibold text-3xl mb-3">

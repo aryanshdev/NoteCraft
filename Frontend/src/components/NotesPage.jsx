@@ -18,6 +18,7 @@ function NotesPage() {
 
   useEffect(() => {
     fetch("/app/notes/getAll", {
+      credentials: "include",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,6 +52,7 @@ function NotesPage() {
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
       const res = await fetch("/app/notes/update", {
+        credentials: "include",
         method: "POST",
         body: JSON.stringify({
           title: title,
@@ -81,6 +83,7 @@ function NotesPage() {
   );
   const favouriteSet = async (noteID, isFav) => {
     let res = await fetch("/app/notes/editFavourite", {
+      credentials: "include",
       body: JSON.stringify({
         gid: gid.groupID,
         nid: noteID,
@@ -105,13 +108,9 @@ function NotesPage() {
     document
       .getElementById("chatSectionContainer")
       .classList.remove("-right-[100vw]");
-    document
-      .getElementById("chatSectionContainer")
-      .classList.add("md:right-0");
+    document.getElementById("chatSectionContainer").classList.add("md:right-0");
     socket.emit("ASKAI", task);
   };
-
-
 
   const showChatSection = () => {
     document
@@ -141,6 +140,7 @@ function NotesPage() {
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
       await fetch("/app/notes/deleteNote", {
+        credentials: "include",
         body: JSON.stringify({
           nid: inpid,
           gid: gid.groupID,

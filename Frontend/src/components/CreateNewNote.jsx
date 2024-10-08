@@ -9,25 +9,30 @@ function CreateNote(props) {
   };
   const addNewGroup = () => {
     fetch("/app/notes/new", {
+      credentials: "include",
       method: "POST",
       body: JSON.stringify({
         title: document.getElementById("newTitle").value,
         description: document.getElementById("newDesc").value,
-        gid: props.gid
+        gid: props.gid,
       }), // Use JSON.stringify
       headers: {
         "Content-Type": "application/json",
       },
     })
       .then(async (res) => {
-        console.log(res)
+        console.log(res);
         if (res.status === 200) {
           toast.success("New Note Added");
-          props.addNewNote(document.getElementById("newTitle").value,document.getElementById("newDesc").value, await res.text())
+          props.addNewNote(
+            document.getElementById("newTitle").value,
+            document.getElementById("newDesc").value,
+            await res.text()
+          );
         } else if (res.status == 400) {
           toast.warning("Check Inputs And Try Again");
-        }else if (res.status == 401) {
-          props.navigator("/401")
+        } else if (res.status == 401) {
+          props.navigator("/401");
         } else {
           toast.error("Some Error Occured");
         }
@@ -84,7 +89,7 @@ function CreateNote(props) {
             />
 
             <textarea
-            required
+              required
               type="text"
               id="newDesc"
               placeholder="Description"

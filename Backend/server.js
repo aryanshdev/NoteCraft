@@ -75,6 +75,7 @@ app.use(
     origin:  "https://notecraft-ai.netlify.app/", // Allow all origins, or replace with specific origins if necessary
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
+    credentials:true,
   })
 );
 

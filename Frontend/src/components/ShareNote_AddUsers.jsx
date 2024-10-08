@@ -5,7 +5,10 @@ import { toast } from "react-toastify";
 function editorDisplay(emailID, delEdFunction) {
   return (
     <>
-      <div className="bg-[#4d4d4d] text-white font-semibold px-3 py-1 w-fit rounded-full flex flex-row gap-2 " key={emailID}>
+      <div
+        className="bg-[#4d4d4d] text-white font-semibold px-3 py-1 w-fit rounded-full flex flex-row gap-2 "
+        key={emailID}
+      >
         {" "}
         {emailID}
         <button
@@ -37,6 +40,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   const navigate = useNavigate();
   const deleteEditor = (emailID) => {
     fetch("/app/notesgroup/removeEditor", {
+      credentials: "include",
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -68,18 +72,18 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
       });
   };
   useEffect(() => {
-    fetch("/app/notes/getSharingInfo")
+    fetch("/app/notes/getSharingInfo", { credentials: "include" })
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraft-ai.netlify.app/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   }, []);
 
   useEffect(() => {
-    fetch(`/app/notesgroup/getEditors/${gid}`)
+    fetch(`/app/notesgroup/getEditors/${gid}`, { credentials: "include" })
       .then((res) => {
         return res.json();
       })
@@ -95,6 +99,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
 
   const addEditor = () => {
     fetch("/app/notesgroup/addEditor", {
+      credentials: "include",
       method: "POST",
       body: JSON.stringify({
         email: document.querySelector("input[type='email']").value,

@@ -11,7 +11,10 @@ function ChatSection({ id, openFunction }) {
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("/app/account/getName", { method: "GET" }).then(async (res) => {
+    fetch("/app/account/getName", {
+      method: "GET",
+      credentials: "include",
+    }).then(async (res) => {
       switch (res.status) {
         case 401:
           setName(null);
@@ -29,9 +32,20 @@ function ChatSection({ id, openFunction }) {
   }, []);
 
   useEffect(() => {
-    socket.on("shared_EDITFAV", (name,nid) => {
+    socket.on("shared_EDITFAV", (name, nid) => {
       toast(name + " Changed Favourities");
-      document.getElementById(nid).querySelectorAll("svg")[1].setAttribute("fill",(document.getElementById(nid).querySelectorAll("svg")[1].getAttribute("fill") == "#FFD700" ? "white" : "#FFD700") )
+      document
+        .getElementById(nid)
+        .querySelectorAll("svg")[1]
+        .setAttribute(
+          "fill",
+          document
+            .getElementById(nid)
+            .querySelectorAll("svg")[1]
+            .getAttribute("fill") == "#FFD700"
+            ? "white"
+            : "#FFD700"
+        );
     });
 
     socket.on("SYSTEM", (msg) => {
