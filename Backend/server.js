@@ -65,7 +65,12 @@ app.use(
   session({
     secret: "NoteCraft-AI",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, 
+    cookie: {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None', 
+    },
   })
 );
 app.use(helmet());
