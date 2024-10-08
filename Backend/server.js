@@ -20,7 +20,10 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const { Server } = require("socket.io");
 const io = new Server(chatServer, {
   cors: {
-    origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.netlify.app/"], // Allow all origins or specify a list of allowed origins
+    origin: [
+      "https://notecraftai-xct5.onrender.com/",
+      "https://notecraft-ai.netlify.app/",
+    ], // Allow all origins or specify a list of allowed origins
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
@@ -41,8 +44,8 @@ io.on("connection", (socket) => {
       .emit("USER", { message: message, name: socket.userName }); // to user joining the room
   });
 
-  socket.on("shared_EDITFAV", (loggedName,nid) => {
-    socket.broadcast.emit("shared_EDITFAV", loggedName,nid);
+  socket.on("shared_EDITFAV", (loggedName, nid) => {
+    socket.broadcast.emit("shared_EDITFAV", loggedName, nid);
   });
 
   socket.on("ASKAI", async (message) => {
@@ -65,11 +68,11 @@ app.use(
   session({
     secret: "NoteCraft-AI",
     resave: false,
-    saveUninitialized: false, 
+    saveUninitialized: false,
     cookie: {
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
-      sameSite: 'None', 
+      sameSite: "None",
     },
   })
 );
@@ -77,8 +80,8 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin:  "https://notecraft-ai.netlify.app", 
-    credentials:true,
+    origin: "https://notecraft-ai.netlify.app",
+    credentials: true,
   })
 );
 

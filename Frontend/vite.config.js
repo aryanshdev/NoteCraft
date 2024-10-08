@@ -19,7 +19,7 @@ export default defineConfig({
         changeOrigin: true,
      },
      "/auth":{
-      target: 'https://notecraftai-xct5.onrender.com/',
+      target: 'https://notecraftai-xct5.onrender.com',
       changeOrigin: true,
      }
     }

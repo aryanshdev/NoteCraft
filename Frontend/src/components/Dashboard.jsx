@@ -34,6 +34,7 @@ function Dashboard() {
         setLoading(false);
       })
       .catch((error) => {
+        
         toast.error("Failed To Fetch Notes");
       });
   }, [navigate]);
