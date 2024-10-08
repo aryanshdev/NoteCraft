@@ -3,6 +3,7 @@
   to = "https://notecraftai-xct5.onrender.com/app/:splat"
   status = 200
   force = true
+  headers = { X-Forwarded-Host = "https://notecraft-ai.netlify.app" }
 
 
 [[redirects]]
@@ -10,6 +11,7 @@
   to = "https://notecraftai-xct5.onrender.com/auth/:splat"
   status = 200
   force = true
+  headers = { X-Forwarded-Host = "https://notecraft-ai.netlify.app" }
 
 
 [[redirects]]
@@ -17,6 +19,7 @@
   to = "https://notecraftai-xct5.onrender.com/sharing/:splat"
   status = 200
   force = true
+  headers = { X-Forwarded-Host = "https://notecraft-ai.netlify.app" }
 
 
 [[redirects]]

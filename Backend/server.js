@@ -77,7 +77,7 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin:  "https://notecraft-ai.netlify.app/", // Allow all origins, or replace with specific origins if necessary
+    origin:  "https://notecraft-ai.netlify.app", 
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
     credentials:true,
