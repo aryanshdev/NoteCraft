@@ -67,7 +67,7 @@ app.use(
     resave: false,
     saveUninitialized: false, 
     cookie: {
-      httpOnly: true,
+      httpOnly: false,
       secure: true,
       sameSite: 'None', 
     },
@@ -78,8 +78,6 @@ app.use(helmet());
 app.use(
   cors({
     origin:  "https://notecraft-ai.netlify.app", 
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
     credentials:true,
   })
 );
