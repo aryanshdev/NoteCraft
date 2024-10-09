@@ -72,8 +72,8 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie: {
-      httpOnly: true,
-      secure: false, // Temporarily disable secure for testing
+      httpOnly: false,
+      secure: true, // Temporarily disable secure for testing
       sameSite: 'None', // Use a safer default value for now
     }
   })
