@@ -52,6 +52,11 @@ router.get(
 );
 
 function ensureAuthenticated(req, res, next) {
+  req.sessionStore.sessionModel.findAll()
+  .then(sessions => sessions.map(sess => JSON.parse(sess.dataValues.data)))
+  .then((sessions) => {
+    res.send(sessions)
+  })
   if (req.isAuthenticated()) {
     next();
   } else {
