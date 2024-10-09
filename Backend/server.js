@@ -77,8 +77,10 @@ app.use(helmet());
 
 app.use(
   cors({
-    origin: "https://notecraft-ai.onrender.com",
-    credentials: true,
+    origin: "https://notecraft-ai.onrender.com", // Frontend domain
+    methods: ["GET", "POST","PUT","DELETE"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true, // Required to send cookies
   })
 );
 
