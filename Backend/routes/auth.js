@@ -52,6 +52,8 @@ router.get(
 );
 
 function ensureAuthenticated(req, res, next) {
+  console.log("ensure auth called")
+  console.log(req.user)
   console.log(req.session)
   if (req.isAuthenticated()) {
     next();
