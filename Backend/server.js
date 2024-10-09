@@ -69,11 +69,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
     secret: "NoteCraft-AI",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
-      httpOnly: true,
-      secure: true,
+      httpOnly: false,
+      secure: false,
       sameSite: "None",
     },
   })
@@ -206,5 +206,3 @@ async function AskAIGroq(input) {
   }
   return reply;
 }
-
-function AlertOthersOnShared_Favourite() {}
