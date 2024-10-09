@@ -14,7 +14,6 @@ const sharingRouter = require("./routes/Sharing");
 const helmet = require("helmet");
 const chatServer = require("http").createServer(app);
 const cors = require("cors");
-const cookieParser = require("cookie-parser")
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -64,7 +63,6 @@ io.on("connection", (socket) => {
 io.on("disconnection", () => {});
 
 app.use(bodyParser.json());
-app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
@@ -72,7 +70,7 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie:{
-      sameSite:"None"
+      sameSite:false
     }
   })
 );
