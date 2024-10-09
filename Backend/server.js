@@ -74,7 +74,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false, // Temporarily disable secure for testing
-      sameSite: 'Lax', // Use a safer default value for now
+      sameSite: 'None', // Use a safer default value for now
     }
   })
 );
