@@ -18,7 +18,13 @@ function Dashboard() {
       : "Evening";
 
   useEffect(() => {
-    fetch("/app/notesgroup/getAll", { credentials: "include" })
+    fetch("/app/notesgroup/getAll", {
+      method: "GET",
+      credentials: "include", // Include cookies
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => {
         switch (res.status) {
           case 401:
@@ -34,7 +40,6 @@ function Dashboard() {
         setLoading(false);
       })
       .catch((error) => {
-        
         toast.error("Failed To Fetch Notes");
       });
   }, [navigate]);
