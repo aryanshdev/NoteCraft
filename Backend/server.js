@@ -71,10 +71,8 @@ app.use(
     secret: "NoteCraft-AI",
     resave: true,
     saveUninitialized: false,
-    cookie: {
-      httpOnly: false,
-      secure: true, // Temporarily disable secure for testing
-      sameSite: 'None', // Use a safer default value for now
+    cookie:{
+      sameSite:"None"
     }
   })
 );
