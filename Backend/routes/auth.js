@@ -25,7 +25,7 @@ router.get(
         .toArray()
     ).map((ele) => ele.groupID);
     console.log(req.user)
-    console.log(req.cookies)
+    req.session.data = req.user;
     req.session.save();
   }
 );
@@ -52,6 +52,7 @@ router.get(
 );
 
 function ensureAuthenticated(req, res, next) {
+  console.log(req.session)
   if (req.isAuthenticated()) {
     next();
   } else {
