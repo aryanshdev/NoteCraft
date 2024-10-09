@@ -70,7 +70,8 @@ app.use(
     resave: true,
     saveUninitialized: false,
     cookie:{
-      sameSite:"none"
+      sameSite:"none",
+      secure:true
     }
   })
 );
