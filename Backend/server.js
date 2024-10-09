@@ -174,13 +174,7 @@ app.listen(10000, () => {
   console.log("Server Up");
 });
 
-app.get('/sessions', (req, res) => {
-  req.sessionStore.sessionModel.findAll()
-    .then(sessions => sessions.map(sess => JSON.parse(sess.dataValues.data)))
-    .then((sessions) => {
-      res.send(sessions)
-    })
-})
+
 
 app.use("/auth", authRouter);
 app.use("/sharing", sharingRouter);
