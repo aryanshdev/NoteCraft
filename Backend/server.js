@@ -66,12 +66,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: "NoteCraft-AI",
-    resave: true,
+    secret: "process.env.SESSION_SECRET",
+    resave: false,
     saveUninitialized: false,
-    cookie:{
-      sameSite:"none",
-    }
+    cookie: {
+      maxAge: 900000,
+      secure: true,
+      sameSite: false,
+    },
   })
 );
 app.use(helmet());
