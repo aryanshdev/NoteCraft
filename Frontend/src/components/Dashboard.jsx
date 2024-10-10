@@ -18,7 +18,7 @@ function Dashboard() {
       : "Evening";
 
   useEffect(() => {
-    fetch("/app/notesgroup/getAll", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
       method: "GET",
       credentials: "include", // Include cookies
       headers: {
@@ -50,7 +50,7 @@ function Dashboard() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("/app/notesgroup/update", {
+      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
@@ -76,7 +76,7 @@ function Dashboard() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (groupID, isFav) => {
-    let res = await fetch("/app/notesgroup/editFavourite", {
+    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         id: groupID,
@@ -99,7 +99,7 @@ function Dashboard() {
 
   const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("/app/notesgroup/deleteNoteGroup", {
+      await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/deleteNoteGroup", {
         credentials: "include",
         body: JSON.stringify({
           id: inpid,

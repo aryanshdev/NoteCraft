@@ -17,7 +17,7 @@ function NotesPage() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/app/notes/getAll", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notes/getAll", {
       credentials: "include",
       method: "POST",
       headers: {
@@ -51,7 +51,7 @@ function NotesPage() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("/app/notes/update", {
+      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -82,7 +82,7 @@ function NotesPage() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("/app/notes/editFavourite", {
+    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: gid.groupID,
@@ -139,7 +139,7 @@ function NotesPage() {
   };
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("/app/notes/deleteNote", {
+      await fetch("https://notecraftai-xct5.onrender.com/app/notes/deleteNote", {
         credentials: "include",
         body: JSON.stringify({
           nid: inpid,

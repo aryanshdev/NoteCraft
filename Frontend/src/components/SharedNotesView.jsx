@@ -18,7 +18,7 @@ function SharedNotes() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/app/account/getName", {
+    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
