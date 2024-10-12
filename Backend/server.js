@@ -69,6 +69,12 @@ app.use(
     secret: "process.env.SESSION_SECRET",
     resave: false,
     saveUninitialized: false,
+    proxy : true,
+    cookie: {
+      secure: true,
+      sameSite:"none",
+      maxAge: 900000
+    },
   })
 );
 app.use(helmet());
