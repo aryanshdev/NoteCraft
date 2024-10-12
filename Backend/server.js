@@ -12,11 +12,11 @@ const ShortUniqueId = require("short-unique-id");
 const { router: authRouter, ensureAuthenticated } = require("./routes/auth");
 const sharingRouter = require("./routes/Sharing");
 const helmet = require("helmet");
-const chatServer = require("http").createServer(app);
 const cors = require("cors");
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
+const chatServer = require("http").createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(chatServer, {
   cors: {
@@ -28,8 +28,6 @@ const io = new Server(chatServer, {
     allowedHeaders: ["Content-Type"],
   },
 });
-
-io.listen(5656);
 io.on("connection", (socket) => {
   socket.on("createRoom", ([roomID, name]) => {
     socket.join(roomID);
@@ -172,9 +170,11 @@ passport.deserializeUser(function (obj, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
+io.listen(10000);
 app.listen(10000, () => {
   console.log("Server Up");
 });
+
 
 app.use("/auth", authRouter);
 app.use("/sharing", sharingRouter);

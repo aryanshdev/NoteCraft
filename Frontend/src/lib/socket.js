@@ -4,6 +4,6 @@ import { io } from "socket.io-client";
 const URL =
   process.env.NODE_ENV === "production" ? undefined : "https://notecraftai-xct5.onrender.com/";
 
-export const socket = io("https://notecraftai-xct5.onrender.com:5656", {
+export const socket = io("https://notecraftai-xct5.onrender.com", {
   autoConnect: false,
 });
