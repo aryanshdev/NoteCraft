@@ -1,5 +1,5 @@
 const express = require("express");
-const app = express();
+const expressServer = express();
 const appRoute = require("./routes/app");
 const bodyParser = require("body-parser");
 const passport = require("passport");
@@ -16,9 +16,9 @@ const cors = require("cors");
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const chatServer = require("http").createServer(app);
+const app = require("http").createServer(expressServer);
 const { Server } = require("socket.io");
-const io = new Server(chatServer, {
+const io = new Server(app, {
   cors: {
     origin: [
       "https://notecraftai-xct5.onrender.com/",
@@ -170,7 +170,6 @@ passport.deserializeUser(function (obj, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-io.listen(10000);
 app.listen(10000, () => {
   console.log("Server Up");
 });
