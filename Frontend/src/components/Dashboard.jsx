@@ -22,9 +22,6 @@ function Dashboard() {
     axios
       .get("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
         withCredentials: true, // Include cookies
-        headers: {
-          "Content-Type": "application/json",
-        },
       })
       .then((res) => {
         switch (res.status) {
