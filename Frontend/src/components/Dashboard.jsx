@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import LoaderDisplay from "../LoaderDisplay";
+import axios from "axios";
 
 function Dashboard() {
   const [userNotes, setUserNotes] = useState([]);
@@ -18,26 +19,24 @@ function Dashboard() {
       : "Evening";
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
-      method: "GET",
-      credentials: "include", // Include cookies
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    axios
+      .get("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
+        withCredentials: true, // Include cookies
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => {
         switch (res.status) {
+          case 200:
+            setUserNotes(res.data);
+            setLoading(false);
           case 401:
             navigate("/401");
             return false;
           case 500:
             navigate("/500");
         }
-        return res.json();
-      })
-      .then((res) => {
-        setUserNotes(res);
-        setLoading(false);
       })
       .catch((error) => {
         toast.error("Failed To Fetch Notes");
@@ -50,14 +49,17 @@ function Dashboard() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/update", {
-        credentials: "include",
-        method: "POST",
-        body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        "https://notecraftai-xct5.onrender.com/app/notesgroup/update",
+        {
+          credentials: "include",
+          method: "POST",
+          body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (res.status === 200) {
         toast.success("Details Updated");
@@ -76,17 +78,20 @@ function Dashboard() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (groupID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/editFavourite", {
-      credentials: "include",
-      body: JSON.stringify({
-        id: groupID,
-        favStatus: isFav,
-      }),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let res = await fetch(
+      "https://notecraftai-xct5.onrender.com/app/notesgroup/editFavourite",
+      {
+        credentials: "include",
+        body: JSON.stringify({
+          id: groupID,
+          favStatus: isFav,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (res.status == 200) {
       toast.success(isFav ? "Favourite Added" : "Favourite Removed");
@@ -99,16 +104,19 @@ function Dashboard() {
 
   const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/deleteNoteGroup", {
-        credentials: "include",
-        body: JSON.stringify({
-          id: inpid,
-        }),
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => {
+      await fetch(
+        "https://notecraftai-xct5.onrender.com/app/notesgroup/deleteNoteGroup",
+        {
+          credentials: "include",
+          body: JSON.stringify({
+            id: inpid,
+          }),
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => {
         if (res.status == 200) {
           toast.success("Note Group Deleted.");
           setUserNotes(userNotes.filter((group) => group.groupID != inpid));

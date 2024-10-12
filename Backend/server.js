@@ -76,9 +76,10 @@ app.use(helmet());
 app.use(
   cors({
     origin: "https://notecraft-ai.onrender.com", // Frontend domain
-    methods: ["GET", "POST","PUT","DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true, // Required to send cookies
+    origin: true,
   })
 );
 
@@ -168,8 +169,6 @@ app.use(passport.session());
 app.listen(10000, () => {
   console.log("Server Up");
 });
-
-
 
 app.use("/auth", authRouter);
 app.use("/sharing", sharingRouter);
