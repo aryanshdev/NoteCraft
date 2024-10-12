@@ -21,18 +21,20 @@ function Dashboard() {
   useEffect(() => {
     axios
       .get("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
-        withCredentials: true, // Include cookies
+        withCredentials: true,
       })
       .then((res) => {
         switch (res.status) {
           case 200:
             setUserNotes(res.data);
             setLoading(false);
+            break;
           case 401:
             navigate("/401");
             return false;
           case 500:
             navigate("/500");
+            break;
         }
       })
       .catch((error) => {

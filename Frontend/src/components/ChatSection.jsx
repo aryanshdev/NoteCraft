@@ -5,15 +5,15 @@ import UserMSG from "./UserMSG";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import AIMSG from "./AIMSG.jsx";
+import axios from "axios";
 
 function ChatSection({ id, openFunction }) {
   const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
-      method: "GET",
-      credentials: "include",
+    axios.get("https://notecraftai-xct5.onrender.com/app/account/getName", {
+      withCredentials: true,
     }).then(async (res) => {
       switch (res.status) {
         case 401:
@@ -21,6 +21,7 @@ function ChatSection({ id, openFunction }) {
           return false;
         case 500:
           navigate("/500");
+          break;
         case 200:
           let uname = await res.text();
           setName(uname.split(" ")[0]);
