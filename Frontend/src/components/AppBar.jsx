@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import "../style.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 
 function AppBar() {
   const nav = useNavigate();
@@ -17,11 +16,8 @@ function AppBar() {
     showHideSideBar();
   };
   const logout = () => {
-    axios
-      .post("/auth/logout", {
-        withCredentials: true,
-      })
-      .then((res) => {
+    fetch("/auth/logout", { method: "POST", credentials: "include" }).then(
+      (res) => {
         switch (res.status) {
           case 200:
             nav("/");
@@ -33,7 +29,8 @@ function AppBar() {
             nav("/");
             break;
         }
-      });
+      }
+    );
   };
 
   return (
