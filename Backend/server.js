@@ -16,18 +16,23 @@ const cors = require("cors");
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const app = require("http").createServer(expressServer);
+const http = require("http"); // Create HTTP server
+const app = http.createServer(expressServer); // Attach Express to the server
 const { Server } = require("socket.io");
+
+// Socket.io server
 const io = new Server(app, {
   cors: {
     origin: [
-      "https://notecraftai-xct5.onrender.com/",
-      "https://notecraft-ai.netlify.app/",
-    ], // Allow all origins or specify a list of allowed origins
+      "https://notecraftai-xct5.onrender.com", // Removed trailing slash
+      "https://notecraft-ai.netlify.app",
+    ], 
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
 });
+
+// Socket.io event handling
 io.on("connection", (socket) => {
   socket.on("createRoom", ([roomID, name]) => {
     socket.join(roomID);
@@ -36,10 +41,11 @@ io.on("connection", (socket) => {
     socket.emit("SYSTEM", "Welcome !!"); // to user joining the room
     socket.to(roomID).emit("SYSTEM", `${name} has joined the room`); // to everyone else
   });
+
   socket.on("UserToServer", (message) => {
     socket
       .to(socket.roomID)
-      .emit("USER", { message: message, name: socket.userName }); // to user joining the room
+      .emit("USER", { message: message, name: socket.userName });
   });
 
   socket.on("shared_EDITFAV", (loggedName, nid) => {
@@ -47,47 +53,49 @@ io.on("connection", (socket) => {
   });
 
   socket.on("ASKAI", async (message) => {
-    socket.emit("SELF", "@NC-AI " + message.split("|")[1]); // to user joining the room
+    socket.emit("SELF", "@NC-AI " + message.split("|")[1]);
     socket.to(socket.roomID).emit("AIQUESTION", {
       message: "@NC-AI " + message.split("|")[1],
       name: socket.userName,
     });
     let reply = await AskAIGroq(message);
-    io.to(socket.roomID).emit("AIMessage", {
-      message: reply,
-    });
+    io.to(socket.roomID).emit("AIMessage", { message: reply });
   });
 });
+
 io.on("disconnection", () => {});
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
+// Middleware and security settings
+expressServer.use(bodyParser.json());
+expressServer.use(bodyParser.urlencoded({ extended: true }));
+expressServer.use(
   session({
-    secret: "process.env.SESSION_SECRET",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    proxy : true,
+    proxy: true,
     cookie: {
       secure: true,
-      sameSite:"none",
-      maxAge: 900000
+      sameSite: "none",
+      maxAge: 900000,
     },
   })
 );
-app.use(helmet());
 
-app.use(
+expressServer.use(helmet());
+
+expressServer.use(
   cors({
-    origin: "https://notecraft-ai.onrender.com", // Frontend domain
+    origin: "https://notecraft-ai.netlify.app", // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
-    credentials: true, // Required to send cookies
+    credentials: true,
     origin: true,
   })
 );
 
-idgen = new ShortUniqueId({ length: 15 });
+// Passport authentication
+const idgen = new ShortUniqueId({ length: 15 });
 
 passport.use(
   new GoogleStrategy(
@@ -98,7 +106,7 @@ passport.use(
         "https://notecraftai-xct5.onrender.com/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
-      userData = await usersCol.findOne({ email: profile._json.email });
+      const userData = await usersCol.findOne({ email: profile._json.email });
       if (userData) {
         return done(null, {
           userName: userData.name,
@@ -106,7 +114,7 @@ passport.use(
           loggedUserEmail: profile._json.email,
         });
       } else {
-        let id = idgen.rnd();
+        let id = idgen();
         await usersCol.insertOne({
           email: profile._json.email,
           name: profile._json.name,
@@ -133,16 +141,15 @@ passport.use(
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
-      userData = await usersCol.findOne({ email: profile.emails[0].value });
+      const userData = await usersCol.findOne({ email: profile.emails[0].value });
       if (userData) {
         return done(null, {
           userName: userData.name,
           loggedinUserUUID: userData.uuid,
-
           loggedUserEmail: profile.emails[0].value,
         });
       } else {
-        let id = idgen.rnd();
+        let id = idgen();
         await usersCol.insertOne({
           email: profile.emails[0].value,
           name: profile._json.name,
@@ -167,25 +174,28 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
+expressServer.use(passport.initialize());
+expressServer.use(passport.session());
 
-app.listen(10000, () => {
-  console.log("Server Up");
+// Routes
+expressServer.use("/auth", authRouter);
+expressServer.use("/sharing", sharingRouter);
+expressServer.use("/app", ensureAuthenticated, appRoute);
+
+// Start the shared server (both Express and Socket.io)
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Server Up on port ${PORT}`);
 });
 
-
-app.use("/auth", authRouter);
-app.use("/sharing", sharingRouter);
-app.use("/app", ensureAuthenticated, appRoute);
-
+// Groq AI function
 async function AskAIGroq(input) {
   const chatCompletion = await groq.chat.completions.create({
     messages: [
       {
         role: "system",
         content:
-          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their \"TITLE|DESCRIPTION\" inputs or a follow up question. Respond only to related follow-up queries; stictly ignore unrelated questions. answer In short - prefer pointwise style, if you think it's useless or some link or anything that you can't help with, reject it simply in the shortest message possible",
+          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their 'TITLE|DESCRIPTION' inputs or a follow-up question. Answer only related queries in a short, pointwise style.",
       },
       {
         role: "user",
@@ -197,8 +207,8 @@ async function AskAIGroq(input) {
     max_tokens: 1024,
     top_p: 1,
     stream: true,
-    stop: null,
   });
+
   let reply = "";
   for await (const chunk of chatCompletion) {
     reply += chunk.choices[0]?.delta?.content || "";
