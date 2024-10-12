@@ -25,7 +25,7 @@ const io = new Server(app, {
   cors: {
     origin: [
       "https://notecraftai-xct5.onrender.com", // Removed trailing slash
-      "https://notecraft-ai.netlify.app",
+      "https://notecraft-ai.onrender.com",
     ], 
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
@@ -86,7 +86,7 @@ expressServer.use(helmet());
 
 expressServer.use(
   cors({
-    origin: "https://notecraft-ai.netlify.app", // Frontend domain
+    origin: "https://notecraft-ai.onrender.com", // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
