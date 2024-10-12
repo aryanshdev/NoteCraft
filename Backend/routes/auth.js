@@ -10,10 +10,10 @@ router.get(
 router.get(
   "/google/process-login",
   passport.authenticate("google", {
-    failureRedirect: "https://notecraft-ai.onrender.com/login",
+    failureRedirect: "http://localhost:5173/login",
   }), 
   async function (req, res) {
-    res.redirect("https://notecraft-ai.onrender.com/dashboard");
+    res.redirect("http://localhost:5173/dashboard");
     req.session.userGIDs = (
       await notesGroupCol
         .find(
@@ -24,7 +24,6 @@ router.get(
         )
         .toArray()
     ).map((ele) => ele.groupID);
-    console.log(req.user)
     req.session.data = req.user;
     req.session.save();
   }
@@ -34,9 +33,9 @@ router.get("/github", passport.authenticate("github"));
 
 router.get(
   "/github/process-login",
-  passport.authenticate("github", { failureRedirect: "https://notecraft-ai.onrender.com/login" }),
+  passport.authenticate("github", { failureRedirect: "http://localhost:5173/login" }),
   async function (req, res) {
-    res.redirect("https://notecraft-ai.onrender.com/dashboard");
+    res.redirect("http://localhost:5173/dashboard");
     req.session.userGIDs = (
       await notesGroupCol
         .find(
@@ -52,9 +51,6 @@ router.get(
 );
 
 function ensureAuthenticated(req, res, next) {
-  console.log("ensure auth called")
-  console.log(req.user)
-  console.log(req.session)
   if (req.isAuthenticated()) {
     next();
   } else {

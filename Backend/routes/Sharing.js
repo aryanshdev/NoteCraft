@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const { notesCol, notesGroupCol } = require("../db/dbconnection");
+const shortuid = require("short-unique-id");
+const idgen = new shortuid({ length: 12 });
 
 function ensureEditor() {}
 
@@ -69,6 +71,31 @@ router.post("/updateShared", async (req, res) => {
   }
 });
 
+router.post("/newNoteShared", async (req, res) => {
+  if (
+    req.body.title &&
+    req.body.description &&
+    req.session.sharedOpened[req.body.gid]
+  ) {
+    id = idgen.rnd();
+    notesCol
+      .insertOne({
+        ownerID: req.body.uid,
+        groupID: req.body.gid,
+        title: req.body.title,
+        body: req.body.description,
+        favourite: false,
+        noteID: id,
+      })
+      .then(() => {
+        res.status(200).send(id);
+      })
+      .catch(() => res.sendStatus(500));
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 router.delete("/deleteShared", async (req, res) => {
   notesCol
     .deleteOne({
@@ -77,7 +104,6 @@ router.delete("/deleteShared", async (req, res) => {
       noteID: req.body.nid,
     })
     .then(async () => {
-      console.log("W")
       res.sendStatus(200);
     })
     .catch(() => res.sendStatus(500));

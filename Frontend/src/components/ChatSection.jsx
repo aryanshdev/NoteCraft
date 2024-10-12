@@ -3,7 +3,7 @@ import { socket } from "../lib/socket";
 import SystemMSG from "./SystemMSG";
 import UserMSG from "./UserMSG";
 import { useNavigate, Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Slide, toast } from "react-toastify";
 import AIMSG from "./AIMSG.jsx";
 
 function ChatSection({ id, openFunction }) {
@@ -11,7 +11,7 @@ function ChatSection({ id, openFunction }) {
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -32,21 +32,6 @@ function ChatSection({ id, openFunction }) {
   }, []);
 
   useEffect(() => {
-    socket.on("shared_EDITFAV", (name, nid) => {
-      toast(name + " Changed Favourities");
-      document
-        .getElementById(nid)
-        .querySelectorAll("svg")[1]
-        .setAttribute(
-          "fill",
-          document
-            .getElementById(nid)
-            .querySelectorAll("svg")[1]
-            .getAttribute("fill") == "#FFD700"
-            ? "white"
-            : "#FFD700"
-        );
-    });
 
     socket.on("SYSTEM", (msg) => {
       setMessages((prevMessages) => [...prevMessages, ["SYSTEM", msg]]);

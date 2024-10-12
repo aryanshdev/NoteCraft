@@ -24,9 +24,9 @@ const { Server } = require("socket.io");
 const io = new Server(app, {
   cors: {
     origin: [
-      "https://notecraftai-xct5.onrender.com", // Removed trailing slash
-      "https://notecraft-ai.onrender.com",
-    ], 
+      "http://localhost:10000", // Removed trailing slash
+      "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
@@ -48,10 +48,6 @@ io.on("connection", (socket) => {
       .emit("USER", { message: message, name: socket.userName });
   });
 
-  socket.on("shared_EDITFAV", (loggedName, nid) => {
-    socket.broadcast.emit("shared_EDITFAV", loggedName, nid);
-  });
-
   socket.on("ASKAI", async (message) => {
     socket.emit("SELF", "@NC-AI " + message.split("|")[1]);
     socket.to(socket.roomID).emit("AIQUESTION", {
@@ -60,6 +56,23 @@ io.on("connection", (socket) => {
     });
     let reply = await AskAIGroq(message);
     io.to(socket.roomID).emit("AIMessage", { message: reply });
+  });
+
+  // Collab Handling
+  socket.on("shared_NoteDelete", (nid, loggedName) => {
+    socket.broadcast.emit("shared_NoteDelete", nid, loggedName);
+  });
+
+  socket.on("shared_NoteAdded", (details, loggedName) => {
+    socket.broadcast.emit("shared_NoteAdded", details, loggedName);
+  });
+
+  socket.on("shared_NoteUpdate", (details, loggedName) => {
+    socket.broadcast.emit("shared_NoteUpdate", details, loggedName);
+  });
+  
+  socket.on("shared_AlterFavourite", (nid, loggedName) => {
+    socket.broadcast.emit("shared_AlterFavourite", nid, loggedName);
   });
 });
 
@@ -75,8 +88,8 @@ expressServer.use(
     saveUninitialized: false,
     proxy: true,
     cookie: {
-      secure: true,
-      sameSite: "none",
+      // secure: true,
+      // sameSite: "none",
       maxAge: 900000,
     },
   })
@@ -86,7 +99,7 @@ expressServer.use(helmet());
 
 expressServer.use(
   cors({
-    origin: "https://notecraft-ai.onrender.com", // Frontend domain
+    origin: "http://localhost:5173", // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
@@ -102,8 +115,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        "https://notecraftai-xct5.onrender.com/auth/google/process-login",
+      callbackURL: "http://localhost:10000/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
@@ -136,12 +148,13 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL:
-        "https://notecraftai-xct5.onrender.com/auth/github/process-login",
+      callbackURL: "http://localhost:10000/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
-      const userData = await usersCol.findOne({ email: profile.emails[0].value });
+      const userData = await usersCol.findOne({
+        email: profile.emails[0].value,
+      });
       if (userData) {
         return done(null, {
           userName: userData.name,

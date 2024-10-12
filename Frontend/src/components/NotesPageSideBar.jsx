@@ -166,10 +166,7 @@ function AppBar({shareFunction}) {
               </svg>
               New Note
             </div>
-            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center text-lg">
-             <input type="checkbox" name="alertMode" className="bg-[#121212] checked:bg-green-500 w-4 h-4 rounded-lg" onChange={setAlertMode}/>
-              Update PopUps
-            </div>
+            
           </div>
         </aside>
       </div>

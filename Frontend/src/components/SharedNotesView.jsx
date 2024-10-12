@@ -1,8 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Slide, toast, ToastContainer } from "react-toastify";
 import { socket } from "../lib/socket.js";
-import CreateNote from "./CreateNewNote";
+import CreateNoteShared from "./CreateNoteShared.jsx";
 import { Link } from "react-router-dom";
 import NoteDisplay from "./NoteDisplay.jsx";
 import LoaderDisplay from "../LoaderDisplay.jsx";
@@ -14,11 +14,12 @@ function SharedNotes() {
   const [isEditor, setIsEditor] = useState(false);
   const getids = useParams();
   const navigate = useNavigate();
+  const bgColors = useRef([]);
 
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -90,6 +91,11 @@ function SharedNotes() {
 
       if (res.status === 200) {
         toast.success("Details Updated");
+        socket.emit(
+          "shared_NoteUpdate",
+          { title: title, description: desc, nid: id },
+          loggedName
+        );
         return true; // Return true on success
       } else if (res.status == 400) {
         toast.warning("Check Inputs And Try Again");
@@ -104,30 +110,128 @@ function SharedNotes() {
     },
     [setUserNotes, userNotes]
   );
-  const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("/sharing/editFavouriteShared", {
-      credentials: "include",
-      body: JSON.stringify({
-        gid: getids.groupID,
-        uid: getids.userID,
-        nid: noteID,
-        favStatus: isFav,
-      }),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+
+  //Collab Events
+  useEffect(() => {
+    socket.on("shared_NoteDelete", (nid, name) => {
+      toast(name + " Deleted A Note", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6"
+          >
+            <path
+              fillRule="evenodd"
+              d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      setUserNotes((userNotes) => {
+        return userNotes.filter((notes) => notes.noteID !== nid);
+      });
     });
 
-    if (res.status == 200) {
-      toast.success(isFav ? "Favourite Added" : "Favourite Removed");
-      socket.emit("shared_EDITFAV", loggedName, noteID);
-      return true;
-    } else {
-      toast.error("Something Went Wrong");
-      return false;
-    }
-  };
+    socket.on("shared_NoteAdded", (details, name) => {
+      toast(name + " Added A Note", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      setUserNotes((userNotes) => [
+        ...userNotes,
+        {
+          body: details.body,
+          favourite: false,
+          groupID: getids.groupID,
+          noteID: details.noteID,
+          title: details.title,
+        },
+      ]);
+    });
+
+    socket.on("shared_NoteUpdate", (details, name) => {
+      toast(name + " Updated A Note", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      console.log(details)
+      setUserNotes((userNotes) =>
+        userNotes.map((note) => {
+          return note.noteID === details.nid
+            ? {  title: details.title, description: details.description }
+            : note;
+        })
+      );
+    });
+    socket.on("shared_AlterFavourite", (nid, name) => {
+      toast(name + " Changed Favourities", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6"
+          >
+            <path
+              fillRule="evenodd"
+              d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      setUserNotes((userNotes) =>
+        userNotes.map((note) => {
+          return note.noteID === nid
+            ? { ...note, favourite: !note.favourite }
+            : note;
+        })
+      );
+    });
+  }, []);
 
   const showChatSection = () => {
     document
@@ -145,12 +249,57 @@ function SharedNotes() {
     document.getElementById("chatSectionContainer").classList.add("md:right-0");
     socket.emit("ASKAI", task);
   };
+  const addNewNote = (title, bodyContent, newNoteID) => {
+    setUserNotes((userNotes) => [
+      ...userNotes,
+      {
+        body: bodyContent,
+        favourite: false,
+        groupID: getids.groupID,
+        noteID: newNoteID,
+        title: title,
+      },
+    ]);
+    socket.emit(
+      "shared_NoteAdded",
+      {
+        body: bodyContent,
+        noteID: newNoteID,
+        title: title,
+      },
+      loggedName
+    );
+  };
   const loginWarning = () => {
     toast.warning("You Need To Login To Make Changes");
   };
   const editorWarning = () => {
     toast.warning("Ask Note Group Owner To Add You As Editor ");
   };
+  const favouriteSet = async (noteID, isFav) => {
+    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
+      credentials: "include",
+      body: JSON.stringify({
+        gid: getids.groupID,
+        nid: noteID,
+        favStatus: isFav,
+      }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.status == 200) {
+      toast.success(isFav ? "Favourite Added" : "Favourite Removed");
+      socket.emit("shared_AlterFavourite", noteID, loggedName);
+      return true;
+    } else {
+      toast.error("Something Went Wrong");
+      return false;
+    }
+  };
+
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
       await fetch("/sharing/deleteShared", {
@@ -167,7 +316,7 @@ function SharedNotes() {
       }).then((res) => {
         if (res.status == 200) {
           toast.success("Note Deleted.");
-
+          socket.emit("shared_NoteDelete", inpid, loggedName);
           setUserNotes(userNotes.filter((note) => note.noteID !== inpid));
         }
       });
@@ -203,6 +352,12 @@ function SharedNotes() {
       </div>
     );
   } else {
+    if (bgColors.current.length === 0) {
+    bgColors.current = userNotes.map(() =>
+      ["orange", "blue", "yellow", "green", "pink"][
+        Math.floor(Math.random() * 5)
+      ]
+    )}
     return (
       <>
         {" "}
@@ -255,11 +410,13 @@ function SharedNotes() {
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4">
               {loggedName ? (
                 isEditor ? (
-                  <CreateNote
+                  <CreateNoteShared
                     already={userNotes.length}
-                    getids={getids.groupID}
+                    gid={getids.groupID}
+                    owner={getids.userID}
                     navigator={navigate}
-                  ></CreateNote>
+                    addNewNote={addNewNote}
+                  ></CreateNoteShared>
                 ) : (
                   <div
                     className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10 text-center flex items-center gap-6 flex-col justify-center`}
@@ -301,13 +458,7 @@ function SharedNotes() {
                       : loginWarning
                   }
                   isFav={note.favourite}
-                  favFunction={
-                    loggedName
-                      ? isEditor
-                        ? favouriteSet
-                        : editorWarning
-                      : loginWarning
-                  }
+                  favFunction={favouriteSet}
                   delFunction={
                     loggedName
                       ? isEditor
@@ -316,10 +467,7 @@ function SharedNotes() {
                       : loginWarning
                   }
                   aiChatFunction={showChatAndAsk}
-                  color={
-                    ["orange", "blue", "yellow", "green", "pink"][
-                      Math.floor(Math.random() * 5)
-                    ]
+                  color={bgColors.current[index]
                   }
                 ></NoteDisplay>
               ))}

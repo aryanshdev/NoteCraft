@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { Slide, toast, ToastContainer } from "react-toastify";
 import CreateNote from "./CreateNewNote";
 import NotesPageSideBar from "./NotesPageSideBar.jsx";
 import NoteDisplay from "./NoteDisplay.jsx";
@@ -13,11 +13,11 @@ function NotesPage() {
   const [userNotes, setUserNotes] = useState([]);
   const gid = useParams();
   const navigate = useNavigate();
-
+  const bgColors = useRef([]);
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/getAll", {
+    fetch("http://localhost:10000/app/notes/getAll", {
       credentials: "include",
       method: "POST",
       headers: {
@@ -43,7 +43,136 @@ function NotesPage() {
       .catch((error) => {
         toast.error("Failed to fetch notes");
       });
+      
   }, [navigate]);
+
+  //Collab Events
+  useEffect(() => {
+    socket.on("shared_NoteDelete", (nid, name) => {
+      toast(name + " Deleted A Note", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="size-6"
+          >
+            <path
+              fillRule="evenodd"
+              d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      setUserNotes((userNotes) => {
+        return userNotes.filter((notes) => notes.noteID !== nid);
+      });
+    });
+    socket.on("shared_NoteAdded", (details, name) => {
+      toast(name + " Added A Note", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      setUserNotes((userNotes) => [
+        ...userNotes,
+        {
+          body: details.body,
+          favourite: false,
+          groupID: gid.groupID,
+          noteID: details.noteID,
+          title: details.title,
+        },
+      ]);
+    });
+    socket.on("shared_NoteUpdate", (details, name) => {
+      toast(name + " Updated A Note", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      setUserNotes((userNotes) => {
+        return userNotes.map((note) => {
+          if (note.noteID === details.noteID) {
+            return {
+              ...note,
+              title: details.title,
+              description: details.body,
+            };
+          }
+          return note;
+        });
+      });
+    });
+    socket.on("shared_AlterFavourite", (nid, name) => {
+      toast(name + " Changed Favourities", {
+        icon: ({ theme, type }) => (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        ),
+        position: "bottom-left",
+        autoClose: 1500,
+        closeOnClick: true,
+        pauseOnHover: false,
+        transition: Slide,
+      });
+      setUserNotes((userNotes) =>
+        userNotes.map((note) => {
+          return note.noteID === nid
+            ? { ...note, favourite: !note.favourite }
+            : note;
+        })
+      );
+    });
+  }, []);
 
   const updateNote = useCallback(
     async (event) => {
@@ -51,7 +180,7 @@ function NotesPage() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/update", {
+      const res = await fetch("http://localhost:10000/app/notes/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -67,6 +196,11 @@ function NotesPage() {
 
       if (res.status === 200) {
         toast.success("Details Updated");
+        socket.emit(
+          "shared_NoteUpdate",
+          { title: title, description: desc, nid: id },
+          "Owner"
+        );
         return true; // Return true on success
       } else if (res.status == 400) {
         toast.warning("Check Inputs And Try Again");
@@ -82,7 +216,7 @@ function NotesPage() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
+    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: gid.groupID,
@@ -97,6 +231,7 @@ function NotesPage() {
 
     if (res.status == 200) {
       toast.success(isFav ? "Favourite Added" : "Favourite Removed");
+      socket.emit("shared_AlterFavourite", noteID, "Owner");
       return true;
     } else {
       toast.error("Something Went Wrong");
@@ -136,10 +271,19 @@ function NotesPage() {
         title: title,
       },
     ]);
+    socket.emit(
+      "shared_NoteAdded",
+      {
+        body: bodyContent,
+        noteID: newNoteID,
+        title: title,
+      },
+      "Owner"
+    );
   };
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notes/deleteNote", {
+      await fetch("http://localhost:10000/app/notes/deleteNote", {
         credentials: "include",
         body: JSON.stringify({
           nid: inpid,
@@ -152,6 +296,8 @@ function NotesPage() {
       }).then((res) => {
         if (res.status == 200) {
           toast.success("Note Deleted.");
+
+          socket.emit("shared_NoteDelete", inpid, "Owner");
           setUserNotes(userNotes.filter((note) => note.noteID !== inpid));
         }
       });
@@ -180,6 +326,7 @@ function NotesPage() {
       </>
     );
   };
+ 
   if (Loading) {
     return (
       <div className="w-screen h-screen flex">
@@ -187,6 +334,12 @@ function NotesPage() {
       </div>
     );
   } else {
+    if (bgColors.current.length === 0) {
+      bgColors.current = userNotes.map(() =>
+        ["orange", "blue", "yellow", "green", "pink"][
+          Math.floor(Math.random() * 5)
+        ]
+      )};
     return (
       <>
         <ToastContainer
@@ -232,11 +385,7 @@ function NotesPage() {
                   favFunction={favouriteSet}
                   delFunction={deleteNote}
                   aiChatFunction={showChatAndAsk}
-                  color={
-                    ["orange", "blue", "yellow", "green", "pink"][
-                      Math.floor(Math.random() * 5)
-                    ]
-                  }
+                  color={bgColors.current[index]}
                 ></NoteDisplay>
               ))}
             </div>

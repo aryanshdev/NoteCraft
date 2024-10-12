@@ -1,51 +1,40 @@
 import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-function CreateNoteGroup(props) {
-  const nav = useNavigate();
+import { toast } from "react-toastify";
+
+function CreateNoteShared(props) {
   const showHideAddArea = () => {
     addMode.classList.toggle("hidden");
     displayMode.classList.toggle("hidden");
   };
-
   const addNewGroup = () => {
-    fetch("http://localhost:10000/app/notesgroup/new", {
+    fetch("http://localhost:10000/sharing/newNoteShared", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
         title: document.getElementById("newTitle").value,
         description: document.getElementById("newDesc").value,
+        gid: props.gid,
+        uid : props.owner
       }), // Use JSON.stringify
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        switch (res.status) {
-          case 200:
-            toast.success(
-              <>
-                New Note Group Created
-                <br />
-                <em>
-                  {" "}
-                  <ul>Redirecting</ul>{" "}
-                </em>
-              </>,
-              {
-                onClose: async () => nav("/notes/" + (await res.text())),
-              }
-            );
-            break;
-          case 400:
-            toast.warning("Check Inputs And Try Again");
-            break;
-          case 500:
-            toast.error("Something Went Wrong");
-            break;
-          case 401:
-            nav("/401");
-            break;
+      .then(async (res) => {
+        if (res.status === 200) {
+          toast.success("New Note Added");
+          props.addNewNote(
+            document.getElementById("newTitle").value,
+            document.getElementById("newDesc").value,
+            await res.text()
+          );
+        } else if (res.status == 400) {
+          toast.warning("Check Inputs And Try Again");
+        } else if (res.status == 401) {
+          props.navigator("/401");
+        } else {
+          toast.error("Some Error Occured");
         }
       })
       .finally(showHideAddArea());
@@ -53,7 +42,7 @@ function CreateNoteGroup(props) {
 
   return (
     <div
-      className={`w-full h-52  rounded-md border-2 border-dotted  bg-blue-800 bg-opacity-10`}
+      className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10`}
     >
       <div
         className="flex justify-center items-center flex-col w-full text-center gap-1 h-full"
@@ -61,6 +50,7 @@ function CreateNoteGroup(props) {
       >
         <div
           className=" rounded-full border-2 border-dotted w-24 h-24 flex justify-center align-middle items-center hover:bg-white hover:bg-opacity-10"
+          id="addNotButton"
           onClick={showHideAddArea}
         >
           <svg
@@ -78,11 +68,11 @@ function CreateNoteGroup(props) {
             ></path>
           </svg>
         </div>
-        <span className="font-semibold"> Add New Note Group</span>
+        <span className="font-semibold"> Add New Note</span>
 
         <span className="italic">
           {" "}
-          You Can Add {8 - props.already} More Groups
+          You Can Add {20 - props.already} More Notes In This Group
         </span>
         <div></div>
       </div>
@@ -94,9 +84,12 @@ function CreateNoteGroup(props) {
               placeholder="Title"
               id="newTitle"
               className="focus:outline-none outline-none bg-transparent border-b-[1px] border-solid border-gray-500 focus:border-white transition-all duration-150  placeholder:text-gray-300 text-xl w-full mb-2"
+              autoFocus={true}
+              required
             />
 
             <textarea
+              required
               type="text"
               id="newDesc"
               placeholder="Description"
@@ -140,4 +133,4 @@ function CreateNoteGroup(props) {
   );
 }
 
-export default CreateNoteGroup;
+export default CreateNoteShared;
