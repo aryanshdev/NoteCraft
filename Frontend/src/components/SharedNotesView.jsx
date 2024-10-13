@@ -19,7 +19,7 @@ function SharedNotes() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:10000/app/account/getName", {
+    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -192,14 +192,15 @@ function SharedNotes() {
         pauseOnHover: false,
         transition: Slide,
       });
-      console.log(details)
+      console.log("DETAILS", details)
       setUserNotes((userNotes) =>
         userNotes.map((note) => {
           return note.noteID === details.nid
-            ? {  title: details.title, description: details.description }
+            ? {title:details.title,body:details.description}
             : note;
         })
-      );
+      )
+      
     });
     socket.on("shared_AlterFavourite", (nid, name) => {
       toast(name + " Changed Favourities", {
@@ -277,7 +278,7 @@ function SharedNotes() {
     toast.warning("Ask Note Group Owner To Add You As Editor ");
   };
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
+    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: getids.groupID,
@@ -352,12 +353,14 @@ function SharedNotes() {
       </div>
     );
   } else {
-    if (bgColors.current.length === 0) {
-    bgColors.current = userNotes.map(() =>
-      ["orange", "blue", "yellow", "green", "pink"][
-        Math.floor(Math.random() * 5)
-      ]
-    )}
+    if (bgColors.current.length !== userNotes.length) {
+      bgColors.current = userNotes.map(
+        () =>
+          ["orange", "blue", "yellow", "green", "pink"][
+            Math.floor(Math.random() * 5)
+          ]
+      );
+    }
     return (
       <>
         {" "}
@@ -467,8 +470,7 @@ function SharedNotes() {
                       : loginWarning
                   }
                   aiChatFunction={showChatAndAsk}
-                  color={bgColors.current[index]
-                  }
+                  color={bgColors.current[index]}
                 ></NoteDisplay>
               ))}
             </div>

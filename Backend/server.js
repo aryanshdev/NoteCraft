@@ -24,8 +24,8 @@ const { Server } = require("socket.io");
 const io = new Server(app, {
   cors: {
     origin: [
-      "http://localhost:10000", // Removed trailing slash
-      "http://localhost:5173",
+      "https://notecraftai-xct5.onrender.com", // Removed trailing slash
+      "https://notecraft-ai.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
@@ -99,7 +99,7 @@ expressServer.use(helmet());
 
 expressServer.use(
   cors({
-    origin: "http://localhost:5173", // Frontend domain
+    origin: "https://notecraft-ai.onrender.com", // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
@@ -115,7 +115,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:10000/auth/google/process-login",
+      callbackURL: "https://notecraftai-xct5.onrender.com/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
@@ -148,7 +148,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:10000/auth/github/process-login",
+      callbackURL: "https://notecraftai-xct5.onrender.com/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
