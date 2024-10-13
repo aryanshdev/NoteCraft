@@ -88,8 +88,8 @@ expressServer.use(
     saveUninitialized: false,
     proxy: true,
     cookie: {
-      // secure: true,
-      // sameSite: "none",
+      secure: true,
+      sameSite: "none",
       maxAge: 900000,
     },
   })
