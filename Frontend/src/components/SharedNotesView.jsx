@@ -38,7 +38,7 @@ function SharedNotes() {
   }, []);
 
   useEffect(() => {
-    fetch("/sharing/sharedGetAll", {
+    fetch("https://notecraftai-xct5.onrender.com/sharing/sharedGetAll", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -75,7 +75,7 @@ function SharedNotes() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("/sharing/updateShared", {
+      const res = await fetch("https://notecraftai-xct5.onrender.com/sharing/updateShared", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -308,7 +308,7 @@ function SharedNotes() {
 
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("/sharing/deleteShared", {
+      await fetch("https://notecraftai-xct5.onrender.com/sharing/deleteShared", {
         credentials: "include",
         body: JSON.stringify({
           gid: getids.groupID,
