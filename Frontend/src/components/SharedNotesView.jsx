@@ -59,6 +59,7 @@ function SharedNotes() {
         return res.json();
       })
       .then((res) => {
+        console.log(res)
         setUserNotes(res["notes"]);
         setIsEditor(res["editor"]);
         setLoading(false);

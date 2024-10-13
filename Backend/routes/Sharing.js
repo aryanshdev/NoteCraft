@@ -23,8 +23,10 @@ router.post("/sharedGetAll", async (req, res) => {
         .toArray()
     )[0]["editors"];
   } catch (error) {
+    console.log("error");
     data = []
   }
+  console.log(data)
   var isEditor = req.user ? data.includes(req.user.loggedUserEmail) : false;
   try {
     req.session.sharedOpened[req.body.gid] = isEditor;
@@ -32,6 +34,7 @@ router.post("/sharedGetAll", async (req, res) => {
     req.session.sharedOpened = { [req.body.gid]: isEditor };
   }
   req.session.save();
+  console.log(isEditor)
   res.json({ notes: await cur.toArray(), editor: isEditor });
 });
 
