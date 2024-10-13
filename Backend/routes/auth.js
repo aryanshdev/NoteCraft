@@ -24,7 +24,6 @@ router.get(
         )
         .toArray()
     ).map((ele) => ele.groupID);
-    req.session.data = req.user;
     req.session.save();
   }
 );

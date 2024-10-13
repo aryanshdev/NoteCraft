@@ -15,7 +15,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const Groq = require("groq-sdk");
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
+const idgen = new ShortUniqueId({ length: 15 });
 const http = require("http"); // Create HTTP server
 const app = http.createServer(expressServer); // Attach Express to the server
 const { Server } = require("socket.io");
@@ -88,8 +88,8 @@ expressServer.use(
     saveUninitialized: false,
     proxy: true,
     cookie: {
-      // secure: true,
-      // sameSite: "none",
+      secure: true,
+      sameSite: "none",
       maxAge: 900000,
     },
   })
@@ -108,7 +108,7 @@ expressServer.use(
 );
 
 // Passport authentication
-const idgen = new ShortUniqueId({ length: 15 });
+
 
 passport.use(
   new GoogleStrategy(
@@ -126,7 +126,7 @@ passport.use(
           loggedUserEmail: profile._json.email,
         });
       } else {
-        let id = idgen();
+        let id = idgen.rnd();
         await usersCol.insertOne({
           email: profile._json.email,
           name: profile._json.name,
@@ -162,7 +162,7 @@ passport.use(
           loggedUserEmail: profile.emails[0].value,
         });
       } else {
-        let id = idgen();
+        let id = idgen.rnd();
         await usersCol.insertOne({
           email: profile.emails[0].value,
           name: profile._json.name,

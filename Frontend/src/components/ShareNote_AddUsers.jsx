@@ -67,7 +67,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraft-ai.onrender.com /shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   };
@@ -79,7 +79,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraft-ai.onrender.com /shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   }, []);

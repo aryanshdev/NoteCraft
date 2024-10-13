@@ -8,6 +8,7 @@ import LoaderDisplay from "../LoaderDisplay";
 
 function Dashboard() {
   const [userNotes, setUserNotes] = useState([]);
+  const [name,setName] = useState("User")
   const navigate = useNavigate();
   const [Loading, setLoading] = useState(true);
   const Greeting =
@@ -16,6 +17,23 @@ function Dashboard() {
       : new Date().getHours() < 16
       ? "Afternoon"
       : "Evening";
+
+      fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+        method: "GET",
+        credentials: "include",
+      }).then(async (res) => {
+        switch (res.status) {
+          case 401:
+            setName(null);
+            return false;
+          case 500:
+            navigate("/500");
+          case 200:
+            let uname = await res.text();
+            setName(uname.split(" ")[0]);
+            break;
+        }
+      });
 
   useEffect(() => {
     fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
@@ -148,7 +166,7 @@ function Dashboard() {
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
 
         <h1 className="font-semibold text-3xl mb-3">
-          Good {Greeting}, Aryansh
+          Good {Greeting}, {name}
         </h1>
         <h3>Take a look at your Notes or Create More Below</h3>
         <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">

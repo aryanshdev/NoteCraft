@@ -192,15 +192,14 @@ function SharedNotes() {
         pauseOnHover: false,
         transition: Slide,
       });
-      console.log("DETAILS", details)
-      setUserNotes((userNotes) =>
-        userNotes.map((note) => {
-          return note.noteID === details.nid
-            ? {title:details.title,body:details.description}
-            : note;
-        })
-      )
-      
+      setUserNotes((userNotes) => {
+        const updatedNotes = userNotes.map((note) =>
+          note.noteID === details.nid
+            ? { ...note, title: details.title, body: details.description } // Update the note if IDs match
+            : note
+        );
+        return updatedNotes;
+      });
     });
     socket.on("shared_AlterFavourite", (nid, name) => {
       toast(name + " Changed Favourities", {
