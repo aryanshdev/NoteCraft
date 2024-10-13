@@ -11,7 +11,7 @@ function Display401() {
         You Session Has Expired. Please Re-Login To Conitnue Using NoteCraft
         <Link to={"/login"}>
           <button className="bg-white px-4 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md">
-            Re-Login
+            Login
           </button>
         </Link>
       </div>

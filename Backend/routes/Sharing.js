@@ -3,8 +3,6 @@ const { notesCol, notesGroupCol } = require("../db/dbconnection");
 const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
 
-function ensureEditor() {}
-
 router.post("/sharedGetAll", async (req, res) => {
   var cur = await notesCol.find({
     ownerID: req.body.uid,
@@ -25,15 +23,13 @@ router.post("/sharedGetAll", async (req, res) => {
   } catch (error) {
     data = []
   }
-  console.log(req.user)
-  var isEditor = req.user ? data.includes(req.user.loggedUserEmail) : false;
+  var isEditor = req.session.passport ? data.includes(req.session.passport.user.loggedUserEmail) : false;
   try {
     req.session.sharedOpened[req.body.gid] = isEditor;
   } catch (error) {
     req.session.sharedOpened = { [req.body.gid]: isEditor };
   }
   req.session.save();
-  console.log(isEditor)
   res.json({ notes: await cur.toArray(), editor: isEditor });
 });
 

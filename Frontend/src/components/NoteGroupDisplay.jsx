@@ -69,7 +69,7 @@ const NoteGroupDisplay = ({
             className="focus:outline-none outline-none bg-transparent border-b-[1px] border-solid border-gray-500 focus:border-white transition-all duration-150 hidden placeholder:text-gray-300"
           />
         </h2>
-        <p className="font-semibold text-wrap break-words">
+        <p className=" text-wrap break-words text-xl">
           <span>{description}</span>
           <textarea
             type="text"

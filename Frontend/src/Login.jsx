@@ -3,7 +3,7 @@ function Login() {
 return <>
 
 <section className="flex justify-center align-middle flex-col md:flex-row h-screen overflow-hidden  relative ">
-        <div className="bg-gradient-to-br w-56 h-56 from-yellow-500 to-gray-700 rounded-full absolute opacity-40 -z-20 top-0 left-1/2 blur-3xl overflow-hidden"></div>
+        <div className="bg-gradient-to-br w-56 h-56 md:h-80 md:w-80 from-yellow-500 to-gray-700 rounded-full absolute opacity-40 -z-20 top-0 left-1/2 blur-3xl overflow-hidden  md:right-14 md:left-auto"></div>
         <div className="flex flex-col gap-4 justify-center align-middle h-[60vh] w-full md:w-2/5 p-5 md:px-7 lg:px-10 md:py-16 md:h-full">
           <h1 className="text-4xl font-semibold w-full">Login</h1>
           <h3 className="flex flex-row align-middle items-center gap-2 text-xl mb-5">
@@ -85,6 +85,25 @@ return <>
               isFav={true}
               _description="What is OAuth? - Why We Need? Where We Need? - PassportJS"
               _title="OAuth Basics"
+              color={"purple"}
+            ></NoteGroupDisplay>
+          </div>
+
+          <div className="absolute left-1/4 md:hidden xs:hidden rotate-3 z-[1] w-52">
+            <NoteGroupDisplay
+              isFav={true}
+              _description="What is React? Why is it used? Difference From Angular"
+
+              _title="Dev Notes"
+              color={"yellow"}
+            ></NoteGroupDisplay>
+          </div>
+          <div className="absolute left-1/2 md:hidden xs:hidden -rotate-6 z-[0] w-52">
+            <NoteGroupDisplay
+              isFav={false}
+              _description="What is C++? Why High Level Language? Uses and Implementations"
+
+              _title="C++ Notes"
               color={"blue"}
             ></NoteGroupDisplay>
           </div>

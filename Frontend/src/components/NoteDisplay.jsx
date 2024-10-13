@@ -18,6 +18,11 @@ const NoteDisplay = ({
   const [description, setDescription] = useState(_description);
   const [isFavourite, setIsFavourite] = useState(isFav);
 
+  useEffect(() => {
+    setTitle(_title);
+    setDescription(_description);
+  }, [_title, _description]);
+
   // Reference to the component to access DOM elements
   const cardRef = useRef(null);
 
@@ -157,7 +162,11 @@ const NoteDisplay = ({
         </button>
 
         {/* AI BUTTON */}
-        <button onClick={()=>{aiChatFunction(title+"|"+description)}}>
+        <button
+          onClick={() => {
+            aiChatFunction(title + "|" + description);
+          }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
