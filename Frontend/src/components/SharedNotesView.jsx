@@ -393,7 +393,7 @@ function SharedNotes() {
               aria-controls="default-sidebar"
               type="button"
               onClick={showChatSection}
-              className="inline-flex items-center m-1 px-4 text-sm text-gray-300 rounded-lg sm:hidden ml-auto mr-0"
+              className="inline-flex items-center m-1 px-4 text-sm text-gray-300 rounded-lg  ml-auto mr-0"
             >
               {" "}
               <svg

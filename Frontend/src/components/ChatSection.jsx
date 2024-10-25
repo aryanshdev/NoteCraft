@@ -77,7 +77,6 @@ function ChatSection({ id, openFunction }) {
     document.getElementById("chatMSG").value = "";
 
     if (String(inpEleVal).startsWith("@NC-AI")) {
-      console.log("sdf");
       socket.emit("ASKAI", inpEleVal.slice(6));
     }
   };

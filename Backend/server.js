@@ -194,6 +194,9 @@ expressServer.use(passport.session());
 expressServer.use("/auth", authRouter);
 expressServer.use("/sharing", sharingRouter);
 expressServer.use("/app", ensureAuthenticated, appRoute);
+expressServer.get("/keepAlive" , (_,res) =>{
+  res.send("<h1> Woahhh !! Didn't Expect To See You Here!! What You Doing In The Back Here? </h1>")
+})
 
 // Start the shared server (both Express and Socket.io)
 const PORT = process.env.PORT || 10000;
