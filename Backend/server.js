@@ -211,7 +211,7 @@ async function AskAIGroq(input) {
       {
         role: "system",
         content:
-          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their 'TITLE|DESCRIPTION' inputs or a follow-up question. Answer only related queries in a short, pointwise style.",
+          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their 'TITLE|DESCRIPTION' inputs or a follow-up question. Answer only related queries in highly descriptiveand long answer, pointwise style.",
       },
       {
         role: "user",
