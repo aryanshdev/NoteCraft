@@ -8,7 +8,7 @@ import LoaderDisplay from "../LoaderDisplay";
 
 function Dashboard() {
   const [userNotes, setUserNotes] = useState([]);
-  const [name,setName] = useState("User")
+  const [name, setName] = useState("User");
   const navigate = useNavigate();
   const [Loading, setLoading] = useState(true);
   const Greeting =
@@ -18,25 +18,25 @@ function Dashboard() {
       ? "Afternoon"
       : "Evening";
 
-      fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
-        method: "GET",
-        credentials: "include",
-      }).then(async (res) => {
-        switch (res.status) {
-          case 401:
-            setName(null);
-            return false;
-          case 500:
-            navigate("/500");
-          case 200:
-            let uname = await res.text();
-            setName(uname.split(" ")[0]);
-            break;
-        }
-      });
+  fetch("http://localhost:10000/app/account/getName", {
+    method: "GET",
+    credentials: "include",
+  }).then(async (res) => {
+    switch (res.status) {
+      case 401:
+        setName(null);
+        return false;
+      case 500:
+        navigate("/500");
+      case 200:
+        let uname = await res.text();
+        setName(uname.split(" ")[0]);
+        break;
+    }
+  });
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
+    fetch("http://localhost:10000/app/notesgroup/getAll", {
       method: "GET",
       credentials: "include", // Include cookies
       headers: {
@@ -68,7 +68,7 @@ function Dashboard() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/update", {
+      const res = await fetch("http://localhost:10000/app/notesgroup/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
@@ -94,17 +94,20 @@ function Dashboard() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (groupID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/editFavourite", {
-      credentials: "include",
-      body: JSON.stringify({
-        id: groupID,
-        favStatus: isFav,
-      }),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let res = await fetch(
+      "http://localhost:10000/app/notesgroup/editFavourite",
+      {
+        credentials: "include",
+        body: JSON.stringify({
+          id: groupID,
+          favStatus: isFav,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (res.status == 200) {
       toast.success(isFav ? "Favourite Added" : "Favourite Removed");
@@ -117,7 +120,7 @@ function Dashboard() {
 
   const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/deleteNoteGroup", {
+      await fetch("http://localhost:10000/app/notesgroup/deleteNoteGroup", {
         credentials: "include",
         body: JSON.stringify({
           id: inpid,

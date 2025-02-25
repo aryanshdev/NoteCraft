@@ -5,10 +5,12 @@ import { toast } from "react-toastify";
 function CreateNote(props) {
   const showHideAddArea = () => {
     addMode.classList.toggle("hidden");
+    document.getElementById("newTitle").value = "";
+    document.getElementById("newDesc").value = "";
     displayMode.classList.toggle("hidden");
   };
   const addNewGroup = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/new", {
+    fetch("http://localhost:10000/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

@@ -24,8 +24,8 @@ const { Server } = require("socket.io");
 const io = new Server(app, {
   cors: {
     origin: [
-      "https://notecraftai-xct5.onrender.com", // Removed trailing slash
-      "https://notecraft-ai.onrender.com",
+      "http://localhost:10000", // Removed trailing slash
+      "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
   socket.on("shared_NoteUpdate", (details, loggedName) => {
     socket.broadcast.emit("shared_NoteUpdate", details, loggedName);
   });
-  
+
   socket.on("shared_AlterFavourite", (nid, loggedName) => {
     socket.broadcast.emit("shared_AlterFavourite", nid, loggedName);
   });
@@ -88,9 +88,9 @@ expressServer.use(
     saveUninitialized: false,
     proxy: true,
     cookie: {
-      secure: true,
-      sameSite: "none",
-      maxAge: 900000,
+      // secure: true,
+      // sameSite: "none",
+      maxAge: 900000000,
     },
   })
 );
@@ -99,7 +99,7 @@ expressServer.use(helmet());
 
 expressServer.use(
   cors({
-    origin: "https://notecraft-ai.onrender.com", // Frontend domain
+    origin: "http://localhost:5173", // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
@@ -109,13 +109,12 @@ expressServer.use(
 
 // Passport authentication
 
-
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/google/process-login",
+      callbackURL: "http://localhost:10000/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
@@ -148,7 +147,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/github/process-login",
+      callbackURL: "http://localhost:10000/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -194,9 +193,11 @@ expressServer.use(passport.session());
 expressServer.use("/auth", authRouter);
 expressServer.use("/sharing", sharingRouter);
 expressServer.use("/app", ensureAuthenticated, appRoute);
-expressServer.get("/keepAlive" , (_,res) =>{
-  res.send("<h1> Woahhh !! Didn't Expect To See You Here!! What You Doing In The Back Here? </h1>")
-})
+expressServer.get("/keepAlive", (_, res) => {
+  res.send(
+    "<h1> Woahhh !! Didn't Expect To See You Here!! What You Doing In The Back Here? </h1>"
+  );
+});
 
 // Start the shared server (both Express and Socket.io)
 const PORT = process.env.PORT || 10000;
@@ -211,7 +212,7 @@ async function AskAIGroq(input) {
       {
         role: "system",
         content:
-          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their 'TITLE|DESCRIPTION' inputs or a follow-up question. Answer only related queries in a short, pointwise style.",
+          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their 'TITLE|DESCRIPTION' inputs or any follow-up question without the mentioned format. Answer only related queries in a short, point-wise style. for code output, always mention the language you are providing code in.",
       },
       {
         role: "user",
@@ -229,5 +230,6 @@ async function AskAIGroq(input) {
   for await (const chunk of chatCompletion) {
     reply += chunk.choices[0]?.delta?.content || "";
   }
+  console.log(reply);
   return reply;
 }

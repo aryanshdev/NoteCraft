@@ -11,7 +11,7 @@ router.get("/getName", async (req, res) => {
 router.put("/updateProfileImage", async (req, res) => {
   const hashedEmail = crypto
     .createHash("sha256")
-    .update(req.user.loggedUserEmail) // Update with the input string
+    .update(req.user.loggedUserEmail)
     .digest("hex");
   await fetch(`https://api.gravatar.com/v3/profiles/${hashedEmail}`, {
     headers: {

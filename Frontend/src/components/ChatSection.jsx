@@ -11,7 +11,7 @@ function ChatSection({ id, openFunction }) {
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -93,7 +93,7 @@ function ChatSection({ id, openFunction }) {
   if (name) {
     return (
       <>
-        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative p-4 transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#262626]">
+        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative p-4 transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#2e2e2e]">
           <div className="flex flex-col gap-4 h-full ">
             <header className="flex flex-row text-sm justify-around">
               {/* Close Chat Area Button */}
@@ -135,7 +135,7 @@ function ChatSection({ id, openFunction }) {
               </button>
             </header>
             {/* Message Display Area */}
-            <div className="flex overflow-y-auto w-full bg-white bg-opacity-5 rounded-lg px-3 py-2 flex-1 flex-col gap-5">
+            <div className="flex overflow-y-auto w-full bg-transparent rounded-lg  py-2 flex-1 flex-col gap-5">
               {messages.map((msgItem, index) => {
                 switch (msgItem[0]) {
                   case "SYSTEM":

@@ -5,23 +5,25 @@
 .sidemenu-active {
   color: #61f9ec;
 }
-
-code {
-  text-wrap: wrap;
+/* 
+.codeblock pre{
   background-color: rgba(133, 133, 133, 0.34);
-  word-wrap: break-word; /* Old name */
-  overflow-wrap: break-word; /* Modern name */
-}
+  margin: -5px 0;
+  padding: 3px;
+  border-radius: 5px;
+} */
 
-.AICHAT pre {
+
+
+/* .AICHAT pre {
   background-color: rgba(133, 133, 133, 0.34);
   margin: 5px 0;
   padding: 3px;
   border-radius: 5px;
 }
-.AICHAT pre code {
+.AICHAT pre {
   background: transparent;
-}
+} */
 
 .AICHAT ul{
     list-style-type: disc; 

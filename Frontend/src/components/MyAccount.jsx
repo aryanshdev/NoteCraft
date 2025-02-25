@@ -2,12 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoaderDisplay from "../LoaderDisplay";
 import { toast } from "react-toastify";
-function MyAccount() {
-  const [userInfo, setuserInfo] = useState({});
-  const [Loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+import { useDropzone } from "react-dropzone";
+
+function ChangePFPPopup() {
   const changeToGravatarImage = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/updateProfileImage", {
+    fetch("http://localhost:10000/app/account/updateProfileImage", {
       credentials: "include",
       method: "PUT",
     }).then(async (res) => {
@@ -25,8 +24,117 @@ function MyAccount() {
       }
     });
   };
+  const [file, setFile] = useState();
+
+  // Destructure getRootProps and getInputProps from useDropzone
+  const { acceptedFiles, fileRejections, getRootProps, getInputProps } =
+    useDropzone({
+      maxFiles: 1,
+      accept: {
+        "image/jpeg": [],
+        "image/png": [],
+      },
+      onDrop: (acceptedFile) => {
+        console.log(acceptedFile);
+        if (acceptedFile.length == 0) toast.info("Only Image Files Allowed");
+        else setFile(acceptedFile[0]);
+      },
+    });
+  return (
+    <>
+      <div
+        className="fixed w-screen z-50 bg-black h-screen top-0 left-0 bg-opacity-25 flex items-center align-middle justify-center"
+        id="pfpUpdateOverlay"
+      >
+        <div className="flex flex-col md:flex-row p-6 md:p-10 w-4/5 lg:w-3/5  h-auto z-50 bg-[#343434] rounded-xl fixed gap-7 md:gap-1">
+          <div className="w-full md:w-2/5 flex flex-col items-center justify-center gap-2">
+            <button
+              className="bg-white text-black w-auto px-3 py-1 rounded-lg m-auto "
+              onClick={changeToGravatarImage}
+            >
+              Use Gravatar Profile Image
+            </button>
+            OR
+            <button
+              className="bg-white text-black w-auto px-3 py-1 rounded-lg m-auto "
+              onClick={changeToGravatarImage}
+            >
+              Use Google Profile Image
+            </button>
+          </div>
+          <hr className="w-40 md:rotate-90 m-auto" />
+          <div className="w-full md:w-3/5 flex flex-col items-center justify-center text-center align-middle">
+            <div
+              {...getRootProps()}
+              className="w-full h-full p-6 border-dashed border-2 rounded-lg items-center justify-center flex-col flex gap-2 cursor-pointer*"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-20"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+                />
+              </svg>
+              <input {...getInputProps()} />
+              Drop Your Image Here To Upload
+              <br />
+              Or Click To Select Image
+            </div>
+          </div>
+        </div>
+        <button className="bg-white py-4 px-2 z[60]">Done</button>
+      </div>
+    </>
+  );
+}
+
+function UserImage({ url }) {
+  const showPFPChangeOptions = () => {
+    document.getElementById("pfpUpdateOverlay").classList.toggle("!hidden");
+  };
+  return (
+    <>
+      <div className="relative w-24">
+        <img
+          id="pfp"
+          src={url}
+          className="w-full rounded-full max-w-24 max-h-24"
+          alt=""
+        />
+        <button
+          className="absolute w-7 h-7 bg-white right-0 rounded-full bottom-0 flex items-center  justify-center opacity-85 hover:opacity-100 duration-150"
+          onClick={showPFPChangeOptions}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="black"
+            class="size-4"
+          >
+            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+          </svg>
+        </button>
+      </div>
+    </>
+  );
+}
+
+function MyAccount() {
+  const [userInfo, setuserInfo] = useState({});
+  const [Loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getInfo", { credentials: "include" })
+    fetch("http://localhost:10000/app/account/getInfo", {
+      credentials: "include",
+    })
       .then((res) => {
         switch (res.status) {
           case 401:
@@ -48,7 +156,7 @@ function MyAccount() {
   }, [navigate]);
   const resetAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/account/resetAccount", {
+      await fetch("http://localhost:10000/app/account/resetAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {
@@ -83,7 +191,7 @@ function MyAccount() {
   };
   const deleteAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/account/deleteAccount", {
+      await fetch("http://localhost:10000/app/account/deleteAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {
@@ -129,15 +237,9 @@ function MyAccount() {
     return (
       <>
         <div className="flex flex-col gap-6 ">
-          {" "}
-          {/* USER NAME DETAIL DISPLAY */}
-          <div className="flex flex-row gap-3 py-2">
-            <img
-              id="pfp"
-              src={userInfo.pfp}
-              className="w-1/3 rounded-full max-w-24 max-h-24"
-              alt=""
-            />
+          <ChangePFPPopup></ChangePFPPopup> {/* USER NAME DETAIL DISPLAY */}
+          <div className="flex flex-row gap-3 py-2 ">
+            <UserImage url={userInfo.pfp}></UserImage>
             <div className="flex flex-col justify-evenly">
               <h2 className="text-2xl font-semibold break-words">
                 {userInfo.name}
@@ -147,13 +249,6 @@ function MyAccount() {
               </h2>
             </div>
           </div>
-          <button
-            className="bg-white text-black w-auto px-3 py-1 rounded-lg mr-auto "
-            onClick={changeToGravatarImage}
-          >
-            Change Profile Image
-          </button>
-          You Can Use Your Gravitar Account To Add Profile Photo
           {/* Functions */}
           <div className="flex flex-col gap-3 items-start ">
             <h4 className="text-xl font-semibold">Reset Account</h4>
