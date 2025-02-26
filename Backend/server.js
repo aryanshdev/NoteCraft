@@ -3,8 +3,7 @@ const expressServer = express();
 const appRoute = require("./routes/app");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-const session = require("express-session");
-require("dotenv").config();
+// const session = require("express-session");
 const GoogleStrategy = require("passport-google-oauth20");
 const GitHubStrategy = require("passport-github2");
 const { usersCol } = require("./db/dbconnection");
@@ -14,11 +13,16 @@ const sharingRouter = require("./routes/Sharing");
 const helmet = require("helmet");
 const cors = require("cors");
 const Groq = require("groq-sdk");
+const http = require("http"); // Create HTTP server
+const { Server } = require("socket.io");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+
+require("dotenv").config();
+
+const app = http.createServer(expressServer); // Attach Express to the server
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 const idgen = new ShortUniqueId({ length: 15 });
-const http = require("http"); // Create HTTP server
-const app = http.createServer(expressServer); // Attach Express to the server
-const { Server } = require("socket.io");
 
 // Socket.io server
 const io = new Server(app, {
@@ -81,19 +85,7 @@ io.on("disconnection", () => {});
 // Middleware and security settings
 expressServer.use(bodyParser.json());
 expressServer.use(bodyParser.urlencoded({ extended: true }));
-expressServer.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    proxy: true,
-    cookie: {
-      // secure: true,
-      // sameSite: "none",
-      maxAge: 900000000,
-    },
-  })
-);
+expressServer.use(cookieParser());
 
 expressServer.use(helmet());
 
@@ -118,26 +110,29 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
-      if (userData) {
-        return done(null, {
-          userName: userData.name,
-          loggedinUserUUID: userData.uuid,
-          loggedUserEmail: profile._json.email,
-        });
-      } else {
-        let id = idgen.rnd();
+      let id = userData ? userData.uuid : idgen.rnd();
+
+      if (!userData) {
         await usersCol.insertOne({
           email: profile._json.email,
           name: profile._json.name,
           uuid: id,
           pfp: profile._json.picture,
         });
-        return done(null, {
+      }
+
+      // Generate JWT token
+      const token = jwt.sign(
+        {
           userName: profile._json.name,
           loggedinUserUUID: id,
           loggedUserEmail: profile._json.email,
-        });
-      }
+        },
+        process.env.SIGNING_KEY,
+        { expiresIn: "30d" }
+      );
+
+      return done(null, token);
     }
   )
 );
@@ -154,40 +149,38 @@ passport.use(
       const userData = await usersCol.findOne({
         email: profile.emails[0].value,
       });
-      if (userData) {
-        return done(null, {
-          userName: userData.name,
-          loggedinUserUUID: userData.uuid,
-          loggedUserEmail: profile.emails[0].value,
-        });
-      } else {
-        let id = idgen.rnd();
+      let id = userData ? userData.uuid : idgen.rnd();
+
+      if (!userData) {
         await usersCol.insertOne({
           email: profile.emails[0].value,
           name: profile._json.name,
           uuid: id,
           pfp: profile._json.avatar_url,
         });
-        return done(null, {
+      }
+
+      // Generate JWT token
+      const token = jwt.sign(
+        {
           userName: profile._json.name,
           loggedinUserUUID: id,
           loggedUserEmail: profile.emails[0].value,
-        });
-      }
+        },
+        process.env.SIGNING_KEY,
+        { expiresIn: "30d" }
+      );
+
+      return done(null, token);
     }
   )
 );
 
-passport.serializeUser(function (user, done) {
-  done(null, user);
-});
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
 
-passport.deserializeUser(function (obj, done) {
-  done(null, obj);
-});
 
 expressServer.use(passport.initialize());
-expressServer.use(passport.session());
 
 // Routes
 expressServer.use("/auth", authRouter);
@@ -220,16 +213,11 @@ async function AskAIGroq(input) {
       },
     ],
     model: "llama3-8b-8192",
-    temperature: 1,
-    max_tokens: 1024,
+    temperature: 1.25,
+    max_completion_tokens: 1024,
     top_p: 1,
-    stream: true,
+    stream: false,
   });
 
-  let reply = "";
-  for await (const chunk of chatCompletion) {
-    reply += chunk.choices[0]?.delta?.content || "";
-  }
-  console.log(reply);
-  return reply;
+  return chatCompletion.choices[0].message.content;
 }
