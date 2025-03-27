@@ -2,9 +2,13 @@ const router = require("express").Router();
 const { notesCol } = require("../db/dbconnection");
 const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
+const jwt = require("jsonwebtoken");
 
 router.post("/getAll", async (req, res) => {
-  if (Array.from(req.session.userGIDs).indexOf(req.body.id) !== -1) {
+  if (
+    Array.from(jwt.decode(req.cookies._uid).usedGIDs).indexOf(req.body.id) !==
+    -1
+  ) {
     var cur = await notesCol.find({
       ownerID: req.user.loggedinUserUUID,
       groupID: req.body.id,
@@ -34,7 +38,7 @@ router.post("/editFavourite", async (req, res) => {
 });
 
 router.post("/new", async (req, res) => {
-  if(req.body.title && req.body.description){
+  if (req.body.title && req.body.description) {
     id = idgen.rnd();
     notesCol
       .insertOne({
@@ -51,9 +55,8 @@ router.post("/new", async (req, res) => {
       .catch(() => {
         res.sendStatus(500);
       });
-  }
-  else{
-    res.sendStatus(400)
+  } else {
+    res.sendStatus(400);
   }
 });
 

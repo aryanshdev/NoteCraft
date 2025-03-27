@@ -36,8 +36,8 @@ router.post("/new", async (req, res) => {
         editors: [],
       })
       .then(() => {
-        req.session.userGIDs = Array.from(req.session.userGIDs).concat([id]);
-        req.session.save();
+        (jwt.decode(req.cookies._uid)).userGIDs = (jwt.decode(req.cookies._uid)).userGIDs.concat([id]);
+        (jwt.decode(req.cookies._uid)).save();
         res.status(200).send(id);
       })
       .catch(() => res.sendStatus(500));
@@ -109,7 +109,7 @@ router.delete("/deleteNoteGroup", async (req, res) => {
     .then(async () => {
       var resl = await deleteAllOfGroup(req.user.loggedinUserUUID, req.body.id);
       if (resl) {
-        req.session.userGIDs = req.session.userGIDs.filter(
+        (jwt.decode(req.cookies._uid)).userGIDs = (jwt.decode(req.cookies._uid)).userGIDs.filter(
           (id) => id !== req.body.id
         );
         res.sendStatus(200);

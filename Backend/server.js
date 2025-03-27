@@ -3,9 +3,6 @@ const expressServer = express();
 const appRoute = require("./routes/app");
 const bodyParser = require("body-parser");
 const passport = require("passport");
-// const session = require("express-session");
-const GoogleStrategy = require("passport-google-oauth20");
-const GitHubStrategy = require("passport-github2");
 const { usersCol } = require("./db/dbconnection");
 const ShortUniqueId = require("short-unique-id");
 const { router: authRouter, ensureAuthenticated } = require("./routes/auth");
@@ -15,8 +12,8 @@ const cors = require("cors");
 const Groq = require("groq-sdk");
 const http = require("http"); // Create HTTP server
 const { Server } = require("socket.io");
-const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 require("dotenv").config();
 
@@ -28,7 +25,7 @@ const idgen = new ShortUniqueId({ length: 15 });
 const io = new Server(app, {
   cors: {
     origin: [
-      "http://localhost:10000", // Removed trailing slash
+      "http://localhost:10000",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -91,93 +88,13 @@ expressServer.use(helmet());
 
 expressServer.use(
   cors({
-    origin: "http://localhost:5173", // Frontend domain
+    origin: ["http://localhost:5173"], // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
     origin: true,
   })
 );
-
-// Passport authentication
-
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:10000/auth/google/process-login",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      const userData = await usersCol.findOne({ email: profile._json.email });
-      let id = userData ? userData.uuid : idgen.rnd();
-
-      if (!userData) {
-        await usersCol.insertOne({
-          email: profile._json.email,
-          name: profile._json.name,
-          uuid: id,
-          pfp: profile._json.picture,
-        });
-      }
-
-      // Generate JWT token
-      const token = jwt.sign(
-        {
-          userName: profile._json.name,
-          loggedinUserUUID: id,
-          loggedUserEmail: profile._json.email,
-        },
-        process.env.SIGNING_KEY,
-        { expiresIn: "30d" }
-      );
-
-      return done(null, token);
-    }
-  )
-);
-
-passport.use(
-  new GitHubStrategy(
-    {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:10000/auth/github/process-login",
-      scope: ["user:email"],
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      const userData = await usersCol.findOne({
-        email: profile.emails[0].value,
-      });
-      let id = userData ? userData.uuid : idgen.rnd();
-
-      if (!userData) {
-        await usersCol.insertOne({
-          email: profile.emails[0].value,
-          name: profile._json.name,
-          uuid: id,
-          pfp: profile._json.avatar_url,
-        });
-      }
-
-      // Generate JWT token
-      const token = jwt.sign(
-        {
-          userName: profile._json.name,
-          loggedinUserUUID: id,
-          loggedUserEmail: profile.emails[0].value,
-        },
-        process.env.SIGNING_KEY,
-        { expiresIn: "30d" }
-      );
-
-      return done(null, token);
-    }
-  )
-);
-
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
 
 
 expressServer.use(passport.initialize());

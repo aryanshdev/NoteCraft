@@ -1,11 +1,14 @@
 const router = require("express").Router();
+const jwt = require("jsonwebtoken");
 const { usersCol, notesCol, notesGroupCol } = require("../db/dbconnection");
 const crypto = require("crypto");
+
 router.get("/getInfo", async (req, res) => {
-  res.send(await usersCol.findOne({ uuid: req.user.loggedinUserUUID }));
+  console.log(jwt.decode(req.cookies, process.env.SIGNING_CODE).email)
+  res.send(await usersCol.findOne({ uuid: jwt.decode(req.cookies, process.env.SIGNING_CODE).email }));
 });
 router.get("/getName", async (req, res) => {
-  res.send(req.user.userName);
+  res.send((jwt.decode(req.cookies._uid)).userName);
 });
 
 router.put("/updateProfileImage", async (req, res) => {

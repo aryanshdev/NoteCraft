@@ -23,13 +23,13 @@ router.post("/sharedGetAll", async (req, res) => {
   } catch (error) {
     data = []
   }
-  var isEditor = req.session.passport ? data.includes(req.session.passport.user.loggedUserEmail) : false;
+  var isEditor = (jwt.decode(req.cookies._uid)).passport ? data.includes((jwt.decode(req.cookies._uid)).passport.user.loggedUserEmail) : false;
   try {
-    req.session.sharedOpened[req.body.gid] = isEditor;
+    (jwt.decode(req.cookies._uid)).sharedOpened[req.body.gid] = isEditor;
   } catch (error) {
-    req.session.sharedOpened = { [req.body.gid]: isEditor };
+    (jwt.decode(req.cookies._uid)).sharedOpened = { [req.body.gid]: isEditor };
   }
-  req.session.save();
+  (jwt.decode(req.cookies._uid)).save();
   res.json({ notes: await cur.toArray(), editor: isEditor });
 });
 
@@ -51,7 +51,7 @@ router.post("/updateShared", async (req, res) => {
   if (
     req.body.title &&
     req.body.description &&
-    req.session.sharedOpened[req.body.gid]
+    (jwt.decode(req.cookies._uid)).sharedOpened[req.body.gid]
   ) {
     notesCol
       .updateOne(
@@ -73,7 +73,7 @@ router.post("/newNoteShared", async (req, res) => {
   if (
     req.body.title &&
     req.body.description &&
-    req.session.sharedOpened[req.body.gid]
+    (jwt.decode(req.cookies._uid)).sharedOpened[req.body.gid]
   ) {
     id = idgen.rnd();
     notesCol
