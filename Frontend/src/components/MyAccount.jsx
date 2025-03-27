@@ -6,7 +6,7 @@ import { useDropzone } from "react-dropzone";
 
 function ChangePFPPopup() {
   const changeToGravatarImage = () => {
-    fetch("http://localhost:10000/app/account/updateProfileImage", {
+    fetch("/app/account/updateProfileImage", {
       credentials: "include",
       method: "PUT",
     }).then(async (res) => {
@@ -132,7 +132,7 @@ function MyAccount() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:10000/app/account/getInfo", {
+    fetch("/app/account/getInfo", {
       credentials: "include",
     })
       .then((res) => {
@@ -156,7 +156,7 @@ function MyAccount() {
   }, [navigate]);
   const resetAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("http://localhost:10000/app/account/resetAccount", {
+      await fetch("/app/account/resetAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {
@@ -191,7 +191,7 @@ function MyAccount() {
   };
   const deleteAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("http://localhost:10000/app/account/deleteAccount", {
+      await fetch("/app/account/deleteAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {

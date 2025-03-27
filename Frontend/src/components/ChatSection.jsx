@@ -11,7 +11,7 @@ function ChatSection({ id, openFunction }) {
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("http://localhost:10000/app/account/getName", {
+    fetch("/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {

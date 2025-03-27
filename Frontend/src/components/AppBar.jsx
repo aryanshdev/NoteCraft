@@ -16,7 +16,7 @@ function AppBar() {
     showHideSideBar();
   };
   const logout = () => {
-    fetch("http://localhost:10000/auth/logout", { method: "POST", credentials: "include" }).then(
+    fetch("/auth/logout", { method: "POST", credentials: "include" }).then(
       (res) => {
         switch (res.status) {
           case 200:

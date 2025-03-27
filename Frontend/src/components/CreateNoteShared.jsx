@@ -8,7 +8,7 @@ function CreateNoteShared(props) {
     displayMode.classList.toggle("hidden");
   };
   const addNewGroup = () => {
-    fetch("http://localhost:10000/sharing/newNoteShared", {
+    fetch("/sharing/newNoteShared", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

@@ -39,7 +39,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   const [editors, setEditors] = useState([]);
   const navigate = useNavigate();
   const deleteEditor = (emailID) => {
-    fetch("http://localhost:10000/app/notesgroup/removeEditor", {
+    fetch("/app/notesgroup/removeEditor", {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -67,26 +67,26 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraftai-xct5.onrender.com/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   };
   useEffect(() => {
-    fetch("http://localhost:10000/app/notes/getSharingInfo", {
+    fetch("/app/notes/getSharingInfo", {
       credentials: "include",
     })
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraftai-xct5.onrender.com/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   }, []);
 
   useEffect(() => {
     fetch(
-      `http://localhost:10000/app/notesgroup/getEditors/${gid}`,
+      `/app/notesgroup/getEditors/${gid}`,
       { credentials: "include" }
     )
       .then((res) => {
@@ -103,7 +103,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   };
 
   const addEditor = () => {
-    fetch("http://localhost:10000/app/notesgroup/addEditor", {
+    fetch("/app/notesgroup/addEditor", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

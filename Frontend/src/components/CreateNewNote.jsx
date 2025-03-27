@@ -10,7 +10,7 @@ function CreateNote(props) {
     displayMode.classList.toggle("hidden");
   };
   const addNewGroup = () => {
-    fetch("http://localhost:10000/app/notes/new", {
+    fetch("/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
