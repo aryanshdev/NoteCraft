@@ -10,7 +10,7 @@ function CreateNote(props) {
     displayMode.classList.toggle("hidden");
   };
   const addNewGroup = () => {
-    fetch("/app/notes/new", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

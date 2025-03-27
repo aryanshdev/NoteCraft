@@ -19,7 +19,7 @@ function SharedNotes() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/app/account/getName", {
+    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -38,7 +38,7 @@ function SharedNotes() {
   }, []);
 
   useEffect(() => {
-    fetch("/sharing/sharedGetAll", {
+    fetch("https://notecraftai-xct5.onrender.com/sharing/sharedGetAll", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -75,7 +75,7 @@ function SharedNotes() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("/sharing/updateShared", {
+      const res = await fetch("https://notecraftai-xct5.onrender.com/sharing/updateShared", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -283,7 +283,7 @@ function SharedNotes() {
     toast.warning("Ask Note Group Owner To Add You As Editor ");
   };
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("/app/notes/editFavourite", {
+    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: getids.groupID,
@@ -308,7 +308,7 @@ function SharedNotes() {
 
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("/sharing/deleteShared", {
+      await fetch("https://notecraftai-xct5.onrender.com/sharing/deleteShared", {
         credentials: "include",
         body: JSON.stringify({
           gid: getids.groupID,
