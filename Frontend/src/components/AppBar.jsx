@@ -16,21 +16,22 @@ function AppBar() {
     showHideSideBar();
   };
   const logout = () => {
-    fetch("https://notecraftai-xct5.onrender.com/auth/logout", { method: "POST", credentials: "include" }).then(
-      (res) => {
-        switch (res.status) {
-          case 200:
-            nav("/");
-            break;
-          case 500:
-            toast.error("Something Went Wrong");
-            break;
-          case 401:
-            nav("/");
-            break;
-        }
+    fetch("https://notecraftai-xct5.onrender.com/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    }).then((res) => {
+      switch (res.status) {
+        case 200:
+          nav("/");
+          break;
+        case 500:
+          toast.error("Something Went Wrong");
+          break;
+        case 401:
+          nav("/");
+          break;
       }
-    );
+    });
   };
 
   return (

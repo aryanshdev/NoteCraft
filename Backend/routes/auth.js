@@ -122,7 +122,11 @@ router.get(
   }),
   async function (req, res) {
     console.log(req.user)
-    res.cookie("_uid", req.user);
+    res.cookie("_uid", req.user, {
+      secure: true,
+      sameSite: "none",
+    }
+    );
     res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
 );
@@ -136,7 +140,10 @@ router.get(
     failureRedirect: "https://notecraft-ai.onrender.com/login",
   }),
   async function (req, res) {
-    res.cookie("_uid", req.user);
+    res.cookie("_uid", req.user,{
+      secure: true,
+      sameSite: "none",
+    });
     res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
 );
