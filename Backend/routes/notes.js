@@ -5,12 +5,13 @@ const idgen = new shortuid({ length: 12 });
 const jwt = require("jsonwebtoken");
 
 router.post("/getAll", async (req, res) => {
+  
   if (
-    Array.from(jwt.decode(req.cookies._uid).usedGIDs).indexOf(req.body.id) !==
+    jwt.decode(req.cookies._uid).usedGIDs.indexOf(req.body.id) !==
     -1
   ) {
     var cur = await notesCol.find({
-      ownerID: req.user.loggedinUserUUID,
+      ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
       groupID: req.body.id,
     });
     res.send(await cur.toArray());
@@ -20,14 +21,14 @@ router.post("/getAll", async (req, res) => {
 });
 
 router.get("/getSharingInfo", async (req, res) => {
-  res.json({ user: req.user.loggedinUserUUID });
+  res.json({ user: jwt.decode(req.cookies._uid).loggedinUserUUID });
 });
 
 router.post("/editFavourite", async (req, res) => {
   notesCol
     .updateOne(
       {
-        ownerID: req.user.loggedinUserUUID,
+        ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
         groupID: req.body.gid,
         noteID: req.body.nid,
       },
@@ -42,7 +43,7 @@ router.post("/new", async (req, res) => {
     id = idgen.rnd();
     notesCol
       .insertOne({
-        ownerID: req.user.loggedinUserUUID,
+        ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
         groupID: req.body.gid,
         title: req.body.title,
         body: req.body.description,
@@ -65,7 +66,7 @@ router.post("/update", async (req, res) => {
     notesCol
       .updateOne(
         {
-          ownerID: req.user.loggedinUserUUID,
+          ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
           groupID: req.body.gid,
           noteID: req.body.nid,
         },

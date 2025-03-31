@@ -4,8 +4,7 @@ const { usersCol, notesCol, notesGroupCol } = require("../db/dbconnection");
 const crypto = require("crypto");
 
 router.get("/getInfo", async (req, res) => {
-  console.log(jwt.decode(req.cookies, process.env.SIGNING_CODE).email)
-  res.send(await usersCol.findOne({ uuid: jwt.decode(req.cookies, process.env.SIGNING_CODE).email }));
+  res.send(await usersCol.findOne({ uuid: jwt.decode(req.cookies._uid, process.env.SIGNING_CODE).loggedinUserUUID }));
 });
 router.get("/getName", async (req, res) => {
   res.send((jwt.decode(req.cookies._uid)).userName);

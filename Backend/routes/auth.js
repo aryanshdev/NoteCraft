@@ -163,7 +163,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 router.post("/logout", (req, res) => {
-  req.cookies.clear();
+  res.clearCookie();
   res.sendStatus(200);
 });
 

@@ -24,10 +24,7 @@ const idgen = new ShortUniqueId({ length: 15 });
 // Socket.io server
 const io = new Server(app, {
   cors: {
-    origin: [
-      "https://notecraftai-xct5.onrender.com",
-      "https://notecraft-ai.onrender.com",
-    ],
+    origin: ["https://notecraftai-xct5.onrender.com", "https://notecraft-ai.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
@@ -96,7 +93,6 @@ expressServer.use(
   })
 );
 
-
 expressServer.use(passport.initialize());
 
 // Routes
@@ -120,10 +116,9 @@ async function AskAIGroq(input) {
   const chatCompletion = await groq.chat.completions.create({
     messages: [
       {
-        role: "system",
-        content:
-          "You're a chatbot for a sticky notes site. Help users complete tasks or learn topics based on their 'TITLE|DESCRIPTION' inputs or any follow-up question without the mentioned format. Answer only related queries in a short, point-wise style. for code output, always mention the language you are providing code in.",
-      },
+        "role": "system",
+        "content": "You're a chatbot for a sticky notes site. Provide structured responses in Markdown format. Always use the format: **Title**, **Description**, **Code**, **Instructions**, and **Example Output**. Use proper markdown syntax for code blocks and avoid unnecessary repetition."
+      },      
       {
         role: "user",
         content: input,
@@ -135,6 +130,8 @@ async function AskAIGroq(input) {
     top_p: 1,
     stream: false,
   });
+
+  console.log(chatCompletion.choices[0].message.content)
 
   return chatCompletion.choices[0].message.content;
 }

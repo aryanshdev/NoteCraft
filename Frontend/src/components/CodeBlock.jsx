@@ -6,18 +6,20 @@ import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 function CodeBlock({ children, className }) {
     const [output, setOutput] = useState("");
     const runCode = async () => {
-        console.log({ code: children, language: language })
+      
         setOutput("Running...");
         try {
-          const response = await fetch("https://d0uv80rzti.execute-api.ap-south-1.amazonaws.com/default/NoteCraft-CodeRunner", {
+          const response = await fetch("https://4i7e9lhv2a.execute-api.ap-south-1.amazonaws.com/default/TEMP_TESTING", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code: children, language: language }),
+            body: JSON.stringify({ code: children }),
           });
     
           const data = await response.json();
+          console.log(data)
           setOutput(data.output || data.error || "No output");
         } catch (error) {
+          console.log(error)
           setOutput(`Error: ${error.message}`);
         }
       };
