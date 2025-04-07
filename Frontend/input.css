@@ -13,7 +13,9 @@
   border-radius: 5px;
 } */
 
-
+.AICHAT{
+  line-height: 2;
+}
 
 /* .AICHAT pre {
   background-color: rgba(133, 133, 133, 0.34);
@@ -21,6 +23,7 @@
   padding: 3px;
   border-radius: 5px;
 }
+  
 .AICHAT pre {
   background: transparent;
 } */
@@ -33,4 +36,13 @@
 .AICHAT ol{
     list-style-type:decimal; 
     list-style-position: inside;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0px;
+}
+
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

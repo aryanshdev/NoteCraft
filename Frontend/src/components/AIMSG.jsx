@@ -20,17 +20,23 @@ function AIMSG({ msg }) {
         </svg>
         NodeCraft AI ✨
       </div>
-      <div className="bg-white bg-opacity-10 text-left flex-1 text-base px-3 py-2 rounded-lg break-words AICHAT">
+      <div className="bg-white bg-opacity-5 text-left flex-1 text-base px-3 py-2 rounded-lg break-words AICHAT">
         <ReactMarkdown
           className="w-full break-words"
           remarkPlugins={[remarkGfm]}
           components={{
             code({ node, inline, className, children, ...props }) {
-              return !inline ? (
-                <CodeBlock className={className}>{children}</CodeBlock>
-              ) : (
-                <code className="bg-gray-700 rounded px-1">{children}</code>
-              );
+              const hasLang = className && className.startsWith("language-");
+
+              if (!inline && hasLang) {
+                // It's a proper code block
+                return <CodeBlock className={className}>{children}</CodeBlock>;
+              } else {
+                // It's inline code
+                return (
+                  <code className="bg-black bg-opacity-20 px-2 rounded ">{children}</code>
+                );
+              }
             },
           }}
         >

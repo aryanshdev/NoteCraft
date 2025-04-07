@@ -109,9 +109,11 @@ router.delete("/deleteNoteGroup", async (req, res) => {
     .then(async () => {
       var resl = await deleteAllOfGroup(req.user.loggedinUserUUID, req.body.id);
       if (resl) {
+        console.log("fg")
         (jwt.decode(req.cookies._uid)).userGIDs = (jwt.decode(req.cookies._uid)).userGIDs.filter(
           (id) => id !== req.body.id
         );
+        console.log("fgsdsd")
         res.sendStatus(200);
       } else res.sendStatus(500);
     })

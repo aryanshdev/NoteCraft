@@ -1,7 +1,18 @@
 // CodeBlock.jsx
 import React, { useState } from "react";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { darkula, gruvboxDark, hopscotch, paraisoDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { atomOneDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { a11yDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { kimbieDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { atomOneDarkReasonable } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { nnfxDark } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { rainbow } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { tomorrowNightBlue } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { tomorrowNight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { vsDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { atelierEstuaryDark, atelierSulphurpoolDark, dark, magula, monokaiSublime, nightOwl, shadesOfPurple, solarizedDark, tomorrow } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { atomDark, coldarkCold, coldarkDark, duotoneDark, duotoneEarth, duotoneSpace, holiTheme, lucario, materialDark, materialOceanic, oneDark, solarizedDarkAtom, synthwave84, twilight, vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 function CodeBlock({ children, className }) {
     const [output, setOutput] = useState("");
@@ -29,7 +40,7 @@ function CodeBlock({ children, className }) {
   return (
     <div className="relative text-white rounded-lg overflow-hidden my-2 codeblock">
       <div className="px-4 py-2 bg-gray-900 text-sm mb-0 flex justify-between items-center">
-        <span>{language}</span>
+        <span>{language.slice(0,1).toUpperCase()+language.slice(1)}</span>
        <div className="gap-5 flex">
        <button
           onClick={() => navigator.clipboard.writeText(children)}
@@ -47,18 +58,19 @@ function CodeBlock({ children, className }) {
       </div>
       <SyntaxHighlighter
         language={language}
-        style={materialDark}
+        style={oneDark}
         wrapLongLines
         customStyle={{ margin: 0, borderRadius: "0 0 10px 10px" }}
       >
-        {String(children).trim()}
+        {String(children).trim() + "\n"+language}
       </SyntaxHighlighter>
     
 
       {output && (
-        <div className="-mt-2 p-2 bg-black bg-opacity-40 text-green-400 rounded">
-          <strong>Output:</strong>
-          <pre>{output}</pre>
+        <div className="-mt-2 p-2  text-green-500 rounded flex flex-col overflow-auto">
+          <strong className="text-white font-bold">Output:</strong>
+          
+          <pre className="pr-5 mx-2">{output}</pre>
         </div>
         
       )}

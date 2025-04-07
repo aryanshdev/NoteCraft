@@ -9,8 +9,9 @@ function CreateNote(props) {
     document.getElementById("newDesc").value = "";
     displayMode.classList.toggle("hidden");
   };
+
   const addNewGroup = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/new", {
+    fetch("http://localhost:10000/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
@@ -23,7 +24,7 @@ function CreateNote(props) {
       },
     })
       .then(async (res) => {
-        console.log(res);
+        console.log(document.getElementById("newTitle").value);
         if (res.status === 200) {
           toast.success("New Note Added");
           props.addNewNote(
@@ -41,6 +42,7 @@ function CreateNote(props) {
       })
       .finally(showHideAddArea());
   };
+
 
   return (
     <div

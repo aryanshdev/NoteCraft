@@ -4,9 +4,9 @@ import LoaderDisplay from "../LoaderDisplay";
 import { toast } from "react-toastify";
 import { useDropzone } from "react-dropzone";
 
-function ChangePFPPopup() {
+function ChangePFPPopup({ closePopup }) {
   const changeToGravatarImage = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/updateProfileImage", {
+    fetch("http://localhost:10000/app/account/updateProfileImage", {
       credentials: "include",
       method: "PUT",
     }).then(async (res) => {
@@ -43,10 +43,21 @@ function ChangePFPPopup() {
   return (
     <>
       <div
-        className="fixed w-screen z-50 bg-black h-screen top-0 left-0 bg-opacity-25 flex items-center align-middle justify-center"
+        className="fixed w-screen z-50 bg-black h-screen top-0 left-0 bg-opacity-25 flex items-center align-middle justify-center !hidden"
         id="pfpUpdateOverlay"
       >
-        <div className="flex flex-col md:flex-row p-6 md:p-10 w-4/5 lg:w-3/5  h-auto z-50 bg-[#343434] rounded-xl fixed gap-7 md:gap-1">
+        <div className="flex flex-col md:flex-row p-6 md:p-10 w-4/5 lg:w-3/5  h-auto z-50 bg-[#343434] rounded-xl gap-7 md:gap-1 absolute">
+          <div
+            className="right-0 translate-x-3 -translate-y-4 absolute top-0 w-8 h-8  bg-white rounded-full flex align-middle items-center justify-center"
+            onClick={closePopup}
+          >
+            <img
+              width="20"
+              height="20"
+              src="https://img.icons8.com/ios-filled/20/delete-sign--v1.png"
+              alt="delete-sign--v1"
+            />
+          </div>
           <div className="w-full md:w-2/5 flex flex-col items-center justify-center gap-2">
             <button
               className="bg-white text-black w-auto px-3 py-1 rounded-lg m-auto "
@@ -94,11 +105,11 @@ function ChangePFPPopup() {
     </>
   );
 }
+const showPFPChangeOptions = () => {
+  document.getElementById("pfpUpdateOverlay").classList.toggle("!hidden");
+};
 
 function UserImage({ url }) {
-  const showPFPChangeOptions = () => {
-    document.getElementById("pfpUpdateOverlay").classList.toggle("!hidden");
-  };
   return (
     <>
       <div className="relative w-24">
@@ -132,7 +143,7 @@ function MyAccount() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getInfo", {
+    fetch("http://localhost:10000/app/account/getInfo", {
       credentials: "include",
     })
       .then((res) => {
@@ -156,7 +167,7 @@ function MyAccount() {
   }, [navigate]);
   const resetAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/account/resetAccount", {
+      await fetch("http://localhost:10000/app/account/resetAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {
@@ -191,7 +202,7 @@ function MyAccount() {
   };
   const deleteAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/account/deleteAccount", {
+      await fetch("http://localhost:10000/app/account/deleteAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {
@@ -237,7 +248,8 @@ function MyAccount() {
     return (
       <>
         <div className="flex flex-col gap-6 ">
-          <ChangePFPPopup></ChangePFPPopup> {/* USER NAME DETAIL DISPLAY */}
+          <ChangePFPPopup closePopup={showPFPChangeOptions}></ChangePFPPopup>{" "}
+          {/*  USER NAME DETAIL DISPLAY */}
           <div className="flex flex-row gap-3 py-2 ">
             <UserImage url={userInfo.pfp}></UserImage>
             <div className="flex flex-col justify-evenly">

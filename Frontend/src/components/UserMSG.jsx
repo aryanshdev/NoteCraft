@@ -22,7 +22,7 @@ function UserMSG({ msg, name = "User", sending = false }) {
           </svg>
           {name}
         </div>
-        <div className="bg-white bg-opacity-10 text-left flex-1 text-base px-3 py-2 rounded-lg">
+        <div className="bg-white bg-opacity-5 text-left flex-1 text-base px-3 py-2 rounded-lg">
           {String(msg).startsWith("@NC-AI") ? (
             <>
               <span className="bg-indigo-700 px-1 py-[2px] font-bold rounded-lg">

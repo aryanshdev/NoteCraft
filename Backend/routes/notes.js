@@ -96,6 +96,7 @@ async function deleteAllOfGroup(loggedinUserUUID, id) {
   let ans = (
     await notesCol.deleteMany({ ownerID: loggedinUserUUID, groupID: id })
   ).acknowledged;
+  
   return ans;
 }
 

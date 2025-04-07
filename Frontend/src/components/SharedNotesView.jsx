@@ -19,7 +19,7 @@ function SharedNotes() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -38,7 +38,7 @@ function SharedNotes() {
   }, []);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/sharing/sharedGetAll", {
+    fetch("http://localhost:10000/sharing/sharedGetAll", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -75,7 +75,7 @@ function SharedNotes() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/sharing/updateShared", {
+      const res = await fetch("http://localhost:10000/sharing/updateShared", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -283,7 +283,7 @@ function SharedNotes() {
     toast.warning("Ask Note Group Owner To Add You As Editor ");
   };
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
+    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: getids.groupID,
@@ -308,7 +308,7 @@ function SharedNotes() {
 
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/sharing/deleteShared", {
+      await fetch("http://localhost:10000/sharing/deleteShared", {
         credentials: "include",
         body: JSON.stringify({
           gid: getids.groupID,
@@ -384,7 +384,7 @@ function SharedNotes() {
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 bg-purple-600 hidden h-0 w-0 "></div>
         <div className="flex flex-row overflow-x-clip w-auto ">
-          <header className=" dark:bg-[#2c2c2c] h-auto flex fixed dark:text-white text-black py-2 px-5 w-full md:hidden flex-row ">
+          <header className=" dark:bg-[#1b1b1b] h-auto flex fixed dark:text-white text-black py-2 px-5 w-full md:hidden flex-row ">
             {/* AI CHAT BUTTON */}
             <p className="font-semibold my-auto text-lg"> NodeCraft</p>
             <button
