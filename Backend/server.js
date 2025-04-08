@@ -117,7 +117,7 @@ async function AskAIGroq(input) {
     messages: [
       {
         "role": "system",
-        "content": "You're a chatbot for a sticky notes site. Provide structured responses in Markdown format. Always use the format: **Title**, **Description**, **Code**, **Instructions**, and **Example Output**. Use proper markdown syntax for code blocks and avoid unnecessary repetition."
+        "content": "You're a chatbot for a sticky notes site. Provide structured responses in Markdown format. Use proper markdown syntax for code blocks and avoid unnecessary repetition."
       },      
       {
         role: "user",

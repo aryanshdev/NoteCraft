@@ -666,6 +666,14 @@ video {
   z-index: 100;
 }
 
+.z-\[14\] {
+  z-index: 14;
+}
+
+.z-\[15\] {
+  z-index: 15;
+}
+
 .z-\[1\] {
   z-index: 1;
 }
@@ -684,10 +692,6 @@ video {
 
 .z-\[99\] {
   z-index: 99;
-}
-
-.-z-10 {
-  z-index: -10;
 }
 
 .m-0 {
@@ -743,6 +747,10 @@ video {
 
 .-mt-2 {
   margin-top: -0.5rem;
+}
+
+.-mt-3 {
+  margin-top: -0.75rem;
 }
 
 .-mt-7 {
@@ -807,10 +815,6 @@ video {
 
 .mt-2 {
   margin-top: 0.5rem;
-}
-
-.mr-10 {
-  margin-right: 2.5rem;
 }
 
 .block {
@@ -1410,11 +1414,6 @@ video {
   background-color: rgb(161 98 7 / var(--tw-bg-opacity));
 }
 
-.bg-gray-700 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
-}
-
 .bg-opacity-10 {
   --tw-bg-opacity: 0.1;
 }
@@ -1439,20 +1438,8 @@ video {
   --tw-bg-opacity: 0.05;
 }
 
-.bg-opacity-40 {
-  --tw-bg-opacity: 0.4;
-}
-
-.bg-opacity-30 {
-  --tw-bg-opacity: 0.3;
-}
-
-.bg-opacity-80 {
-  --tw-bg-opacity: 0.8;
-}
-
-.bg-opacity-90 {
-  --tw-bg-opacity: 0.9;
+.bg-opacity-50 {
+  --tw-bg-opacity: 0.5;
 }
 
 .bg-gradient-to-br {
@@ -1583,8 +1570,8 @@ video {
   padding-top: 0.5rem;
 }
 
-.pr-10 {
-  padding-right: 2.5rem;
+.pt-4 {
+  padding-top: 1rem;
 }
 
 .text-left {
@@ -1777,10 +1764,19 @@ video {
   padding: 3px;
   border-radius: 5px;
 }
-  
-.AICHAT pre {
-  background: transparent;
-} */
+
+*/
+
+.AICHAT pre code::-webkit-scrollbar-track {
+  background-color: #131313;
+}
+
+.AICHAT pre code::-webkit-scrollbar-thumb {
+  background-color: #3a3a3a;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
 
 .AICHAT ul{
   list-style-type: disc;
@@ -1792,12 +1788,23 @@ video {
   list-style-position: inside;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
+.scrollbar-invisible::-webkit-scrollbar {
   width: 0px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.scrollbar-thin::-webkit-scrollbar {
+  width: 0px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background-color: #131313;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3a3a3a;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .placeholder\:text-gray-300::-moz-placeholder {

@@ -135,7 +135,7 @@ function ChatSection({ id, openFunction }) {
               </button>
             </header>
             {/* Message Display Area */}
-            <div className="custom-scrollbar flex overflow-y-auto w-full bg-transparent rounded-lg  py-2 flex-1 flex-col gap-5">
+            <div className="scrollbar-invisible flex overflow-y-auto w-full bg-transparent rounded-lg  py-2 flex-1 flex-col gap-5">
               {messages.map((msgItem, index) => {
                 switch (msgItem[0]) {
                   case "SYSTEM":

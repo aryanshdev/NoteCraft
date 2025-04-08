@@ -23,10 +23,20 @@
   padding: 3px;
   border-radius: 5px;
 }
+
+*/
   
-.AICHAT pre {
-  background: transparent;
-} */
+.AICHAT pre code::-webkit-scrollbar-track {
+ 
+  background-color: #131313;
+}
+
+.AICHAT pre code::-webkit-scrollbar-thumb {
+  background-color: #3a3a3a;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
 
 .AICHAT ul{
     list-style-type: disc; 
@@ -38,11 +48,23 @@
     list-style-position: inside;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
+.scrollbar-invisible::-webkit-scrollbar {
   width: 0px;
 }
 
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.scrollbar-thin::-webkit-scrollbar {
+  width: 0px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+ 
+  background-color: #131313;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3a3a3a;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }

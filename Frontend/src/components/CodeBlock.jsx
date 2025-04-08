@@ -39,7 +39,7 @@ function CodeBlock({ children, className }) {
 
   return (
     <div className="relative text-white rounded-lg overflow-hidden my-2 codeblock">
-      <div className="px-4 py-2 bg-gray-900 text-sm mb-0 flex justify-between items-center">
+      <div className="px-4 py-2 bg-gray-900 text-sm mb-0 flex justify-between items-center z-[15]">
         <span>{language.slice(0,1).toUpperCase()+language.slice(1)}</span>
        <div className="gap-5 flex">
        <button
@@ -60,14 +60,14 @@ function CodeBlock({ children, className }) {
         language={language}
         style={oneDark}
         wrapLongLines
-        customStyle={{ margin: 0, borderRadius: "0 0 10px 10px" }}
+        customStyle={{ margin: 0, borderRadius: "0 0 10px 10px", zIndex:"15", position:"relative" }}
       >
-        {String(children).trim() + "\n"+language}
+        {String(children).trim()}
       </SyntaxHighlighter>
     
 
       {output && (
-        <div className="-mt-2 p-2  text-green-500 rounded flex flex-col overflow-auto">
+        <div className="-mt-3 z-[14] p-2 pt-4  text-green-500 rounded flex flex-col overflow-auto scrollbar-thin bg-gray-800 bg-opacity-50">
           <strong className="text-white font-bold">Output:</strong>
           
           <pre className="pr-5 mx-2">{output}</pre>

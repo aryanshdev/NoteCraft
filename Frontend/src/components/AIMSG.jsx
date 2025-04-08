@@ -3,6 +3,14 @@ import remarkGfm from "remark-gfm";
 import CodeBlock from "./CodeBlock"; // Import the custom component
 
 function AIMSG({ msg }) {
+  function preprocessMarkdown(markdown) {
+  return markdown.replace(/(`{1,3})([^`]+?)\1/g, (match, backticks, content) => {
+    const isBlock = backticks.length === 3;
+    const tag = isBlock ? 'blockcode' : 'inlinecode';
+    return `<${tag}>${content}</${tag}>`;
+  });
+}
+
   return (
     <div className="w-full h-fit rounded-2xl flex flex-col text-white text-center bg-opacity-35 gap-2">
       <div className="flex flex-row text-sm font-bold text-blue-400 flex-1 items-center gap-2">
@@ -26,15 +34,16 @@ function AIMSG({ msg }) {
           remarkPlugins={[remarkGfm]}
           components={{
             code({ node, inline, className, children, ...props }) {
+              
               const hasLang = className && className.startsWith("language-");
-
+              
               if (!inline && hasLang) {
                 // It's a proper code block
                 return <CodeBlock className={className}>{children}</CodeBlock>;
               } else {
-                // It's inline code
+               
                 return (
-                  <code className="bg-black bg-opacity-20 px-2 rounded ">{children}</code>
+                  <code className="bg-black bg-opacity-20 px-2 rounded h-full">{children}</code>
                 );
               }
             },
