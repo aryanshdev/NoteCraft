@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { notesCol, notesGroupCol } = require("../db/dbconnection");
 const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
+const jwt = require("jsonwebtoken")
 
 router.post("/sharedGetAll", async (req, res) => {
   var cur = await notesCol.find({
@@ -23,13 +24,13 @@ router.post("/sharedGetAll", async (req, res) => {
   } catch (error) {
     data = []
   }
-  var isEditor = (jwt.decode(req.cookies._uid)).passport ? data.includes((jwt.decode(req.cookies._uid)).passport.user.loggedUserEmail) : false;
+  var isEditor = (jwt.decode(req.cookies._uid)) ? data.includes((jwt.decode(req.cookies._uid)).loggedUserEmail) : false;
   try {
     (jwt.decode(req.cookies._uid)).sharedOpened[req.body.gid] = isEditor;
   } catch (error) {
-    (jwt.decode(req.cookies._uid)).sharedOpened = { [req.body.gid]: isEditor };
+
   }
-  (jwt.decode(req.cookies._uid)).save();
+  
   res.json({ notes: await cur.toArray(), editor: isEditor });
 });
 
@@ -73,7 +74,7 @@ router.post("/newNoteShared", async (req, res) => {
   if (
     req.body.title &&
     req.body.description &&
-    (jwt.decode(req.cookies._uid)).sharedOpened[req.body.gid]
+    jwt.decode(req.cookies._uid).sharedOpened[req.body.gid]
   ) {
     id = idgen.rnd();
     notesCol

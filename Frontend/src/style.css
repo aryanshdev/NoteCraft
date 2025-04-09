@@ -1788,6 +1788,21 @@ video {
   list-style-position: inside;
 }
 
+.AICHAT h1{
+  font-size: larger;
+  font-weight: 800;
+}
+
+.AICHAT h2{
+  font-size: inherit;
+  font-weight: 800;
+}
+
+.AICHAT h3{
+  font-size: large;
+  font-weight: 700;
+}
+
 .scrollbar-invisible::-webkit-scrollbar {
   width: 0px;
 }
