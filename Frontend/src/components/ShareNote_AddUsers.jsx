@@ -6,7 +6,7 @@ function editorDisplay(emailID, delEdFunction) {
   return (
     <>
       <div
-        className="bg-[#4d4d4d] text-white font-semibold px-3 py-1 w-fit rounded-full flex flex-row gap-2 "
+        className="bg-[#1a1a1a] text-white font-semibold px-3 py-1 w-fit rounded-full flex flex-row gap-2 "
         key={emailID}
       >
         {" "}
@@ -39,7 +39,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   const [editors, setEditors] = useState([]);
   const navigate = useNavigate();
   const deleteEditor = (emailID) => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/removeEditor", {
+    fetch("http://localhost:10000/app/notesgroup/removeEditor", {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -67,26 +67,26 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
+        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   };
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/getSharingInfo", {
+    fetch("http://localhost:10000/app/notes/getSharingInfo", {
       credentials: "include",
     })
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
+        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   }, []);
 
   useEffect(() => {
     fetch(
-      `https://notecraftai-xct5.onrender.com/app/notesgroup/getEditors/${gid}`,
+      `http://localhost:10000/app/notesgroup/getEditors/${gid}`,
       { credentials: "include" }
     )
       .then((res) => {
@@ -103,7 +103,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   };
 
   const addEditor = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/addEditor", {
+    fetch("http://localhost:10000/app/notesgroup/addEditor", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
@@ -134,10 +134,10 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   return (
     <>
       <div
-        className="w-screen h-screen  justify-center align-middle items-center flex absolute bg-black bg-opacity-350 z-40 !hidden"
+        className="w-screen h-screen  justify-center align-middle items-center flex absolute bg-black bg-opacity-40 backdrop-blur-sm z-40 !hidden"
         id="shareOverlay"
       >
-        <div className="bg-[#2e2e2e] rounded-xl px-4 py-2 z-30 absolute m-auto h-fit w-5/6 border-2 border-white md:h-fit md:w-1/2">
+        <div className="bg-black rounded-xl px-6 py-4 z-30 absolute m-auto h-fit w-5/6 border-[1px] border-white md:h-fit md:w-1/2">
           <h2 className="text-2xl font-semibold">
             Share Notes And Allow Editors
           </h2>
@@ -148,11 +148,11 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
               <input
                 type="text"
                 readOnly
-                className="outline-none w-full bg-[#404040] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
+                className="outline-none w-full bg-[#1a1a1a] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
                 value={link}
               />
               <button
-                className="rounded-l-none rounded-full px-3 py-2 bg-[#808080] flex flex-row gap-2"
+                className="rounded-l-none rounded-full px-3 py-2 bg-[#323232] flex flex-row gap-2"
                 onClick={copyToClipboard}
               >
                 <svg
@@ -181,10 +181,10 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
                 <>
                   <input
                     type="email"
-                    className="outline-none w-full bg-[#404040] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
+                    className="outline-none w-full bg-[#1a1a1a] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
                   />
                   <button
-                    className="rounded-l-none rounded-full px-3 py-2 bg-[#808080] flex flex-row gap-2 align-middle items-center"
+                    className="rounded-l-none rounded-full px-3 py-2 bg-[#323232] flex flex-row gap-2 align-middle items-center"
                     onClick={addEditor}
                   >
                     <svg

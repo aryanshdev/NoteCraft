@@ -16,7 +16,7 @@ function AppBar() {
     showHideSideBar();
   };
   const logout = () => {
-    fetch("https://notecraftai-xct5.onrender.com/auth/logout", {
+    fetch("http://localhost:10000/auth/logout", {
       method: "POST",
       credentials: "include",
     }).then((res) => {
@@ -67,7 +67,7 @@ function AppBar() {
           id="sidebar"
           className="z-20 xl:w-[17.5vw] w-[20vw] md:w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
         >
-          <div className="fixed md:relative dark:bg-[#1b1b1b] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl">
+          <div className="fixed md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl">
             <button onClick={showHideSideBar} className="md:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

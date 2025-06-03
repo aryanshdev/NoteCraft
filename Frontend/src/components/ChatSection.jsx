@@ -11,7 +11,7 @@ function ChatSection({ id, openFunction }) {
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -93,7 +93,7 @@ function ChatSection({ id, openFunction }) {
   if (name) {
     return (
       <>
-        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative p-4 transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#1b1b1b]">
+        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative p-4 transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#0a0a0a] bg-opacity-50 backdrop-blur-3xl">
           <div className="flex flex-col gap-4 h-full ">
             <header className="flex flex-row text-sm justify-around">
               {/* Close Chat Area Button */}

@@ -18,7 +18,7 @@ function Dashboard() {
       ? "Afternoon"
       : "Evening";
 
-  fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+  fetch("http://localhost:10000/app/account/getName", {
     method: "GET",
     credentials: "include",
   }).then(async (res) => {
@@ -36,7 +36,7 @@ function Dashboard() {
   });
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
+    fetch("http://localhost:10000/app/notesgroup/getAll", {
       method: "GET",
       credentials: "include", // Include cookies
       headers: {
@@ -68,7 +68,7 @@ function Dashboard() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/update", {
+      const res = await fetch("http://localhost:10000/app/notesgroup/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
@@ -95,7 +95,7 @@ function Dashboard() {
   );
   const favouriteSet = async (groupID, isFav) => {
     let res = await fetch(
-      "https://notecraftai-xct5.onrender.com/app/notesgroup/editFavourite",
+      "http://localhost:10000/app/notesgroup/editFavourite",
       {
         credentials: "include",
         body: JSON.stringify({
@@ -120,7 +120,7 @@ function Dashboard() {
 
   const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/deleteNoteGroup", {
+      await fetch("http://localhost:10000/app/notesgroup/deleteNoteGroup", {
         credentials: "include",
         body: JSON.stringify({
           id: inpid,
@@ -166,7 +166,7 @@ function Dashboard() {
   } else {
     return (
       <>
-        <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 hidden h-0 w-0"></div>
+        <div className="bg-orange-500 bg-blue-500 bg-yellow-500 bg-red-500 bg-purple-500 bg-green-500 bg-pink-500 hidden h-0 w-0"></div>
 
         <h1 className="font-semibold text-3xl mb-3">
           Good {Greeting}, {name}

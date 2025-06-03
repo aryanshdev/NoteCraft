@@ -17,7 +17,7 @@ function NotesPage() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/getAll", {
+    fetch("http://localhost:10000/app/notes/getAll", {
       credentials: "include",
       method: "POST",
       headers: {
@@ -175,7 +175,7 @@ function NotesPage() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/update", {
+      const res = await fetch("http://localhost:10000/app/notes/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -211,7 +211,7 @@ function NotesPage() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
+    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: gid.groupID,
@@ -279,7 +279,7 @@ function NotesPage() {
   };
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notes/deleteNote", {
+      await fetch("http://localhost:10000/app/notes/deleteNote", {
         credentials: "include",
         body: JSON.stringify({
           nid: inpid,
@@ -389,7 +389,7 @@ function NotesPage() {
             </div>
           </div>
           <button
-            className="hidden md:flex bg-white w-[3%] text-white justify-center items-center px-1 flex-col bg-opacity-10 my-5 rounded-l-xl"
+            className="hidden md:flex  bg-[#0a0a0a] lg:w-[3%] md:w-[5%] text-white justify-center items-center px-1 flex-col my-5 rounded-l-xl"
             onClick={showChatSection}
           >
             <span className="origin-center rotate-90 text-lg font-semibold  transform block w-[100vh] ">

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.polka {
+    background-color: white;
+    z-index: 100;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.648) 1px,rgb(0, 0, 0) 1px);
+    background-size: 32px 32px;
+}
+
 .sidemenu-active {
   color: #61f9ec;
 }

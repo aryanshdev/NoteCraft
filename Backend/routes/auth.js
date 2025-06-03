@@ -15,7 +15,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/google/process-login",
+      callbackURL: "http://localhost:10000/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
@@ -62,7 +62,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/github/process-login",
+      callbackURL: "http://localhost:10000/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -121,7 +121,7 @@ router.get(
   "/google/process-login",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "https://notecraft-ai.onrender.com/login",
+    failureRedirect: "http://localhost:5173/login",
   }),
   async function (req, res) {
     console.log(req.user)
@@ -131,7 +131,7 @@ router.get(
       maxAge: 24 * 60 * 60 * 1000 * 30,
     }
     );
-    res.redirect("https://notecraft-ai.onrender.com/dashboard");
+    res.redirect("http://localhost:5173/dashboard");
   }
 );
 
@@ -141,7 +141,7 @@ router.get(
   "/github/process-login",
   passport.authenticate("github", {
     session: false,
-    failureRedirect: "https://notecraft-ai.onrender.com/login",
+    failureRedirect: "http://localhost:5173/login",
   }),
   async function (req, res) {
     res.cookie("_uid", req.user,{
@@ -149,7 +149,7 @@ router.get(
       sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000 * 30,
     });
-    res.redirect("https://notecraft-ai.onrender.com/dashboard");
+    res.redirect("http://localhost:5173/dashboard");
   }
 );
 
