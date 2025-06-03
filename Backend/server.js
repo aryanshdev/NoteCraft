@@ -24,7 +24,7 @@ const idgen = new ShortUniqueId({ length: 15 });
 // Socket.io server
 const io = new Server(app, {
   cors: {
-    origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.onrender.com"],
+    origin: ["https://notecraftai-xct5.onrender.com", "https://notecraft-ai.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
