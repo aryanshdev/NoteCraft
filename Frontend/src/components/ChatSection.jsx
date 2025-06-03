@@ -11,7 +11,7 @@ function ChatSection({ id, openFunction }) {
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com//app/account/getName", {
+    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {

@@ -6,7 +6,7 @@ import { useDropzone } from "react-dropzone";
 
 function ChangePFPPopup({ closePopup }) {
   const changeToGravatarImage = () => {
-    fetch("https://notecraftai-xct5.onrender.com//app/account/updateProfileImage", {
+    fetch("https://notecraftai-xct5.onrender.com/app/account/updateProfileImage", {
       credentials: "include",
       method: "PUT",
     }).then(async (res) => {
@@ -143,7 +143,7 @@ function MyAccount() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com//app/account/getInfo", {
+    fetch("https://notecraftai-xct5.onrender.com/app/account/getInfo", {
       credentials: "include",
     })
       .then((res) => {
@@ -167,7 +167,7 @@ function MyAccount() {
   }, [navigate]);
   const resetAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("https://notecraftai-xct5.onrender.com//app/account/resetAccount", {
+      await fetch("https://notecraftai-xct5.onrender.com/app/account/resetAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {
@@ -202,7 +202,7 @@ function MyAccount() {
   };
   const deleteAccount = async () => {
     const resetInnerFunc = async () => {
-      await fetch("https://notecraftai-xct5.onrender.com//app/account/deleteAccount", {
+      await fetch("https://notecraftai-xct5.onrender.com/app/account/deleteAccount", {
         credentials: "include",
         method: "DELETE",
       }).then((res) => {

@@ -39,7 +39,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   const [editors, setEditors] = useState([]);
   const navigate = useNavigate();
   const deleteEditor = (emailID) => {
-    fetch("https://notecraftai-xct5.onrender.com//app/notesgroup/removeEditor", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/removeEditor", {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -72,7 +72,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
       });
   };
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com//app/notes/getSharingInfo", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notes/getSharingInfo", {
       credentials: "include",
     })
       .then((res) => {
@@ -86,7 +86,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
 
   useEffect(() => {
     fetch(
-      `https://notecraftai-xct5.onrender.com//app/notesgroup/getEditors/${gid}`,
+      `https://notecraftai-xct5.onrender.com/app/notesgroup/getEditors/${gid}`,
       { credentials: "include" }
     )
       .then((res) => {
@@ -103,7 +103,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   };
 
   const addEditor = () => {
-    fetch("https://notecraftai-xct5.onrender.com//app/notesgroup/addEditor", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/addEditor", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

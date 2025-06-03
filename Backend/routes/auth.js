@@ -135,6 +135,7 @@ router.get(
   }
 );
 
+
 router.get("/github", passport.authenticate("github", { session: false }));
 
 router.get(
@@ -152,6 +153,11 @@ router.get(
     res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
 );
+
+
+router.get("/check", ensureAuthenticated, (req, res) => {
+  res.sendStatus(200);
+});
 
 function ensureAuthenticated(req, res, next) {
   const authToken = req.cookies._uid;

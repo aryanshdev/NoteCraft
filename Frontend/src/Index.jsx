@@ -1,7 +1,6 @@
 import NoteGroupDisplay from "./components/NoteGroupDisplay";
 import { Link } from "react-router-dom";
 import WordRotate from "./components/word-rotate";
-import { FlickeringGrid } from "./components/FlickeringGrid";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
 

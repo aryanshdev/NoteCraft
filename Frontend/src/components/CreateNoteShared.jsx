@@ -8,7 +8,7 @@ function CreateNoteShared(props) {
     displayMode.classList.toggle("hidden");
   };
   const addNewGroup = () => {
-    fetch("https://notecraftai-xct5.onrender.com//sharing/newNoteShared", {
+    fetch("https://notecraftai-xct5.onrender.com/sharing/newNoteShared", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
