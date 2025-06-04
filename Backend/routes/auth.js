@@ -5,9 +5,6 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20");
 const GitHubStrategy = require("passport-github2");
 
-const ShortUniqueId = require("short-unique-id");
-const idgen = new ShortUniqueId({ length: 15 });
-
 // Passport authentication
 
 passport.use(
@@ -15,7 +12,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/google/process-login",
+      callbackURL: "http://localhost:10000/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
@@ -32,7 +29,7 @@ passport.use(
 
       // Generate JWT token
 
-      const usedGIDs = (
+      const userGIDs = (
         await notesGroupCol
           .find(
             { ownerID: userData ? userData.uuid : idgen.rnd() },
@@ -46,7 +43,7 @@ passport.use(
           userName: profile._json.name,
           loggedinUserUUID: id,
           loggedUserEmail: profile._json.email,
-          usedGIDs: usedGIDs,
+          userGIDs: userGIDs,
         },
         process.env.SIGNING_KEY,
         { expiresIn: "30d" }
@@ -62,7 +59,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/github/process-login",
+      callbackURL: "http://localhost:10000/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -81,7 +78,7 @@ passport.use(
       }
 
       // Generate JWT token
-      const usedGIDs = (
+      const userGIDs = (
         await notesGroupCol
           .find(
             { ownerID:  userData ? userData.uuid : idgen.rnd() },
@@ -95,7 +92,7 @@ passport.use(
           userName: profile._json.name,
           loggedinUserUUID: id,
           loggedUserEmail: profile._json.email,
-          usedGIDs: usedGIDs,
+          userGIDs: userGIDs,
         },
         process.env.SIGNING_KEY,
         { expiresIn: "30d" }
@@ -121,20 +118,13 @@ router.get(
   "/google/process-login",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "https://notecraft-ai.onrender.com/login",
+    failureRedirect: "http://localhost:5173/login",
   }),
   async function (req, res) {
-    console.log(req.user)
-    res.cookie("_uid", req.user, {
-      secure: true,
-      sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000 * 30,
-    }
-    );
-    res.redirect("https://notecraft-ai.onrender.com/dashboard");
+    res.cookie("_uid", req.user);
+    res.redirect("http://localhost:5173/dashboard");
   }
 );
-
 
 router.get("/github", passport.authenticate("github", { session: false }));
 
@@ -142,22 +132,13 @@ router.get(
   "/github/process-login",
   passport.authenticate("github", {
     session: false,
-    failureRedirect: "https://notecraft-ai.onrender.com/login",
+    failureRedirect: "http://localhost:5173/login",
   }),
   async function (req, res) {
-    res.cookie("_uid", req.user,{
-      secure: true,
-      sameSite: "none",
-      maxAge: 24 * 60 * 60 * 1000 * 30,
-    });
-    res.redirect("https://notecraft-ai.onrender.com/dashboard");
+    res.cookie("_uid", req.user);
+    res.redirect("http://localhost:5173/dashboard");
   }
 );
-
-
-router.get("/check", ensureAuthenticated, (req, res) => {
-  res.sendStatus(200);
-});
 
 function ensureAuthenticated(req, res, next) {
   const authToken = req.cookies._uid;
@@ -173,8 +154,12 @@ function ensureAuthenticated(req, res, next) {
   
 }
 
+router.get("/check", ensureAuthenticated, (req, res) => {
+  res.sendStatus(200);
+});
+
 router.post("/logout", (req, res) => {
-  res.clearCookie();
+  res.clearCookie("_uid");
   res.sendStatus(200);
 });
 

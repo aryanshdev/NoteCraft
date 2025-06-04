@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 router.post("/getAll", async (req, res) => {
   
   if (
-    jwt.decode(req.cookies._uid).usedGIDs.indexOf(req.body.id) !==
+    jwt.decode(req.cookies._uid).userGIDs.indexOf(req.body.id) !==
     -1
   ) {
     var cur = await notesCol.find({

@@ -9,7 +9,7 @@ function CreateNoteGroup(props) {
   };
 
   const addNewGroup = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/new", {
+    fetch("http://localhost:10000/app/notesgroup/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
@@ -48,7 +48,7 @@ function CreateNoteGroup(props) {
             break;
         }
       })
-      .finally(showHideAddArea());
+      
   };
 
   return (

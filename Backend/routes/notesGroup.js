@@ -3,6 +3,7 @@ const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
 const { notesGroupCol } = require("../db/dbconnection");
 const { deleteAllOfGroup } = require("./notes");
+const jwt = require("jsonwebtoken");
 
 router.get("/getAll", async (req, res) => {
   var cur = notesGroupCol.find({ ownerID: req.user.loggedinUserUUID });
@@ -28,7 +29,7 @@ router.post("/new", async (req, res) => {
     id = idgen.rnd();
     notesGroupCol
       .insertOne({
-        ownerID: req.user.loggedinUserUUID,
+        ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
         groupID: id,
         title: req.body.title,
         description: req.body.description,
@@ -105,11 +106,11 @@ router.post("/editFavourite", async (req, res) => {
 
 router.delete("/deleteNoteGroup", async (req, res) => {
   notesGroupCol
-    .deleteOne({ ownerID: req.user.loggedinUserUUID, groupID: req.body.id })
+    .deleteOne({ ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID, groupID: req.body.id })
     .then(async () => {
-      var resl = await deleteAllOfGroup(req.user.loggedinUserUUID, req.body.id);
+      var resl = await deleteAllOfGroup(jwt.decode(req.cookies._uid).loggedinUserUUID, req.body.id);
       if (resl) {
-        console.log("fg")
+        console.log((jwt.decode(req.cookies._uid)))
         (jwt.decode(req.cookies._uid)).userGIDs = (jwt.decode(req.cookies._uid)).userGIDs.filter(
           (id) => id !== req.body.id
         );
@@ -117,7 +118,7 @@ router.delete("/deleteNoteGroup", async (req, res) => {
         res.sendStatus(200);
       } else res.sendStatus(500);
     })
-    .catch(() => res.sendStatus(500));
+    .catch((e) => {console.log(e);res.sendStatus(500)});
 });
 
 module.exports = router;

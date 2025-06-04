@@ -11,15 +11,15 @@ export default defineConfig({
     proxy: {
       // Proxy /api requests to the backend server on port 10000
       '/app': {
-        target: 'https://notecraftai-xct5.onrender.com/',
+        target: 'http://localhost:10000/',
         changeOrigin: true,
      },
      '/sharing': {
-        target: 'https://notecraftai-xct5.onrender.com/',
+        target: 'http://localhost:10000/',
         changeOrigin: true,
      },
      "/auth":{
-      target: 'https://notecraftai-xct5.onrender.com/',
+      target: 'http://localhost:10000/',
       changeOrigin: true,
      }
     }

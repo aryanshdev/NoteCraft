@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function CreateNote(props) {
+
   const showHideAddArea = () => {
     addMode.classList.toggle("hidden");
     document.getElementById("newTitle").value = "";
@@ -10,15 +11,15 @@ function CreateNote(props) {
     displayMode.classList.toggle("hidden");
   };
 
-  const addNewGroup = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/new", {
+  const addNewNote = () => {
+    fetch("http://localhost:10000/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
         title: document.getElementById("newTitle").value,
         description: document.getElementById("newDesc").value,
         gid: props.gid,
-      }), // Use JSON.stringify
+      }), 
       headers: {
         "Content-Type": "application/json",
       },
@@ -40,13 +41,13 @@ function CreateNote(props) {
           toast.error("Some Error Occured");
         }
       })
-      .finally(showHideAddArea());
+     
   };
 
 
   return (
     <div
-      className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10`}
+      className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-black bg-opacity-10 backdrop-brightness-200 backdrop-blur-[2px] transition-all duration-300`}
     >
       <div
         className="flex justify-center items-center flex-col w-full text-center gap-1 h-full"
@@ -117,7 +118,7 @@ function CreateNote(props) {
               />
             </svg>
           </button>
-          <button onClick={addNewGroup}>
+          <button onClick={addNewNote}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
