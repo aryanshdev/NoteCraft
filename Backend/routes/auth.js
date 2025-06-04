@@ -12,7 +12,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:10000/auth/google/process-login",
+      callbackURL: "https://notecraftai-xct5.onrender.com/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
@@ -32,7 +32,7 @@ passport.use(
       const userGIDs = (
         await notesGroupCol
           .find(
-            { ownerID: userData ? userData.uuid : idgen.rnd() },
+            { ownerID: id },
             { projection: { groupID: 1, _id: 0 } }
           )
           .toArray()
@@ -59,7 +59,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:10000/auth/github/process-login",
+      callbackURL: "https://notecraftai-xct5.onrender.com/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -81,7 +81,7 @@ passport.use(
       const userGIDs = (
         await notesGroupCol
           .find(
-            { ownerID:  userData ? userData.uuid : idgen.rnd() },
+            { ownerID:  id },
             { projection: { groupID: 1, _id: 0 } }
           )
           .toArray()
@@ -118,11 +118,14 @@ router.get(
   "/google/process-login",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "http://localhost:5173/login",
+    failureRedirect: "https://notecraft-ai.onrender.com/login",
   }),
   async function (req, res) {
-    res.cookie("_uid", req.user);
-    res.redirect("http://localhost:5173/dashboard");
+    res.cookie("_uid", req.user, {
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+  });
+    res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
 );
 
@@ -132,11 +135,14 @@ router.get(
   "/github/process-login",
   passport.authenticate("github", {
     session: false,
-    failureRedirect: "http://localhost:5173/login",
+    failureRedirect: "https://notecraft-ai.onrender.com/login",
   }),
   async function (req, res) {
-    res.cookie("_uid", req.user);
-    res.redirect("http://localhost:5173/dashboard");
+    res.cookie("_uid", req.user, {
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+        });
+    res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
 );
 

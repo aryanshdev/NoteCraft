@@ -4,9 +4,10 @@ const idgen = new shortuid({ length: 12 });
 const { notesGroupCol } = require("../db/dbconnection");
 const { deleteAllOfGroup } = require("./notes");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 router.get("/getAll", async (req, res) => {
-  var cur = notesGroupCol.find({ ownerID: req.user.loggedinUserUUID });
+  var cur = notesGroupCol.find({ ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID });
   res.send(await cur.toArray());
 });
 
@@ -26,22 +27,28 @@ router.post("/update", async (req, res) => {
 
 router.post("/new", async (req, res) => {
   if (req.body.title && req.body.description) {
-    id = idgen.rnd();
-    notesGroupCol
-      .insertOne({
+    try {
+      const id = idgen.rnd();
+      await notesGroupCol.insertOne({
         ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
         groupID: id,
         title: req.body.title,
         description: req.body.description,
         favourite: false,
         editors: [],
-      })
-      .then(() => {
-        (jwt.decode(req.cookies._uid)).userGIDs = (jwt.decode(req.cookies._uid)).userGIDs.concat([id]);
-        (jwt.decode(req.cookies._uid)).save();
-        res.status(200).send(id);
-      })
-      .catch(() => res.sendStatus(500));
+      });
+
+      const userData = jwt.decode(req.cookies._uid);
+      userData.userGIDs = userData.userGIDs.concat([id]);
+      const token = jwt.sign(userData, process.env.SIGNING_KEY);
+      res.cookie("_uid", token, {
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+        });
+      res.status(200).send(id);
+    } catch (e) {
+      res.sendStatus(500);
+    }
   } else {
     res.sendStatus(400);
   }
@@ -106,19 +113,34 @@ router.post("/editFavourite", async (req, res) => {
 
 router.delete("/deleteNoteGroup", async (req, res) => {
   notesGroupCol
-    .deleteOne({ ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID, groupID: req.body.id })
+    .deleteOne({
+      ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
+      groupID: req.body.id,
+    })
     .then(async () => {
-      var resl = await deleteAllOfGroup(jwt.decode(req.cookies._uid).loggedinUserUUID, req.body.id);
+      var resl = await deleteAllOfGroup(
+        jwt.decode(req.cookies._uid).loggedinUserUUID,
+        req.body.id
+      );
       if (resl) {
-        console.log((jwt.decode(req.cookies._uid)))
-        (jwt.decode(req.cookies._uid)).userGIDs = (jwt.decode(req.cookies._uid)).userGIDs.filter(
-          (id) => id !== req.body.id
-        );
-        console.log("fgsdsd")
+        const userData = jwt.decode(req.cookies._uid);
+
+        userData.userGIDs = jwt
+          .decode(req.cookies._uid)
+          .userGIDs.filter((id) => id !== req.body.id);
+
+        const token = jwt.sign(userData, process.env.SIGNING_KEY);
+        res.cookie("_uid", token, {
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          httpOnly: true,
+        });
         res.sendStatus(200);
       } else res.sendStatus(500);
     })
-    .catch((e) => {console.log(e);res.sendStatus(500)});
+    .catch((e) => {
+      console.log(e);
+      res.sendStatus(500);
+    });
 });
 
 module.exports = router;

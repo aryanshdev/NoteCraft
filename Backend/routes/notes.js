@@ -5,8 +5,8 @@ const idgen = new shortuid({ length: 12 });
 const jwt = require("jsonwebtoken");
 
 router.post("/getAll", async (req, res) => {
-  
-  if (
+  console.log(jwt.decode(req.cookies._uid) )
+  if (  
     jwt.decode(req.cookies._uid).userGIDs.indexOf(req.body.id) !==
     -1
   ) {

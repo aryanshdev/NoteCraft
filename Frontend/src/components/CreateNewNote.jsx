@@ -12,7 +12,7 @@ function CreateNote(props) {
   };
 
   const addNewNote = () => {
-    fetch("http://localhost:10000/app/notes/new", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

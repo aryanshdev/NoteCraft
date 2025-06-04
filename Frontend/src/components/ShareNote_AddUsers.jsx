@@ -39,7 +39,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   const [editors, setEditors] = useState([]);
   const navigate = useNavigate();
   const deleteEditor = (emailID) => {
-    fetch("http://localhost:10000/app/notesgroup/removeEditor", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/removeEditor", {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -67,26 +67,26 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   };
   useEffect(() => {
-    fetch("http://localhost:10000/app/notes/getSharingInfo", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notes/getSharingInfo", {
       credentials: "include",
     })
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
+        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   }, []);
 
   useEffect(() => {
     fetch(
-      `http://localhost:10000/app/notesgroup/getEditors/${gid}`,
+      `https://notecraftai-xct5.onrender.com/app/notesgroup/getEditors/${gid}`,
       { credentials: "include" }
     )
       .then((res) => {
@@ -103,7 +103,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   };
 
   const addEditor = () => {
-    fetch("http://localhost:10000/app/notesgroup/addEditor", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/addEditor", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
@@ -148,11 +148,11 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
               <input
                 type="text"
                 readOnly
-                className="outline-none w-full bg-[#1a1a1a] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
+                className="outline-none w-full bg-[#101010] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
                 value={link}
               />
               <button
-                className="rounded-l-none rounded-full px-3 py-2 bg-[#323232] flex flex-row gap-2"
+                className="rounded-l-none rounded-full px-3 py-2 bg-[#212121] flex flex-row gap-2"
                 onClick={copyToClipboard}
               >
                 <svg
@@ -181,10 +181,10 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
                 <>
                   <input
                     type="email"
-                    className="outline-none w-full bg-[#1a1a1a] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
+                    className="outline-none w-full bg-[#101010] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
                   />
                   <button
-                    className="rounded-l-none rounded-full px-3 py-2 bg-[#323232] flex flex-row gap-2 align-middle items-center"
+                    className="rounded-l-none rounded-full px-3 py-2 bg-[#212121] flex flex-row gap-2 align-middle items-center"
                     onClick={addEditor}
                   >
                     <svg
@@ -213,7 +213,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
           </div>
           <button
             onClick={closeFunction}
-            className="bg-white rounded-xl text-black px-3 py-1 font-semibold text-base"
+            className="border-2  hover:bg-white hover:text-black ml-auto mr-0 flex rounded-md px-6 py-2 font-semibold text-base"
           >
             Done
           </button>
