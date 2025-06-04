@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 function AppBar() {
   const nav = useNavigate();
   const showHideSideBar = () => {
-    document.getElementById("sidebar").classList.toggle("-left-56");
+    document.getElementById("sidebar").classList.toggle("-left-60");
   };
 
   const clickOperation = (event) => {
@@ -65,9 +65,9 @@ function AppBar() {
 
         <aside
           id="sidebar"
-          className="z-20 xl:w-[17.5vw] w-[20vw] md:w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
+          className="z-20 xl:w-[17.5vw] w-[25vw] md:w-fit h-full md:h-screen absolute md:relative -left-60 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
         >
-          <div className="fixed md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75">
+          <div className="fixed md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[45vw] md:w-full">
             <button onClick={showHideSideBar} className="md:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
