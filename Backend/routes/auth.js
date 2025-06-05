@@ -124,7 +124,8 @@ router.get(
   async function (req, res) {
     res.cookie("_uid", req.user, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
+           secure: true,
+      sameSite: "none",
   });
     res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
@@ -141,7 +142,8 @@ router.get(
   async function (req, res) {
     res.cookie("_uid", req.user, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
+          secure: true,
+      sameSite: "none",
         });
     res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }

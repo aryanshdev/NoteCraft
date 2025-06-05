@@ -43,7 +43,8 @@ router.post("/new", async (req, res) => {
       const token = jwt.sign(userData, process.env.SIGNING_KEY);
       res.cookie("_uid", token, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
+          secure: true,
+      sameSite: "none",
         });
       res.status(200).send(id);
     } catch (e) {
@@ -132,7 +133,8 @@ router.delete("/deleteNoteGroup", async (req, res) => {
         const token = jwt.sign(userData, process.env.SIGNING_KEY);
         res.cookie("_uid", token, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          httpOnly: true,
+          secure: true,
+      sameSite: "none",
         });
         res.sendStatus(200);
       } else res.sendStatus(500);
