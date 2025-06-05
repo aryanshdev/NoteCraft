@@ -1111,6 +1111,10 @@ video {
   width: 100vw;
 }
 
+.w-\[50vw\] {
+  width: 50vw;
+}
+
 .min-w-64 {
   min-width: 16rem;
 }

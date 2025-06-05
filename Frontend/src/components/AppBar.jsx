@@ -67,7 +67,7 @@ function AppBar() {
           id="sidebar"
           className="xl:w-[17.5vw] w-[25vw] md:w-fit h-full md:h-screen md:relative -left-64 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-[100] absolute"
         >
-          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[45vw] md:w-full  ">
+          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full  ">
             <button onClick={showHideSideBar} className="md:hidden mb-5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -75,8 +75,8 @@ function AppBar({shareFunction}) {
           id="sidebar"
           className=" xl:w-[17.5vw] h-full md:h-screen  md:relative -left-64 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-10 fixed"
         >
-          <div className="fixed md:relative dark:bg-[#0a0a0a] bg-opacity-0 h-full flex flex-col dark:text-white text-black py-8 md:px-4 px-7 md:rounded-3xl w-[45vw] md:w-auto">
-            <button onClick={showSideBar} className="md:hidden">
+          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full  ">
+             <button onClick={showSideBar} className="md:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
