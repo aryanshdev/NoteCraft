@@ -12,6 +12,7 @@ function SharedNotes() {
   const [userNotes, setUserNotes] = useState([]);
   const [loggedName, setLoggedName] = useState({});
   const [isEditor, setIsEditor] = useState(false);
+  const [metaData, setMetaData] = useState({});
   const getids = useParams();
   const navigate = useNavigate();
   const bgColors = useRef([]);
@@ -62,6 +63,8 @@ function SharedNotes() {
         console.log(res);
         setUserNotes(res["notes"]);
         setIsEditor(res["editor"]);
+        document.title = res["data"].title + " - Shared Notes | NoteCraft";
+        setMetaData(res["data"]);
         setLoading(false);
       })
       .catch((error) => {
@@ -301,6 +304,9 @@ function SharedNotes() {
       socket.emit("shared_AlterFavourite", noteID, loggedName);
       return true;
     } else {
+      if (res.status == 401) {
+        toast.warning("You Need To Login To Make Changes");
+      }
       toast.error("Something Went Wrong");
       return false;
     }
@@ -384,9 +390,10 @@ function SharedNotes() {
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 bg-purple-600 hidden h-0 w-0 "></div>
         <div className="flex flex-row overflow-x-clip w-auto ">
-          <header className=" dark:bg-[#1b1b1b] h-auto flex fixed dark:text-white text-black py-2 px-5 w-full md:hidden flex-row ">
+          <header className=" dark:bg-[#0a0a0a] h-auto fixed dark:text-white text-black p-2 w-full md:hidden flex justify-between z-10 px-5">
+            {" "}
             {/* AI CHAT BUTTON */}
-            <p className="font-semibold my-auto text-lg"> NodeCraft</p>
+            <p className="my-auto text-xl"> NoteCraft</p>
             <button
               data-drawer-target="default-sidebar"
               data-drawer-toggle="default-sidebar"
@@ -410,11 +417,26 @@ function SharedNotes() {
               </svg>
             </button>
           </header>
-          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0">
-            <h3 className="text-lg font-semibold px-4">
-              Take a Look At Notes or Create More Below
-            </h3>
-
+          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0 ">
+            <div className="flex w-full px-4 py-2 bg-black bg-opacity-15 backdrop-blur-[1px] rounded-md flex-col md:flex-row justify-between items-center ">
+              <div className="lg:w-4/5 w-full md:3/4">
+                <h1 className="font-semibold text-3xl mb-3">
+                  {metaData.title} - Shared Notes
+                </h1>
+                <h3 className="text-xl">{metaData.description}</h3>
+              </div>
+              <div className="lg:w-1/5 w-full flex justify-center align-middle md:w-1/4 mt-5 md:mt-0 justify-items-center items-center">
+                <div className="w-full md:w-2/3 flex flex-col justify-center items-end mr-5">
+                  <h3 className="font-light text-lg ">Created By</h3>
+                  <h2 className="font-semibold text-xl">
+                    {metaData.ownerData.name}
+                  </h2>
+                </div>
+                <div className="md:w-1/3">
+                  <img src={metaData.ownerData.pfp} alt="PFP" />
+                </div>
+              </div>
+            </div>
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4">
               {loggedName ? (
                 isEditor ? (
@@ -427,7 +449,7 @@ function SharedNotes() {
                   ></CreateNoteShared>
                 ) : (
                   <div
-                    className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10 text-center flex items-center gap-6 flex-col justify-center`}
+                    className={`w-full h-52 rounded-md border-2 border-dotted p-2  bg-black backdrop-blur-[1px] backdrop-brightness-200 bg-opacity-10 text-center flex items-center gap-6 flex-col justify-center`}
                   >
                     <h2 className="text-lg font-semibold m-auto">
                       You Need To Be An Editor To Create New Notes
@@ -440,7 +462,7 @@ function SharedNotes() {
                 )
               ) : (
                 <div
-                  className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10 text-center flex items-center gap-7 flex-col justify-center`}
+                  className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-black backdrop-blur-[1px] backdrop-brightness-200 bg-opacity-10  text-center flex items-center gap-7 flex-col justify-center`}
                 >
                   <h2 className="text-lg font-semibold my-auto">
                     You Need To Login To Add Notes To This Group
@@ -485,7 +507,7 @@ function SharedNotes() {
             onClick={showChatSection}
           >
             <span className="origin-center rotate-90 text-lg font-semibold  transform block w-[100vh] ">
-              Open NodeCraft AI Chat
+              Open NoteCraft AI Chat
             </span>
           </button>
           <div

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function AppBar({shareFunction}) {
   const showSideBar = () => {
-    document.getElementById("sidebar").classList.toggle("-left-56");
+    document.getElementById("sidebar").classList.toggle("-left-64");
   };
 
   const highlightItem = (target) => {
@@ -20,7 +20,7 @@ function AppBar({shareFunction}) {
   return (
     <>
       <div className="flex flex-row h-screen w-fit m-0 p-0 text-lg md:text-xl">
-        <header className=" dark:bg-[#0a0a0a] h-auto fixed dark:text-white text-black p-2 w-full md:hidden flex justify-between">
+        <header className=" dark:bg-[#0a0a0a] h-auto fixed dark:text-white text-black p-2 w-full md:hidden flex justify-between z-10">
           {/* SIDEBAR BUTTON */}
           <button
             data-drawer-target="default-sidebar"
@@ -73,9 +73,9 @@ function AppBar({shareFunction}) {
 
         <aside
           id="sidebar"
-          className="xl:w-[17.5vw] w-fit h-full md:h-screen absolute md:relative -left-56 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6"
+          className=" xl:w-[17.5vw] h-full md:h-screen  md:relative -left-64 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-10 fixed"
         >
-          <div className="fixed md:relative dark:bg-[#0a0a0a] bg-opacity-0 h-full flex flex-col dark:text-white text-black py-8 md:px-4 px-7 md:rounded-3xl">
+          <div className="fixed md:relative dark:bg-[#0a0a0a] bg-opacity-0 h-full flex flex-col dark:text-white text-black py-8 md:px-4 px-7 md:rounded-3xl w-[45vw] md:w-auto">
             <button onClick={showSideBar} className="md:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

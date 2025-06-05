@@ -55,7 +55,7 @@ const NoteGroupDisplay = ({
     <div
       ref={cardRef}
       id={id}
-      className={`w-full h-52 rounded-md bg-${color}-500 bg-opacity-75 backdrop-blur-md hover:scale-105 duration-300`}
+      className={`w-full h-52 rounded-md bg-${color}-500 bg-opacity-75 backdrop-blur-md hover:scale-[1.025] duration-300`}
     >
       <div className="h-5/6 overflow-clip px-3 pt-2">
         <h2 className="font-semibold text-xl mb-2">

@@ -1,11 +1,10 @@
 const router = require("express").Router();
-const { notesCol } = require("../db/dbconnection");
+const { notesCol, notesGroupCol } = require("../db/dbconnection");
 const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
 const jwt = require("jsonwebtoken");
 
 router.post("/getAll", async (req, res) => {
-  console.log(jwt.decode(req.cookies._uid) )
   if (  
     jwt.decode(req.cookies._uid).userGIDs.indexOf(req.body.id) !==
     -1
@@ -14,7 +13,14 @@ router.post("/getAll", async (req, res) => {
       ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
       groupID: req.body.id,
     });
-    res.send(await cur.toArray());
+    var det = await notesGroupCol.findOne(
+      {
+        ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
+        groupID: req.body.id,
+      },
+      { projection: { title: 1, description: 1 } }
+    )
+    res.json({"details": det,"notes": await cur.toArray()});
   } else {
     res.sendStatus(404);
   }

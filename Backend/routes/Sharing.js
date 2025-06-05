@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const { notesCol, notesGroupCol } = require("../db/dbconnection");
+const { notesCol, notesGroupCol, usersCol } = require("../db/dbconnection");
 const shortuid = require("short-unique-id");
 const idgen = new shortuid({ length: 12 });
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 router.post("/sharedGetAll", async (req, res) => {
   var cur = await notesCol.find({
@@ -22,16 +22,26 @@ router.post("/sharedGetAll", async (req, res) => {
         .toArray()
     )[0]["editors"];
   } catch (error) {
-    data = []
+    data = [];
   }
-  var isEditor = (jwt.decode(req.cookies._uid)) ? data.includes((jwt.decode(req.cookies._uid)).loggedUserEmail) : false;
+  var isEditor = jwt.decode(req.cookies._uid)
+    ? data.includes(jwt.decode(req.cookies._uid).loggedUserEmail)
+    : false;
   try {
-    (jwt.decode(req.cookies._uid)).sharedOpened[req.body.gid] = isEditor;
-  } catch (error) {
-
-  }
+    jwt.decode(req.cookies._uid).sharedOpened[req.body.gid] = isEditor;
+  } catch (error) {}
+  var metadata = await notesGroupCol.findOne(
+    {
+      ownerID: req.body.uid,
+      groupID: req.body.gid,
+    },
+    { projection: { title: 1, description: 1 } }
+  );
+  metadata.ownerData = await usersCol.findOne(
+    { uuid: req.body.uid },
+  );
   
-  res.json({ notes: await cur.toArray(), editor: isEditor });
+  res.json({ notes: await cur.toArray(), editor: isEditor,  data: metadata });
 });
 
 router.post("/editFavouriteShared", async (req, res) => {
@@ -52,7 +62,7 @@ router.post("/updateShared", async (req, res) => {
   if (
     req.body.title &&
     req.body.description &&
-    (jwt.decode(req.cookies._uid)).sharedOpened[req.body.gid]
+    jwt.decode(req.cookies._uid).sharedOpened[req.body.gid]
   ) {
     notesCol
       .updateOne(

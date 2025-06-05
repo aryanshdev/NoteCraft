@@ -131,7 +131,6 @@ async function AskAIGroq(input) {
     stream: false,
   });
 
-  console.log(chatCompletion.choices[0].message.content)
 
   return chatCompletion.choices[0].message.content;
 }

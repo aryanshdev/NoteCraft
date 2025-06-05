@@ -25,7 +25,6 @@ function CreateNote(props) {
       },
     })
       .then(async (res) => {
-        console.log(document.getElementById("newTitle").value);
         if (res.status === 200) {
           toast.success("New Note Added");
           props.addNewNote(

@@ -209,7 +209,7 @@ function ChatSection({ id, openFunction }) {
     return (
       <>
         {" "}
-        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#262626]">
+        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#121212]">
           <div className="h-full w-full text-lg font-semibold p-5 flex flex-col justify-center align-middle text-center gap-5">
             <h2 className="text-2xl text-red-600 font-bold">
               Sign In Required

@@ -11,13 +11,14 @@ import ShareNote_AddUsers from "./ShareNote_AddUsers.jsx";
 
 function NotesPage() {
   const [userNotes, setUserNotes] = useState([]);
+  const [groupDetails, setGroupDetails] = useState({});
   const gid = useParams();
   const navigate = useNavigate();
   const bgColors = useRef([]);
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/getAll", {
+    fetch("https://notecraft-ai.onrender.com/app/notes/getAll", {
       credentials: "include",
       method: "POST",
       headers: {
@@ -37,7 +38,9 @@ function NotesPage() {
         return res.json();
       })
       .then((res) => {
-        setUserNotes(res);
+        setGroupDetails(res.details);
+        document.title = res.details.title + " | NoteCraft - Notes";
+        setUserNotes(res.notes);
         setLoading(false);
       })
       .catch((error) => {
@@ -175,7 +178,7 @@ function NotesPage() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/update", {
+      const res = await fetch("https://notecraft-ai.onrender.com/app/notes/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -211,7 +214,7 @@ function NotesPage() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
+    let res = await fetch("https://notecraft-ai.onrender.com/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: gid.groupID,
@@ -279,7 +282,7 @@ function NotesPage() {
   };
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notes/deleteNote", {
+      await fetch("https://notecraft-ai.onrender.com/app/notes/deleteNote", {
         credentials: "include",
         body: JSON.stringify({
           nid: inpid,
@@ -360,10 +363,13 @@ function NotesPage() {
             closeFunction={showSharing}
           ></ShareNote_AddUsers>
           <NotesPageSideBar shareFunction={showSharing} />
-          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0">
-            <h3 className="text-lg font-semibold">
-              Take a look at your Notes or Create More Below
-            </h3>
+          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0  ">
+           <div className="bg-[#121212] rounded-lg bg-opacity-10 px-3 py-2 backdrop-blur-[1px] backdrop-brightness-200 w-full">
+            <h1 className="font-semibold text-3xl mb-3">
+              {groupDetails.title}
+            </h1>
+            <h3 className="text-xl">{groupDetails.description}</h3>
+            </div>
 
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
               <CreateNote
@@ -393,7 +399,7 @@ function NotesPage() {
             onClick={showChatSection}
           >
             <span className="origin-center rotate-90 text-lg font-semibold  transform block w-[100vh] ">
-              Open NodeCraft AI Chat
+              Open NoteCraft AI Chat
             </span>
           </button>
           <div

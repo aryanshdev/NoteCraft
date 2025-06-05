@@ -23,6 +23,7 @@ function CreateNoteGroup(props) {
       .then((res) => {
         switch (res.status) {
           case 200:
+            showHideAddArea();
             toast.success(
               <>
                 New Note Group Created
@@ -34,6 +35,7 @@ function CreateNoteGroup(props) {
               </>,
               {
                 onClose: async () => nav("/notes/" + (await res.text())),
+                autoClose: 2500,
               }
             );
             break;

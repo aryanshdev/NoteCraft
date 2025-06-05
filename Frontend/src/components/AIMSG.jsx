@@ -26,7 +26,7 @@ function AIMSG({ msg }) {
             clipRule="evenodd"
           />
         </svg>
-        NodeCraft AI ✨
+        NoteCraft AI ✨
       </div>
       <div className="bg-white bg-opacity-5 text-left flex-1 text-base px-3 py-2 rounded-lg break-words AICHAT">
         <ReactMarkdown

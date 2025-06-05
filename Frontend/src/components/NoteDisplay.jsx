@@ -74,15 +74,15 @@ const NoteDisplay = ({
             className="focus:outline-none outline-none bg-transparent border-b-[1px] border-solid border-gray-500 focus:border-white transition-all duration-150 hidden placeholder:text-gray-300"
           />
         </h2>
-        <p className="font-semibold text-wrap break-words">
-          <span>{description}</span>
+        <p className="font-semibold text-wrap break-words overflow-y-auto h-48 scrollbar-invisible ">
+          <span >{description}</span>
           <textarea
             type="text"
             value={description}
             onChange={(e) => {
               setDescription(e.target.value);
             }}
-            rows={4}
+            rows={5}
             className="focus:outline-none outline-none bg-transparent border-b-[1px] border-solid border-gray-500 focus:border-white transition-all duration-150 hidden w-full placeholder:text-gray-300"
           />
         </p>

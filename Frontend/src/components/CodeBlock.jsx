@@ -27,10 +27,8 @@ function CodeBlock({ children, className }) {
           });
     
           const data = await response.json();
-          console.log(data)
           setOutput(data.output || data.error || "No output");
         } catch (error) {
-          console.log(error)
           setOutput(`Error: ${error.message}`);
         }
       };

@@ -138,7 +138,6 @@ router.delete("/deleteNoteGroup", async (req, res) => {
       } else res.sendStatus(500);
     })
     .catch((e) => {
-      console.log(e);
       res.sendStatus(500);
     });
 });

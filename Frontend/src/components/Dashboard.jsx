@@ -168,10 +168,12 @@ function Dashboard() {
       <>
         <div className="bg-orange-500 bg-blue-500 bg-yellow-500 bg-red-500 bg-purple-500 bg-green-500 bg-pink-500 hidden h-0 w-0"></div>
 
-        <h1 className="font-semibold text-3xl mb-3">
-          Good {Greeting}, {name}
-        </h1>
-        <h3>Take a look at your Notes or Create More Below</h3>
+        <div className="bg-[#121212] rounded-lg bg-opacity-10 px-3 py-2 backdrop-blur-[1px] backdrop-brightness-200 w-full">
+          <h1 className="font-semibold text-3xl mb-3">
+            Good {Greeting}, {name}
+          </h1>
+          <h3 className="text-xl">Take a look at your Note Groups or Create More Below</h3>
+        </div>
         <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
           {userNotes.length < 8 ? (
             <CreateNoteGroup already={userNotes.length}></CreateNoteGroup>

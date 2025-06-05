@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20");
 const GitHubStrategy = require("passport-github2");
-
+const ShortUniqueId = require("short-unique-id");
+const idgen = new ShortUniqueId({ length: 15 });
 // Passport authentication
 
 passport.use(

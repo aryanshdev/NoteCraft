@@ -41,7 +41,7 @@ function CreateNoteShared(props) {
 
   return (
     <div
-      className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-blue-800 bg-opacity-10`}
+      className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-black backdrop-blur-[1px] backdrop-brightness-200 bg-opacity-10`}
     >
       <div
         className="flex justify-center items-center flex-col w-full text-center gap-1 h-full"

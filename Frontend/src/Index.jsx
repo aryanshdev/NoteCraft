@@ -300,7 +300,7 @@ function Index() {
           ></NoteGroupDisplay>
           <NoteGroupDisplay
             isFav={true}
-            _description="Nodecraft-AI is the helper you need to conqure your goals. NC-AI helps, optemizes, and makes your life easier"
+            _description="NoteCraft-AI is the helper you need to conqure your goals. NC-AI helps, optemizes, and makes your life easier"
             _title="AI Integrated"
             color={"red"}
           ></NoteGroupDisplay>
