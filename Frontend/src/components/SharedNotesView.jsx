@@ -20,7 +20,7 @@ function SharedNotes() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -39,7 +39,7 @@ function SharedNotes() {
   }, []);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/sharing/sharedGetAll", {
+    fetch("http://localhost:10000/sharing/sharedGetAll", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -63,7 +63,7 @@ function SharedNotes() {
         console.log(res);
         setUserNotes(res["notes"]);
         setIsEditor(res["editor"]);
-        document.title = res["data"].title + " - Shared Notes | NoteCraft";
+        document.title = res["data"].title + " | NoteCraft - Shared Notes ";
         setMetaData(res["data"]);
         setLoading(false);
       })
@@ -78,7 +78,7 @@ function SharedNotes() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/sharing/updateShared", {
+      const res = await fetch("http://localhost:10000/sharing/updateShared", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -286,7 +286,7 @@ function SharedNotes() {
     toast.warning("Ask Note Group Owner To Add You As Editor ");
   };
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
+    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: getids.groupID,
@@ -314,7 +314,7 @@ function SharedNotes() {
 
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/sharing/deleteShared", {
+      await fetch("http://localhost:10000/sharing/deleteShared", {
         credentials: "include",
         body: JSON.stringify({
           gid: getids.groupID,
@@ -417,27 +417,27 @@ function SharedNotes() {
               </svg>
             </button>
           </header>
-          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0 ">
+          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0 pb-10">
             <div className="flex w-full px-4 py-2 bg-black bg-opacity-15 backdrop-blur-[1px] rounded-md flex-col md:flex-row justify-between items-center ">
-              <div className="lg:w-4/5 w-full md:3/4">
+              <div className="xl:w-4/5 w-full md:3/4">
                 <h1 className="font-semibold text-3xl mb-3">
                   {metaData.title} - Shared Notes
                 </h1>
-                <h3 className="text-xl">{metaData.description}</h3>
+                <h3 className="text-lg">{metaData.description}</h3>
               </div>
-              <div className="lg:w-1/5 w-full flex justify-center align-middle md:w-1/4 mt-5 md:mt-0 justify-items-center items-center">
+              <div className="xl:w-1/5 w-full flex justify-center align-middle md:w-1/4 mt-5 md:mt-0 justify-items-center items-center">
                 <div className="w-full md:w-2/3 flex flex-col justify-center items-end mr-5">
                   <h3 className="font-light text-lg ">Created By</h3>
-                  <h2 className="font-semibold text-xl">
+                  <h2 className="font-semibold text-lg">
                     {metaData.ownerData.name}
                   </h2>
                 </div>
                 <div className="md:w-1/3">
-                  <img src={metaData.ownerData.pfp} alt="PFP" />
+                  <img src={metaData.ownerData.pfp} className="max-h-24 rounded-full " alt="PFP" />
                 </div>
               </div>
             </div>
-            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4">
+            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4 pb-10">
               {loggedName ? (
                 isEditor ? (
                   <CreateNoteShared

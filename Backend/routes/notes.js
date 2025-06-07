@@ -5,10 +5,7 @@ const idgen = new shortuid({ length: 12 });
 const jwt = require("jsonwebtoken");
 
 router.post("/getAll", async (req, res) => {
-  if (  
-    jwt.decode(req.cookies._uid).userGIDs.indexOf(req.body.id) !==
-    -1
-  ) {
+  if (jwt.decode(req.cookies._uid).userGIDs.indexOf(req.body.id) !== -1) {
     var cur = await notesCol.find({
       ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
       groupID: req.body.id,
@@ -19,8 +16,8 @@ router.post("/getAll", async (req, res) => {
         groupID: req.body.id,
       },
       { projection: { title: 1, description: 1 } }
-    )
-    res.json({"details": det,"notes": await cur.toArray()});
+    );
+    res.json({ details: det, notes: await cur.toArray() });
   } else {
     res.sendStatus(404);
   }
@@ -102,8 +99,13 @@ async function deleteAllOfGroup(loggedinUserUUID, id) {
   let ans = (
     await notesCol.deleteMany({ ownerID: loggedinUserUUID, groupID: id })
   ).acknowledged;
-  
+
   return ans;
 }
+
+router.delete("/resetGroup", async (req, res) => {
+  (await notesCol.deleteMany({ ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID, groupID: req.body.id }));
+  res.sendStatus(200);
+});
 
 module.exports = { router, deleteAllOfGroup };

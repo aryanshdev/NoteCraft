@@ -13,7 +13,8 @@ function Index() {
     offset: ["start end", "end start"],
   });
 
-  const scrollY = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const moveX = useTransform(scrollYProgress, [0, 1], [0, 100]); // Moves 100px right
+  const scrollY = useTransform(scrollYProgress, [0, 1], [0, -35]);
   const springY = useSpring(scrollY, {
     stiffness: 100,
     damping: 5,
@@ -93,6 +94,7 @@ function Index() {
         <div className="md:block hidden">
           <motion.div
             ref={noteRef}
+            x:moveX
             style={{ y: springY }} // Scroll-based parallax
             initial={{ opacity: 0, y: -40, rotate: -12 }}
             animate={{ opacity: 1, y: 0, rotate: -12 }}
@@ -108,8 +110,8 @@ function Index() {
             {" "}
             <NoteGroupDisplay
               color={"purple"}
-              _description={"s-AI : Note Taking Made Easier"}
-              _title={"Welcome"}
+              _description={"Why Need Demo, Try Yourself And Find Out"}
+              _title={"Demo?"}
             />
           </motion.div>
           <motion.div
@@ -129,8 +131,8 @@ function Index() {
             {" "}
             <NoteGroupDisplay
               color={"blue"}
-              _description={"NoteCraft-AI : Note Taking Made Easier"}
-              _title={"Welcome"}
+              _description={"Share Notes And Collaborate In Real Time! Chat, Plan, Create, Update!"}
+              _title={"Live Collaborations"}
             />
           </motion.div>
 
@@ -151,7 +153,7 @@ function Index() {
             {" "}
             <NoteGroupDisplay
               color={"orange"}
-              _description={"AI Integrated To Do Planner, Daily Memo and "}
+              _description={"Integrated AI To Help You With Your Notes, Ideas, And Plans."}
               _title={"NoteCraft-AI"}
             />
           </motion.div>
@@ -279,16 +281,13 @@ function Index() {
         </motion.div>
       </section>
       <section
-        className="flex justify-center py-20 px-5 text-xl flex-col gap-5 bg-black"
+        className="flex justify-center py-20 px-8 text-xl flex-col gap-5 bg-black"
         id="about"
       >
         <h2 className="text-3xl font-semibold"> What is NoteCraft?</h2>
         <p className="capitalize">
           NoteCraft is an{" "}
-          <span className="font-bold italic">AI integrated</span> Note-Taking
-          cum Planner app that helps you organize your ideas. Use Notecraft ad
-          you want, as a study note taking platform, as a to-do planner, or as
-          sticky notes that you can access fropm anywhere!!
+          <span className="font-bold italic">AI integrated</span> Note-Taking cum Planner app that helps you organize your ideas. Use Notecraft ad you want, as a study note taking platform, as a to-do planner, or as sticky notes that you can access fropm anywhere!!
         </p>
         <h2 className="text-3xl font-semibold"> Salient Features</h2>
         <div className="grid w-auto h-auto grid-flow-row md:grid-flow-col grid-cols-1 lg:grid-cols-3 gap-5 mx-3">
@@ -312,18 +311,18 @@ function Index() {
           ></NoteGroupDisplay>
         </div>
       </section>
-      <section className="flex justify-center py-20 px-5 text-xl flex-col gap-10 text-center ">
+      <section className="flex justify-center py-20 px-5 text-xl flex-col gap-10 text-center h-[75vh]">
         <span className="text-3xl font-normal">
           Being Your Note Making Journey
         </span>
         <Link to="/login">
-          <button className="hover:bg-green-500 border-green-500 border-[1px] rounded-md px-6 py-3 text-xl hover:text-black font-semibold m-auto">
+          <button className="hover:bg-green-500 border-green-500 bg-black bg-opacity-5 border-[2px] rounded-md px-32 backdrop-blur-[2px] backdrop-brightness-200 py-3 text-xl hover:text-white font-semibold m-auto">
             Get Started
           </button>
         </Link>
       </section>
-      <section className="text-center mb-10">
-        &copy; 2024 NoteCraft. All rights reserved.
+      <section className="text-center mb-10 ">
+        &copy; 2025 NoteCraft. All rights reserved.
       </section>
     </>
   );

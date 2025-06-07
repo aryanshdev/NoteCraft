@@ -18,7 +18,7 @@ function NotesPage() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/getAll", {
+    fetch("http://localhost:10000/app/notes/getAll", {
       credentials: "include",
       method: "POST",
       headers: {
@@ -131,7 +131,7 @@ function NotesPage() {
         return userNotes.map((note) => {
           if (note.noteID === details.nid) {
             return {
-              ...note, 
+              ...note,
               title: details.title,
               body: details.description,
             };
@@ -172,13 +172,60 @@ function NotesPage() {
     });
   }, []);
 
+  const resetGroup = useCallback(() => {
+    const deleteInnerFunc = async () => {
+    fetch("http://localhost:10000/app/notes/resetGroup", {
+      credentials: "include",
+      method: "DELETE",
+      body: JSON.stringify({ id: gid.groupID }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.status == 200) {
+        toast.success("Group Reset Successfully");
+        setUserNotes([]);
+        
+      } else if (res.status == 401) {
+        toast.error("Session Expired, Please Login Again");
+        navigate("/401");
+      } else {
+        toast.error("Some Error Occurred");
+      }
+    });
+    }
+    var id = toast(
+      <>
+        <div>Confirm Reset?</div>
+        <div className="font-light italic text-sm">This Will Delete All Notes Within This Group</div>
+        <button
+          className="bg-gray-800 py-2 my-2 px-3"
+          onClick={() => {
+            deleteInnerFunc();
+            toast.dismiss(id);
+          }}
+        >
+          Delete
+        </button>
+        <button
+          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          onClick={() => {
+            toast.dismiss(id);
+          }}
+        >
+          Cancel
+        </button>
+      </>
+    );
+  });
+
   const updateNote = useCallback(
     async (event) => {
       var ele = event.target.parentElement.parentElement.parentElement;
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/update", {
+      const res = await fetch("http://localhost:10000/app/notes/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -214,7 +261,7 @@ function NotesPage() {
     [setUserNotes, userNotes]
   );
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
+    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: gid.groupID,
@@ -269,7 +316,7 @@ function NotesPage() {
         title: title,
       },
     ]);
-    
+
     socket.emit(
       "shared_NoteAdded",
       {
@@ -282,7 +329,7 @@ function NotesPage() {
   };
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notes/deleteNote", {
+      await fetch("http://localhost:10000/app/notes/deleteNote", {
         credentials: "include",
         body: JSON.stringify({
           nid: inpid,
@@ -362,16 +409,16 @@ function NotesPage() {
             gid={gid.groupID}
             closeFunction={showSharing}
           ></ShareNote_AddUsers>
-          <NotesPageSideBar shareFunction={showSharing} />
+          <NotesPageSideBar shareFunction={showSharing} resetFunction={resetGroup} />
           <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0  ">
-           <div className="bg-[#121212] rounded-lg bg-opacity-10 px-3 py-2 backdrop-blur-[1px] backdrop-brightness-200 w-full">
-            <h1 className="font-semibold text-3xl mb-3">
-              {groupDetails.title}
-            </h1>
-            <h3 className="text-xl">{groupDetails.description}</h3>
+            <div className="bg-[#121212] rounded-lg bg-opacity-10 px-3 py-2 backdrop-blur-[1px] backdrop-brightness-200 w-full">
+              <h1 className="font-semibold text-3xl mb-3">
+                {groupDetails.title}
+              </h1>
+              <h3 className="text-lg">{groupDetails.description}</h3>
             </div>
 
-            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
+            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 pb-10">
               <CreateNote
                 already={userNotes.length}
                 gid={gid.groupID}

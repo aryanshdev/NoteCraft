@@ -6,7 +6,7 @@ function Login() {
   const nav = useNavigate();
   useEffect(() => {
     document.title = "Login | NoteCraft";
-    fetch("https://notecraftai-xct5.onrender.com/auth/check", {
+    fetch("http://localhost:10000/auth/check", {
       credentials: "include",
     }).then((res) => {
       switch (res.status) {
@@ -32,7 +32,7 @@ function Login() {
             Login / Signup To Continue To NoteCraft
           </h3>
 
-          <a href="/auth/google">
+          <a href={showButtons ? "/auth/google" : "javascript:void(0)"}>
             <button className="bg-white px-3 py-2 text-black font-semibold flex flex-row gap-3 h-auto mx-auto items-center text-lg rounded-lg min-w-64">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@ function Login() {
               )}
             </button>
           </a>
-          <a href="/auth/github">
+          <a href={showButtons ? "/auth/github" : "javascript:void(0)"}>
             <button className="bg-white px-3 py-1 text-black font-semibold flex flex-row gap-3 h-auto mx-auto items-center text-lg rounded-lg min-w-64">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

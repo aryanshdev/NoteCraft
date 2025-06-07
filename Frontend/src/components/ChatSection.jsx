@@ -11,7 +11,7 @@ function ChatSection({ id, openFunction }) {
   const navigate = useNavigate();
   const [name, setName] = useState();
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -93,7 +93,7 @@ function ChatSection({ id, openFunction }) {
   if (name) {
     return (
       <>
-        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative p-4 transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#0a0a0a] bg-opacity-50 backdrop-blur-3xl">
+        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative p-4 transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#0a0a0a] bg-opacity-60 backdrop-brightness-75 backdrop-blur-3xl">
           <div className="flex flex-col gap-4 h-full ">
             <header className="flex flex-row text-sm justify-around">
               {/* Close Chat Area Button */}
@@ -165,7 +165,8 @@ function ChatSection({ id, openFunction }) {
 
             {/* Message Sending Area */}
             <div className="flex w-full flex-row items-center">
-              <button  className="  bg-gray-500 bg-opacity-35 px-2 h-full  rounded-md rounded-r-none"
+              <button
+                className="  bg-gray-500 bg-opacity-35 px-2 h-full  rounded-md rounded-r-none"
                 onClick={() => {
                   document.getElementById("chatMSG").value = "@NC-AI ";
                 }}
@@ -182,14 +183,17 @@ function ChatSection({ id, openFunction }) {
                   />
                 </svg>
               </button>
-              <input
+              <textarea
                 type="text"
-                className=" w-full bg-white h-fit bg-opacity-5 px-4 py-2 outline-none focus:outline-none rounded-md rounded-l-none"
+                rows={1}
+                
+                className=" w-full bg-white  bg-opacity-5 px-4 py-2 outline-none focus:outline-none rounded-md rounded-l-none "
                 id="chatMSG"
                 onKeyDown={(key) => {
-                  key.key == "Enter" ? sendMessage() : null;
+                  key.key === "Enter" && !key.shiftKey ? sendMessage() : null;
                 }}
               />
+
               <button id="sendButton" onClick={sendMessage} className="ml-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

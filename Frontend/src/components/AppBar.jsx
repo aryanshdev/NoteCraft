@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 function AppBar() {
   const nav = useNavigate();
   const showHideSideBar = () => {
-    document.getElementById("sidebar").classList.toggle("-left-64");
+    document.getElementById("sidebar").classList.toggle("-left-96");
   };
 
   const clickOperation = (event) => {
@@ -16,7 +16,7 @@ function AppBar() {
     showHideSideBar();
   };
   const logout = () => {
-    fetch("https://notecraftai-xct5.onrender.com/auth/logout", {
+    fetch("http://localhost:10000/auth/logout", {
       method: "POST",
       credentials: "include",
     }).then((res) => {
@@ -65,9 +65,9 @@ function AppBar() {
 
         <aside
           id="sidebar"
-          className="xl:w-[17.5vw] w-[25vw] md:w-fit h-full md:h-screen md:relative -left-64 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-[100] absolute"
+          className="xl:w-[17.5vw] w-[25vw] md:w-fit h-full md:h-screen md:relative -left-96 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-[100] absolute"
         >
-          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full  ">
+          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full gap-2">
             <button onClick={showHideSideBar} className="md:hidden mb-5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -1,9 +1,9 @@
 import "../style.css";
 import { Link } from "react-router-dom";
 
-function AppBar({shareFunction}) {
+function AppBar({ shareFunction, resetFunction }) {
   const showSideBar = () => {
-    document.getElementById("sidebar").classList.toggle("-left-64");
+    document.getElementById("sidebar").classList.toggle("-left-96");
   };
 
   const highlightItem = (target) => {
@@ -15,7 +15,7 @@ function AppBar({shareFunction}) {
       .classList.toggle("-right-[100vw]");
   };
 
-  const setAlertMode = ()=>{}
+  const setAlertMode = () => {};
 
   return (
     <>
@@ -73,10 +73,10 @@ function AppBar({shareFunction}) {
 
         <aside
           id="sidebar"
-          className=" xl:w-[17.5vw] h-full md:h-screen  md:relative -left-64 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-10 fixed"
+          className=" xl:w-[17.5vw] h-full md:h-screen  md:relative -left-96 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-10 fixed"
         >
-          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full  ">
-             <button onClick={showSideBar} className="md:hidden">
+          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full gap-2">
+            <button onClick={showSideBar} className="md:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -90,9 +90,7 @@ function AppBar({shareFunction}) {
                 />
               </svg>
             </button>
-            
 
-            
             <div className="w-full text-left pt-6 md:pt-0">
               <Link
                 to="/dashboard"
@@ -111,27 +109,10 @@ function AppBar({shareFunction}) {
               </Link>
             </div>
 
-            <div className="w-full text-left">
-              <Link
-                to="/account"
-                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                Account
-              </Link>
-            </div>
-            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center" onClick={shareFunction}>
+            <div
+              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
+              onClick={shareFunction}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -146,10 +127,25 @@ function AppBar({shareFunction}) {
               </svg>
               Share Notes
             </div>
-            <div className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center" onClick={()=>{
-              document.getElementById("addNotButton").click();
-              showSideBar();
-            }}>
+
+            <div
+              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
+              onClick={resetFunction}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path fill-rule="evenodd" d="M2.515 10.674a1.875 1.875 0 0 0 0 2.652L8.89 19.7c.352.351.829.549 1.326.549H19.5a3 3 0 0 0 3-3V6.75a3 3 0 0 0-3-3h-9.284c-.497 0-.974.198-1.326.55l-6.375 6.374ZM12.53 9.22a.75.75 0 1 0-1.06 1.06L13.19 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L15.31 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z" clip-rule="evenodd" />
+</svg>
+
+              Reset Group
+            </div>
+
+            <div
+              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
+              onClick={() => {
+                document.getElementById("addNotButton").click();
+                showSideBar();
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -166,7 +162,6 @@ function AppBar({shareFunction}) {
               </svg>
               New Note
             </div>
-            
           </div>
         </aside>
       </div>
