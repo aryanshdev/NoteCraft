@@ -16,7 +16,7 @@ function AppBar() {
     showHideSideBar();
   };
   const logout = () => {
-    fetch("/logout", {
+    fetch("https://notecraftai-xct5.onrender.com/logout", {
       method: "POST",
       credentials: "include", // Necessary for cookies
     }).then((res) => {
