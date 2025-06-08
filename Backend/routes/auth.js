@@ -13,7 +13,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/google/process-login",
+      callbackURL:
+        "https://notecraftai-xct5.onrender.com/auth/google/process-login",
     },
     async (accessToken, refreshToken, profile, done) => {
       const userData = await usersCol.findOne({ email: profile._json.email });
@@ -32,10 +33,7 @@ passport.use(
 
       const userGIDs = (
         await notesGroupCol
-          .find(
-            { ownerID: id },
-            { projection: { groupID: 1, _id: 0 } }
-          )
+          .find({ ownerID: id }, { projection: { groupID: 1, _id: 0 } })
           .toArray()
       ).map((ele) => ele.groupID);
 
@@ -60,7 +58,8 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://notecraftai-xct5.onrender.com/auth/github/process-login",
+      callbackURL:
+        "https://notecraftai-xct5.onrender.com/auth/github/process-login",
       scope: ["user:email"],
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -81,10 +80,7 @@ passport.use(
       // Generate JWT token
       const userGIDs = (
         await notesGroupCol
-          .find(
-            { ownerID:  id },
-            { projection: { groupID: 1, _id: 0 } }
-          )
+          .find({ ownerID: id }, { projection: { groupID: 1, _id: 0 } })
           .toArray()
       ).map((ele) => ele.groupID);
 
@@ -123,10 +119,10 @@ router.get(
   }),
   async function (req, res) {
     res.cookie("_uid", req.user, {
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-           secure: true,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      secure: true,
       sameSite: "none",
-  });
+    });
     res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
 );
@@ -141,10 +137,10 @@ router.get(
   }),
   async function (req, res) {
     res.cookie("_uid", req.user, {
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          secure: true,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      secure: true,
       sameSite: "none",
-        });
+    });
     res.redirect("https://notecraft-ai.onrender.com/dashboard");
   }
 );
@@ -152,15 +148,14 @@ router.get(
 function ensureAuthenticated(req, res, next) {
   const authToken = req.cookies._uid;
   if (!authToken) return res.sendStatus(401);
-  
-  try{
+
+  try {
     let user = jwt.verify(authToken, process.env.SIGNING_KEY);
     req.user = user;
     next();
-  }catch(e){
-    res.sendStatus(401)
+  } catch (e) {
+    res.sendStatus(401);
   }
-  
 }
 
 router.get("/check", ensureAuthenticated, (req, res) => {
@@ -168,7 +163,12 @@ router.get("/check", ensureAuthenticated, (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("_uid").sendStatus(200);
+  res
+    .clearCookie("_uid", {
+      secure: true,
+      sameSite: "none",
+    })
+    .sendStatus(200);
 });
 
 module.exports = { router, ensureAuthenticated };
