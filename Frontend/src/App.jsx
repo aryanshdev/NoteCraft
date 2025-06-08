@@ -11,6 +11,7 @@ import Display404 from "./Error Components/404";
 import Display401 from "./Error Components/401";
 import Display500 from "./Error Components/500";
 import SharedNotes from "./components/SharedNotesView";
+import StatusPage from "./components/StatusPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/notes/:groupID" element={<NotesPage />} />
         <Route path="shared/:userID/:groupID" element={<SharedNotes />} />
+        <Route path="/status" element={<StatusPage />} />
 
         {/* Routes with the MainLayout wrapper */}
         <Route element={<MainLayout />}>
