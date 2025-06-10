@@ -39,7 +39,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   const [editors, setEditors] = useState([]);
   const navigate = useNavigate();
   const deleteEditor = (emailID) => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/removeEditor", {
+    fetch("http://localhost:10000/app/notesgroup/removeEditor", {
       credentials: "include",
       method: "DELETE",
       headers: {
@@ -67,26 +67,26 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
         return res.json();
       })
       .then((res) => {
-        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
+        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   };
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notes/getSharingInfo", {
+    fetch("http://localhost:10000/app/notes/getSharingInfo", {
       credentials: "include",
     })
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        let url = `https://notecraft-ai.onrender.com/shared/${res["user"]}/${gid}`;
+        let url = `http://localhost:5173/shared/${res["user"]}/${gid}`;
         setLink(url);
       });
   }, []);
 
   useEffect(() => {
     fetch(
-      `https://notecraftai-xct5.onrender.com/app/notesgroup/getEditors/${gid}`,
+      `http://localhost:10000/app/notesgroup/getEditors/${gid}`,
       { credentials: "include" }
     )
       .then((res) => {
@@ -103,7 +103,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   };
 
   const addEditor = () => {
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/addEditor", {
+    fetch("http://localhost:10000/app/notesgroup/addEditor", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
@@ -134,7 +134,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   return (
     <>
       <div
-        className="w-screen h-screen  justify-center align-middle items-center flex absolute bg-black bg-opacity-40 backdrop-blur-sm z-40 !hidden"
+        className="w-screen h-screen  justify-center align-middle items-center flex fixed bg-black bg-opacity-40 backdrop-blur-sm z-40 !hidden"
         id="shareOverlay"
       >
         <div className="bg-black rounded-xl px-6 py-4 z-30 absolute m-auto h-fit w-5/6 border-[1px] border-white md:h-fit md:w-1/2">

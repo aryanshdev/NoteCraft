@@ -23,8 +23,7 @@ function CodeBlock({ children, className }) {
     "c#": "https://x85pek5qfc.execute-api.ap-south-1.amazonaws.com/default/NoteCraft-CSharp-Runner",
     csharp:
       "https://x85pek5qfc.execute-api.ap-south-1.amazonaws.com/default/NoteCraft-CSharp-Runner",
-       cs:
-      "https://x85pek5qfc.execute-api.ap-south-1.amazonaws.com/default/NoteCraft-CSharp-Runner",
+    cs: "https://x85pek5qfc.execute-api.ap-south-1.amazonaws.com/default/NoteCraft-CSharp-Runner",
     java: "https://g11cpg2862.execute-api.ap-south-1.amazonaws.com/default/NoteCraft-JAVA-Runner",
     js: "https://mukyv6o63b.execute-api.ap-south-1.amazonaws.com/default/NoteCraft-JS-Runner",
     javascript:
@@ -51,8 +50,8 @@ function CodeBlock({ children, className }) {
       setOutput(`Error: ${error.message}`);
     }
   };
-  
-  const language =  className?.replace("language-", "") || "plaintext";
+
+  const language = className?.replace("language-", "") || "plaintext";
   return (
     <div className="relative text-white rounded-lg overflow-hidden my-2 codeblock">
       <div className="px-4 py-2 bg-gray-900 bg-opacity-75 text-sm mb-0 flex justify-between items-center z-[15]">

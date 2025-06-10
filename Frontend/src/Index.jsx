@@ -316,7 +316,7 @@ function Index() {
           Being Your Note Making Journey
         </span>
         <Link to="/login">
-          <button className="hover:bg-green-500 border-green-500 bg-black bg-opacity-5 border-[2px] rounded-md px-32 backdrop-blur-[2px] backdrop-brightness-200 py-3 text-xl hover:text-white font-semibold m-auto">
+          <button className="hover:bg-green-500 border-green-500 bg-black bg-opacity-5 border-[2px] rounded-md px-20 md:px-32 backdrop-blur-[2px] backdrop-brightness-200 py-3 text-xl hover:text-white font-semibold m-auto ">
             Get Started
           </button>
         </Link>

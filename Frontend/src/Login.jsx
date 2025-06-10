@@ -6,7 +6,7 @@ function Login() {
   const nav = useNavigate();
   useEffect(() => {
     document.title = "Login | NoteCraft";
-    fetch("https://notecraftai-xct5.onrender.com/auth/check", {
+    fetch("http://localhost:10000/auth/check", {
       credentials: "include",
     }).then((res) => {
       switch (res.status) {

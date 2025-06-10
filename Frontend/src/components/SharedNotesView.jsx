@@ -20,7 +20,7 @@ function SharedNotes() {
   const [Loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -39,7 +39,7 @@ function SharedNotes() {
   }, []);
 
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/sharing/sharedGetAll", {
+    fetch("http://localhost:10000/sharing/sharedGetAll", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -78,7 +78,7 @@ function SharedNotes() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/sharing/updateShared", {
+      const res = await fetch("http://localhost:10000/sharing/updateShared", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({
@@ -286,7 +286,7 @@ function SharedNotes() {
     toast.warning("Ask Note Group Owner To Add You As Editor ");
   };
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
+    let res = await fetch("http://localhost:10000/app/notes/editFavourite", {
       credentials: "include",
       body: JSON.stringify({
         gid: getids.groupID,
@@ -314,7 +314,7 @@ function SharedNotes() {
 
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/sharing/deleteShared", {
+      await fetch("http://localhost:10000/sharing/deleteShared", {
         credentials: "include",
         body: JSON.stringify({
           gid: getids.groupID,
@@ -433,7 +433,11 @@ function SharedNotes() {
                   </h2>
                 </div>
                 <div className="md:w-1/3">
-                  <img src={metaData.ownerData.pfp} className="max-h-24 rounded-full " alt="PFP" />
+                  <img
+                    src={metaData.ownerData.pfp}
+                    className="max-h-24 rounded-full "
+                    alt="PFP"
+                  />
                 </div>
               </div>
             </div>
@@ -467,11 +471,17 @@ function SharedNotes() {
                   <h2 className="text-lg font-semibold my-auto">
                     You Need To Login To Add Notes To This Group
                   </h2>
-                  <Link to={"/login"} className="my-auto">
-                    <button className="bg-white px-4 py-2 text-xl  text-black font-semibold rounded-md">
-                      Login
-                    </button>
-                  </Link>
+
+                  <button
+                    className="bg-white px-4 py-2 text-xl  text-black font-semibold rounded-md my-auto"
+                    onClick={() => {
+                      var path = document.location.href.split("shared")[1];
+                      localStorage.setItem("__rdi", path);
+                      navigate("/login");
+                    }}
+                  >
+                    Login
+                  </button>
                 </div>
               )}
               {userNotes.map((note, index) => (
@@ -503,7 +513,7 @@ function SharedNotes() {
             </div>
           </div>
           <button
-            className="hidden md:flex bg-white w-[3%] text-white justify-center items-center px-1 flex-col bg-opacity-10 my-5 rounded-l-xl"
+            className="hidden md:flex  bg-[#0a0a0a] lg:w-[3%] md:w-[5%] text-white justify-center items-center px-1 flex-col my-5 rounded-l-xl"
             onClick={showChatSection}
           >
             <span className="origin-center rotate-90 text-lg font-semibold  transform block w-[100vh] ">

@@ -1,20 +1,20 @@
 [[redirects]]
   from = "/app/*"
-  to = "https://notecraftai-xct5.onrender.com/app/:splat"
+  to = "http://localhost:10000/app/:splat"
   status = 200
   force = true
 
 
 [[redirects]]
   from = "/auth/*"
-  to = "https://notecraftai-xct5.onrender.com/auth/:splat"
+  to = "http://localhost:10000/auth/:splat"
   status = 200
   force = true
 
 
 [[redirects]]
   from = "/sharing/*"
-  to = "https://notecraftai-xct5.onrender.com/sharing/:splat"
+  to = "http://localhost:10000/sharing/:splat"
   status = 200
   force = true
 

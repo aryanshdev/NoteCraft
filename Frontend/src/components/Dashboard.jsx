@@ -18,7 +18,7 @@ function Dashboard() {
       ? "Afternoon"
       : "Evening";
 
-  fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+  fetch("http://localhost:10000/app/account/getName", {
     method: "GET",
     credentials: "include",
   }).then(async (res) => {
@@ -36,8 +36,15 @@ function Dashboard() {
   });
 
   useEffect(() => {
-    document.title = "Dashboard | NoteCraft";
-    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
+    if (localStorage.getItem("__rdi")) {
+      var loc = localStorage.getItem("__rdi")
+      localStorage.removeItem("__rdi")
+      window.location.href =
+        "http://localhost:5173/shared" + loc;
+      return;
+    }
+
+    fetch("http://localhost:10000/app/notesgroup/getAll", {
       method: "GET",
       credentials: "include", // Include cookies
       headers: {
@@ -69,7 +76,7 @@ function Dashboard() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/update", {
+      const res = await fetch("http://localhost:10000/app/notesgroup/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
@@ -96,7 +103,7 @@ function Dashboard() {
   );
   const favouriteSet = async (groupID, isFav) => {
     let res = await fetch(
-      "https://notecraftai-xct5.onrender.com/app/notesgroup/editFavourite",
+      "http://localhost:10000/app/notesgroup/editFavourite",
       {
         credentials: "include",
         body: JSON.stringify({
@@ -121,7 +128,7 @@ function Dashboard() {
 
   const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/deleteNoteGroup", {
+      await fetch("http://localhost:10000/app/notesgroup/deleteNoteGroup", {
         credentials: "include",
         body: JSON.stringify({
           id: inpid,
@@ -173,7 +180,9 @@ function Dashboard() {
           <h1 className="font-semibold text-3xl mb-3">
             Good {Greeting}, {name}
           </h1>
-          <h3 className="text-lg">Take a look at your Note Groups or Create More Below</h3>
+          <h3 className="text-lg">
+            Take a look at your Note Groups or Create More Below
+          </h3>
         </div>
         <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5">
           {userNotes.length < 8 ? (

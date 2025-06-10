@@ -5,13 +5,15 @@ import UserMSG from "./UserMSG";
 import { useNavigate, Link } from "react-router-dom";
 import { Slide, toast } from "react-toastify";
 import AIMSG from "./AIMSG.jsx";
+import LoaderDisplay from "../LoaderDisplay.jsx";
 
 function ChatSection({ id, openFunction }) {
   const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
   const [name, setName] = useState();
+  const [isConnected, setIsConnected] = useState(false);
   useEffect(() => {
-    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
+    fetch("http://localhost:10000/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -31,35 +33,76 @@ function ChatSection({ id, openFunction }) {
     });
   }, []);
 
+  const redirectLogin = () => {
+    var path = document.location.href.split("shared")[1];
+    localStorage.setItem("__rdi", path);
+    navigate("/login");
+  };
+
   useEffect(() => {
-    socket.on("SYSTEM", (msg) => {
-      setMessages((prevMessages) => [...prevMessages, ["SYSTEM", msg]]);
-    });
+    // Connect manually if autoConnect is false
 
-    socket.on("USER", (msgObject) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
+    const handleSystem = (msg) => {
+      setMessages((prev) => [...prev, ["SYSTEM", msg]]);
+    };
+
+    const handleDisconnect = () => {
+      setIsConnected(false);
+    };
+
+    const handleConnect = () => {
+      setIsConnected(true);
+    };
+
+    const handleReconnect = () => {
+      socket.connect();
+      socket.emit("createRoom", [id, name]);
+    };
+
+    const handleUser = (msgObject) => {
+      setMessages((prev) => [
+        ...prev,
         ["USER", msgObject.message, msgObject.name],
       ]);
-    });
-    socket.on("ServerToUser", (message) => {
+    };
+
+    const handleServerToUser = () => {
       socket.emit("UserToServer", inpEle.value);
-      setMessages((prevMessages) => [...prevMessages, ["SELF", inpEle.value]]);
-    });
+      setMessages((prev) => [...prev, ["SELF", inpEle.value]]);
+    };
 
-    socket.on("AIQUESTION", (msgObject) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
+    const handleAIQuestion = (msgObject) => {
+      setMessages((prev) => [
+        ...prev,
         ["USER", msgObject.message, msgObject.name],
       ]);
-    });
+    };
 
-    socket.on("AIMessage", (msgObject) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        ["AI", msgObject.message],
-      ]);
-    });
+    const handleAIMessage = (msgObject) => {
+      setMessages((prev) => [...prev, ["AI", msgObject.message]]);
+    };
+
+    // Attach listeners
+    socket.on("SYSTEM", handleSystem);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("connect", handleConnect);
+    socket.on("reconnect", handleReconnect);
+    socket.on("USER", handleUser);
+    socket.on("ServerToUser", handleServerToUser);
+    socket.on("AIQUESTION", handleAIQuestion);
+    socket.on("AIMessage", handleAIMessage);
+
+    // Cleanup
+    return () => {
+      socket.off("SYSTEM", handleSystem);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("connect", handleConnect);
+      socket.off("reconnect", handleReconnect);
+      socket.off("USER", handleUser);
+      socket.off("ServerToUser", handleServerToUser);
+      socket.off("AIQUESTION", handleAIQuestion);
+      socket.off("AIMessage", handleAIMessage);
+    };
   }, []);
 
   const showHideSideBar = () => {
@@ -134,77 +177,90 @@ function ChatSection({ id, openFunction }) {
                 Clear Chat
               </button>
             </header>
-            {/* Message Display Area */}
-            <div className="scrollbar-invisible flex overflow-y-auto w-full bg-transparent rounded-lg  py-2 flex-1 flex-col gap-5">
-              {messages.map((msgItem, index) => {
-                switch (msgItem[0]) {
-                  case "SYSTEM":
-                    return <SystemMSG key={index} msg={msgItem[1]}></SystemMSG>;
-                  case "USER":
-                    return (
-                      <UserMSG
-                        key={index}
-                        msg={msgItem[1]}
-                        name={msgItem[2]}
-                      ></UserMSG>
-                    );
-                  case "SELF":
-                    return (
-                      <UserMSG
-                        key={index}
-                        msg={msgItem[1]}
-                        name={name}
-                        sending={true}
-                      ></UserMSG>
-                    );
-                  case "AI":
-                    return <AIMSG key={index} msg={msgItem[1]}></AIMSG>;
-                }
-              })}
-            </div>
-
-            {/* Message Sending Area */}
-            <div className="flex w-full flex-row items-center">
-              <button
-                className="  bg-gray-500 bg-opacity-35 px-2 h-full  rounded-md rounded-r-none"
-                onClick={() => {
-                  document.getElementById("chatMSG").value = "@NC-AI ";
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  class="size-6 fill-blue-400"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z"
-                    clip-rule="evenodd"
+            {isConnected ? (
+              <>
+                {" "}
+                {/* Message Display Area */}
+                <div className="scrollbar-invisible flex overflow-y-auto w-full bg-transparent rounded-lg  py-2 flex-1 flex-col gap-5 ">
+                  {messages.map((msgItem, index) => {
+                    switch (msgItem[0]) {
+                      case "SYSTEM":
+                        return (
+                          <SystemMSG key={index} msg={msgItem[1]}></SystemMSG>
+                        );
+                      case "USER":
+                        return (
+                          <UserMSG
+                            key={index}
+                            msg={msgItem[1]}
+                            name={msgItem[2]}
+                          ></UserMSG>
+                        );
+                      case "SELF":
+                        return (
+                          <UserMSG
+                            key={index}
+                            msg={msgItem[1]}
+                            name={name}
+                            sending={true}
+                          ></UserMSG>
+                        );
+                      case "AI":
+                        return <AIMSG key={index} msg={msgItem[1]}></AIMSG>;
+                    }
+                  })}
+                </div>
+                {/* Message Sending Area */}
+                <div className="flex w-full flex-row items-center">
+                  <button
+                    className="  bg-gray-500 bg-opacity-35 px-2 h-full  rounded-md rounded-r-none"
+                    onClick={() => {
+                      document.getElementById("chatMSG").value = "@NC-AI ";
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      class="size-6 fill-blue-400"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 7.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5ZM16.5 15a.75.75 0 0 1 .712.513l.394 1.183c.15.447.5.799.948.948l1.183.395a.75.75 0 0 1 0 1.422l-1.183.395c-.447.15-.799.5-.948.948l-.395 1.183a.75.75 0 0 1-1.422 0l-.395-1.183a1.5 1.5 0 0 0-.948-.948l-1.183-.395a.75.75 0 0 1 0-1.422l1.183-.395c.447-.15.799-.5.948-.948l.395-1.183A.75.75 0 0 1 16.5 15Z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                  <textarea
+                    type="text"
+                    rows={1}
+                    className=" w-full bg-white  bg-opacity-5 px-4 py-2 outline-none focus:outline-none rounded-md rounded-l-none "
+                    id="chatMSG"
+                    onKeyDown={(key) => {
+                      key.key === "Enter" && !key.shiftKey
+                        ? sendMessage()
+                        : null;
+                    }}
                   />
-                </svg>
-              </button>
-              <textarea
-                type="text"
-                rows={1}
-                
-                className=" w-full bg-white  bg-opacity-5 px-4 py-2 outline-none focus:outline-none rounded-md rounded-l-none "
-                id="chatMSG"
-                onKeyDown={(key) => {
-                  key.key === "Enter" && !key.shiftKey ? sendMessage() : null;
-                }}
-              />
 
-              <button id="sendButton" onClick={sendMessage} className="ml-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentcolor"
-                  class="size-6"
-                >
-                  <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-                </svg>
-              </button>
-            </div>
+                  <button
+                    id="sendButton"
+                    onClick={sendMessage}
+                    className="ml-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentcolor"
+                      class="size-6"
+                    >
+                      <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                    </svg>
+                  </button>
+                </div>
+              </>
+            ) : (
+              <LoaderDisplay></LoaderDisplay>
+            )}
           </div>
         </aside>
       </>
@@ -219,11 +275,12 @@ function ChatSection({ id, openFunction }) {
               Sign In Required
             </h2>
             You Need To Sign In to Chat
-            <Link to={"/login"}>
-              <button className="bg-white px-4 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md">
-                Login
-              </button>
-            </Link>
+            <button
+              className="bg-white px-4 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md"
+              onClick={redirectLogin}
+            >
+              Login
+            </button>
             OR
             <button
               className="bg-white text-lg font-semibold text-black px-5 py-2 rounded-lg mx-auto flex flex-row gap-3 items-center"

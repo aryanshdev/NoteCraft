@@ -24,7 +24,7 @@ const idgen = new ShortUniqueId({ length: 15 });
 // Socket.io server
 const io = new Server(app, {
   cors: {
-    origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.onrender.com"],
+    origin: ["http://localhost:10000/", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
@@ -32,6 +32,7 @@ const io = new Server(app, {
 
 // Socket.io event handling
 io.on("connection", (socket) => {
+
   socket.on("createRoom", ([roomID, name]) => {
     socket.join(roomID);
     socket.roomID = roomID;
@@ -48,6 +49,7 @@ io.on("connection", (socket) => {
 
   socket.on("ASKAI", async (message) => {
    // socket.emit("SELF", "@NC-AI " + message.split("|")[1]);
+   console.log(socket.roomID)
     socket.to(socket.roomID).emit("AIQUESTION", {
       message: "@NC-AI " + message.split("|")[1],
       name: socket.userName,
@@ -85,7 +87,7 @@ expressServer.use(helmet());
 
 expressServer.use(
   cors({
-    origin: ["https://notecraft-ai.onrender.com"], // Frontend domain
+    origin: ["http://localhost:5173"], // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
