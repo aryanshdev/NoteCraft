@@ -12,7 +12,11 @@ function CreateNote(props) {
   };
 
   const addNewNote = () => {
-    fetch("http://localhost:10000/app/notes/new", {
+   if(props.already >= 20) {
+      toast.error("You Can Only Add 20 Notes In A Group");
+      return;
+    }
+     fetch("http://localhost:10000/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({
@@ -27,11 +31,14 @@ function CreateNote(props) {
       .then(async (res) => {
         if (res.status === 200) {
           toast.success("New Note Added");
+                   
           props.addNewNote(
             document.getElementById("newTitle").value,
             document.getElementById("newDesc").value,
             await res.text()
           );
+
+          showHideAddArea();
         } else if (res.status == 400) {
           toast.warning("Check Inputs And Try Again");
         } else if (res.status == 401) {

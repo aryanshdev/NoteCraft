@@ -19,7 +19,7 @@ function AppBar({ shareFunction, resetFunction }) {
 
   return (
     <>
-      <div className="flex flex-row h-screen w-fit m-0 p-0 text-lg md:text-xl">
+      <div className="flex flex-row h-screen w-fit m-0 p-0 text-lg md:text-xl ">
         <header className=" dark:bg-[#0a0a0a] h-auto fixed dark:text-white text-black p-2 w-full md:hidden flex justify-between z-10">
           {/* SIDEBAR BUTTON */}
           <button
@@ -75,7 +75,7 @@ function AppBar({ shareFunction, resetFunction }) {
           id="sidebar"
           className=" xl:w-[17.5vw] h-full md:h-screen  md:relative -left-96 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-10 fixed"
         >
-          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full gap-2">
+          <div className=" md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75 w-[50vw] md:w-full gap-2 fixed">
             <button onClick={showSideBar} className="md:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -162,10 +162,10 @@ function AppBar({ shareFunction, resetFunction }) {
               </svg>
               New Note
             </div>
-             <button
-              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
-              onClick={()=>{nav("/status")}}
-            >
+              <Link
+                to="/status"
+                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
+              >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -180,7 +180,7 @@ function AppBar({ shareFunction, resetFunction }) {
                 />
               </svg>
               Status
-            </button>
+            </Link>
           </div>
         </aside>
       </div>

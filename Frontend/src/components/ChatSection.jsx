@@ -39,7 +39,7 @@ function ChatSection({ id, openFunction }) {
     navigate("/login");
   };
 
-  useEffect(() => {
+   useEffect(() => {
     // Connect manually if autoConnect is false
 
     const handleSystem = (msg) => {
@@ -56,6 +56,7 @@ function ChatSection({ id, openFunction }) {
 
     const handleReconnect = () => {
       socket.connect();
+      alert(id)
       socket.emit("createRoom", [id, name]);
     };
 
@@ -156,7 +157,6 @@ function ChatSection({ id, openFunction }) {
                     clip-rule="evenodd"
                   />
                 </svg>
-                Close
               </button>
               <button
                 className="ml-auto flex flex-row gap-1 items-center"

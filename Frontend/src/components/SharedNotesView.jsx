@@ -444,13 +444,17 @@ function SharedNotes() {
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4 pb-10">
               {loggedName ? (
                 isEditor ? (
-                  <CreateNoteShared
-                    already={userNotes.length}
-                    gid={getids.groupID}
-                    owner={getids.userID}
-                    navigator={navigate}
-                    addNewNote={addNewNote}
-                  ></CreateNoteShared>
+                  userNotes.length <= 19 ? (
+                    <CreateNoteShared
+                      already={userNotes.length}
+                      gid={getids.groupID}
+                      owner={getids.userID}
+                      navigator={navigate}
+                      addNewNote={addNewNote}
+                    ></CreateNoteShared>
+                  ) : (
+                    <></>
+                  )
                 ) : (
                   <div
                     className={`w-full h-52 rounded-md border-2 border-dotted p-2  bg-black backdrop-blur-[1px] backdrop-brightness-200 bg-opacity-10 text-center flex items-center gap-6 flex-col justify-center`}

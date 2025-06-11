@@ -23,6 +23,10 @@ const idgen = new ShortUniqueId({ length: 15 });
 
 // Socket.io server
 const io = new Server(app, {
+  cconnectionStateRecovery: {
+    maxDisconnectionDuration: 2 * 60 * 1000,
+    skipMiddlewares: true,
+  },
   cors: {
     origin: ["http://localhost:10000/", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
@@ -32,7 +36,6 @@ const io = new Server(app, {
 
 // Socket.io event handling
 io.on("connection", (socket) => {
-
   socket.on("createRoom", ([roomID, name]) => {
     socket.join(roomID);
     socket.roomID = roomID;
@@ -48,12 +51,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("ASKAI", async (message) => {
-   // socket.emit("SELF", "@NC-AI " + message.split("|")[1]);
-   console.log(socket.roomID)
-    socket.to(socket.roomID).emit("AIQUESTION", {
-      message: "@NC-AI " + message.split("|")[1],
-      name: socket.userName,
-    });
     let reply = await AskAIGroq(message);
     io.to(socket.roomID).emit("AIMessage", { message: reply });
   });
@@ -76,7 +73,7 @@ io.on("connection", (socket) => {
   });
 });
 
-io.on("disconnection", () => {});
+io.on("disconnection", () => {console.log("User Disconnected");});
 
 // Middleware and security settings
 expressServer.use(bodyParser.json());
@@ -118,9 +115,10 @@ async function AskAIGroq(input) {
   const chatCompletion = await groq.chat.completions.create({
     messages: [
       {
-        "role": "system",
-        "content": "You're a chatbot for a sticky notes site. Provide structured responses in Markdown format. Use proper markdown syntax for code blocks with language description and avoid unnecessary repetition."
-      },      
+        role: "system",
+        content:
+          "You're a chatbot for a sticky notes site. Provide structured responses in Markdown format. Use proper markdown syntax for code blocks with language description and avoid unnecessary repetition.",
+      },
       {
         role: "user",
         content: input,
@@ -132,7 +130,6 @@ async function AskAIGroq(input) {
     top_p: 1,
     stream: false,
   });
-
 
   return chatCompletion.choices[0].message.content;
 }

@@ -54,8 +54,12 @@ router.delete("/deleteAccount", async (req, res) => {
   try {
     notesGroupCol.deleteMany({ ownerID: req.user.loggedinUserUUID });
     notesCol.deleteMany({ ownerID: req.user.loggedinUserUUID });
-    usersCol.deleteMany({ ownerID: req.user.loggedinUserUUID });
-    res.sendStatus(200);
+    usersCol.deleteOne({ uuid: req.user.loggedinUserUUID });
+    
+    res.clearCookie("_uid", {
+      secure: true,
+      sameSite: "none",
+    }).sendStatus(200);
   } catch (error) {
     res.sendStatus(500);
   }

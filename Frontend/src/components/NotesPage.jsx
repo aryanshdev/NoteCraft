@@ -419,12 +419,12 @@ function NotesPage() {
             </div>
 
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 pb-10">
-              <CreateNote
+            { userNotes.length <= 19 ? <CreateNote
                 already={userNotes.length}
                 gid={gid.groupID}
                 addNewNote={addNewNote}
                 navigator={navigate}
-              ></CreateNote>
+              ></CreateNote>: <></>}
               {userNotes.map((note, index) => (
                 <NoteDisplay
                   _title={note.title}

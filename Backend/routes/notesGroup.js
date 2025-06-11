@@ -7,7 +7,9 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 router.get("/getAll", async (req, res) => {
-  var cur = notesGroupCol.find({ ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID });
+  var cur = notesGroupCol.find({
+    ownerID: jwt.decode(req.cookies._uid).loggedinUserUUID,
+  });
   res.send(await cur.toArray());
 });
 
@@ -42,10 +44,10 @@ router.post("/new", async (req, res) => {
       userData.userGIDs = userData.userGIDs.concat([id]);
       const token = jwt.sign(userData, process.env.SIGNING_KEY);
       res.cookie("_uid", token, {
-          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          secure: true,
-      sameSite: "none",
-        });
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        secure: true,
+        sameSite: "none",
+      });
       res.status(200).send(id);
     } catch (e) {
       res.sendStatus(500);
@@ -134,7 +136,7 @@ router.delete("/deleteNoteGroup", async (req, res) => {
         res.cookie("_uid", token, {
           expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           secure: true,
-      sameSite: "none",
+          sameSite: "none",
         });
         res.sendStatus(200);
       } else res.sendStatus(500);

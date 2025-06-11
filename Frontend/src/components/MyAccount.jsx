@@ -226,7 +226,7 @@ function MyAccount() {
 
     var id = toast(
       <>
-        <div>Confirm Reset?</div>
+        <div>Confirm Account Deletion?</div>
         <button
           className="bg-gray-800 py-2 my-2 px-3"
           onClick={() => {
