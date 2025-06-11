@@ -13,7 +13,7 @@ function ChatSection({ id, openFunction }) {
   const [name, setName] = useState();
   const [isConnected, setIsConnected] = useState(false);
   useEffect(() => {
-    fetch("http://localhost:10000/app/account/getName", {
+    fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {

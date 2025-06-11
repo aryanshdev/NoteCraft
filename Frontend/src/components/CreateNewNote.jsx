@@ -16,7 +16,7 @@ function CreateNote(props) {
       toast.error("You Can Only Add 20 Notes In A Group");
       return;
     }
-     fetch("http://localhost:10000/app/notes/new", {
+     fetch("https://notecraftai-xct5.onrender.com/app/notes/new", {
       credentials: "include",
       method: "POST",
       body: JSON.stringify({

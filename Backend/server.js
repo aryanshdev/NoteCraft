@@ -28,7 +28,7 @@ const io = new Server(app, {
     skipMiddlewares: true,
   },
   cors: {
-    origin: ["http://localhost:10000/", "http://localhost:5173"],
+    origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   },
@@ -84,7 +84,7 @@ expressServer.use(helmet());
 
 expressServer.use(
   cors({
-    origin: ["http://localhost:5173"], // Frontend domain
+    origin: ["https://notecraft-ai.onrender.com"], // Frontend domain
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
     credentials: true,

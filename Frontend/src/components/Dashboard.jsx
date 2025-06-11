@@ -18,7 +18,7 @@ function Dashboard() {
       ? "Afternoon"
       : "Evening";
 
-  fetch("http://localhost:10000/app/account/getName", {
+  fetch("https://notecraftai-xct5.onrender.com/app/account/getName", {
     method: "GET",
     credentials: "include",
   }).then(async (res) => {
@@ -40,11 +40,11 @@ function Dashboard() {
       var loc = localStorage.getItem("__rdi")
       localStorage.removeItem("__rdi")
       window.location.href =
-        "http://localhost:5173/shared" + loc;
+        "https://notecraft-ai.onrender.com/shared" + loc;
       return;
     }
 
-    fetch("http://localhost:10000/app/notesgroup/getAll", {
+    fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/getAll", {
       method: "GET",
       credentials: "include", // Include cookies
       headers: {
@@ -76,7 +76,7 @@ function Dashboard() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("http://localhost:10000/app/notesgroup/update", {
+      const res = await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/update", {
         credentials: "include",
         method: "POST",
         body: JSON.stringify({ title: title, description: desc, id: id }), // Use JSON.stringify
@@ -103,7 +103,7 @@ function Dashboard() {
   );
   const favouriteSet = async (groupID, isFav) => {
     let res = await fetch(
-      "http://localhost:10000/app/notesgroup/editFavourite",
+      "https://notecraftai-xct5.onrender.com/app/notesgroup/editFavourite",
       {
         credentials: "include",
         body: JSON.stringify({
@@ -128,7 +128,7 @@ function Dashboard() {
 
   const deleteNoteGroup = async (groupID) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("http://localhost:10000/app/notesgroup/deleteNoteGroup", {
+      await fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/deleteNoteGroup", {
         credentials: "include",
         body: JSON.stringify({
           id: inpid,
