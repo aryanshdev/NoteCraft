@@ -299,7 +299,7 @@ function ChatSection({ id, openFunction }) {
                   <button
                     className="  bg-gray-500 bg-opacity-35 px-2 h-full  rounded-md rounded-r-none"
                     onClick={() => {
-                      document.getElementById("chatMSG").value = "@NC-AI ";
+                      document.getElementById("chatMSG").value = "@NC-AI "+ document.getElementById("chatMSG").value ;
                     }}
                   >
                     <svg

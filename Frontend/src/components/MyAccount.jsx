@@ -22,6 +22,7 @@ function ChangePFPPopup({ closePopup }) {
           break;
         case 404:
           toast.warning("No Gravatar Account Found With Same Email");
+          setShowLoading(false);
           break;
         case 401:
           navigate("/401");
