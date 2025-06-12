@@ -389,7 +389,7 @@ function SharedNotes() {
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 bg-purple-600 hidden h-0 w-0 "></div>
         <div className="flex flex-row overflow-x-clip w-auto ">
-          <header className=" dark:bg-[#0a0a0a] h-auto fixed dark:text-white text-black p-2 w-full md:hidden flex justify-between z-10 px-5">
+          <header className=" bg-[#0a0a0a] h-auto fixed text-white text-black p-2 w-full md:hidden flex justify-between z-10 px-5">
             {" "}
             {/* AI CHAT BUTTON */}
             <p className="my-auto text-xl"> NoteCraft</p>

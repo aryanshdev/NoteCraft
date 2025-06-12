@@ -37,7 +37,7 @@ function AppBar() {
   return (
     <>
       <div className="flex flex-row h-screen w-fit m-0 p-0 text-lg md:text-xl z-[100] fixed md:static">
-        <header className=" dark:bg-[#1b1b1b] h-auto fixed dark:text-white text-black p-2 w-full md:hidden">
+        <header className=" bg-[#1b1b1b] h-auto fixed text-white text-black p-2 w-full md:hidden">
           <button
             data-drawer-target="default-sidebar"
             data-drawer-toggle="default-sidebar"
@@ -67,7 +67,7 @@ function AppBar() {
           id="sidebar"
           className="xl:w-[17.5vw] w-[25vw] md:w-fit h-full md:h-screen md:relative -left-96 transition-all duration-300 md:block md:left-0 md:py-5 md:px-6 z-[100] absolute min-w-fit"
         >
-          <div className="absolute md:relative dark:bg-[#121212] h-full flex flex-col dark:text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75  md:w-full gap-2">
+          <div className="absolute md:relative bg-[#121212] h-full flex flex-col text-white text-black py-8 px-4  md:rounded-3xl bg-opacity-90 backdrop-brightness-75  md:w-full gap-2">
             <button onClick={showHideSideBar} className="md:hidden mb-5">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
