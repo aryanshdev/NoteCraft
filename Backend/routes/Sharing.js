@@ -46,7 +46,11 @@ router.post("/sharedGetAll", async (req, res) => {
       sharedOpened: [req.body.gid],
     },
     process.env.SIGNING_KEY
-  ));
+  ),{
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      secure: true,
+      sameSite: "none",
+    });
 
   res.json({ notes: await cur.toArray(), editor: isEditor,  data: metadata });
 });
