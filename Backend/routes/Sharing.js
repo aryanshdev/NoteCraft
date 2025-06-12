@@ -30,7 +30,9 @@ router.post("/sharedGetAll", async (req, res) => {
   try {
     jwt.decode(req.cookies._uid).sharedOpened[req.body.gid] = isEditor;
   } catch (error) {}
-  var metadata = await notesGroupCol.findOne(
+  var metadata = {}
+  console.log(req.body.gid, req.body.uid);
+  metadata = await notesGroupCol.findOne(
     {
       ownerID: req.body.uid,
       groupID: req.body.gid,
