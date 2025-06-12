@@ -87,7 +87,7 @@ router.put("/updateProfileImageUpload", async (req, res) => {
 
     const uploadResult = await cloudinary.uploader.upload(base64Image, {
       folder: "PFPs",
-      transformation:{aspect_ratio: "1:1", gravity: "auto", crop: "auto"},
+      transformation:{aspect_ratio: "1:1", gravity: "auto", crop: "auto", quality: "auto"},
       public_id: `pfp-${req.user.loggedinUserUUID}`,
       overwrite: true,
       resource_type: "auto",

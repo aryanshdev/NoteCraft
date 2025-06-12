@@ -103,6 +103,13 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   };
 
   const addEditor = () => {
+    if (
+      !document.querySelector("input[type='email']").value ||
+      !document.querySelector("input[type='email']").value.includes("@")
+    ) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     fetch("https://notecraftai-xct5.onrender.com/app/notesgroup/addEditor", {
       credentials: "include",
       method: "POST",
