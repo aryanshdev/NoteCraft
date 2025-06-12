@@ -26,8 +26,7 @@ function ChatSection({ id, openFunction }) {
         case 200:
           let uname = await res.text();
           setName(uname.split(" ")[0]);
-          socket.connect();
-          socket.emit("createRoom", [id, uname]);
+
           break;
       }
     });
@@ -39,25 +38,70 @@ function ChatSection({ id, openFunction }) {
     navigate("/login");
   };
 
-   useEffect(() => {
-    // Connect manually if autoConnect is false
+  useEffect(() => {
+    // Use refs to persist values between renders
+    const intentionalDisconnect = { current: false };
+    const reconnectTimer = { current: null };
+    const reconnectAttempts = { current: 0 };
+    const MAX_RECONNECT_ATTEMPTS = 20;
 
     const handleSystem = (msg) => {
       setMessages((prev) => [...prev, ["SYSTEM", msg]]);
     };
 
-    const handleDisconnect = () => {
+    const handleDisconnect = (_) => {
+      setMessages((prev) => [
+        ...prev,
+        ["SYSTEM", `Disconnected From Server`],
+      ]);
       setIsConnected(false);
+
+      // Only attempt reconnect for non-intentional disconnects
+      if (
+        !intentionalDisconnect.current &&
+        reconnectAttempts.current < MAX_RECONNECT_ATTEMPTS
+      ) {
+        // Clear any existing timer
+        if (reconnectTimer.current) {
+          clearTimeout(reconnectTimer.current);
+        }
+
+        // Calculate exponential backoff delay (1s, 2s, 4s, 8s... max 30s)
+        const delay = Math.min(
+          1000 * Math.pow(2, reconnectAttempts.current),
+          30000
+        );
+        reconnectAttempts.current += 1;
+
+    
+
+        reconnectTimer.current = setTimeout(() => {
+          if (!intentionalDisconnect.current) {
+            socket.connect();
+          }
+        }, delay);
+      }
     };
 
     const handleConnect = () => {
       setIsConnected(true);
+      intentionalDisconnect.current = false;
+      reconnectAttempts.current = 0;
+
+      // Clear any pending reconnect timers
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+        reconnectTimer.current = null;
+      }
+
+      // Rejoin room if we have an ID and name
+      if (id && name) {
+        socket.emit("createRoom", [id, name]);
+      }
     };
 
-    const handleReconnect = () => {
-      socket.connect();
-      alert(id)
-      socket.emit("createRoom", [id, name]);
+    const handleConnectError = (error) => {
+      console.error("Connection error:", error);
     };
 
     const handleUser = (msgObject) => {
@@ -68,8 +112,12 @@ function ChatSection({ id, openFunction }) {
     };
 
     const handleServerToUser = () => {
-      socket.emit("UserToServer", inpEle.value);
-      setMessages((prev) => [...prev, ["SELF", inpEle.value]]);
+      // Using a ref for input element is better than global variable
+      const message = inputRef.current?.value || "";
+      if (message) {
+        socket.emit("UserToServer", message);
+        setMessages((prev) => [...prev, ["SELF", message]]);
+      }
     };
 
     const handleAIQuestion = (msgObject) => {
@@ -85,26 +133,62 @@ function ChatSection({ id, openFunction }) {
 
     // Attach listeners
     socket.on("SYSTEM", handleSystem);
-    socket.on("disconnect", handleDisconnect);
     socket.on("connect", handleConnect);
-    socket.on("reconnect", handleReconnect);
+    socket.on("connect_error", handleConnectError);
+    socket.on("disconnect", handleDisconnect);
     socket.on("USER", handleUser);
     socket.on("ServerToUser", handleServerToUser);
     socket.on("AIQUESTION", handleAIQuestion);
     socket.on("AIMessage", handleAIMessage);
 
+    // Debugging events
+    socket.on("reconnect_attempt", (attempt) => {
+    });
+
+    socket.on("reconnect_error", (error) => {
+      console.error("Reconnection error:", error);
+    });
+
+    // Override disconnect method to mark as intentional
+    const originalDisconnect = socket.disconnect;
+    socket.disconnect = () => {
+      intentionalDisconnect.current = true;
+      originalDisconnect.call(socket);
+    };
+
+    // Initial connection if not already connected
+    if (!socket.connected && !intentionalDisconnect.current) {
+      socket.connect();
+    }
+
     // Cleanup
     return () => {
+      // Mark disconnect as intentional
+      intentionalDisconnect.current = true;
+
+      // Clear any pending reconnect timers
+      if (reconnectTimer.current) {
+        clearTimeout(reconnectTimer.current);
+      }
+
+      // Remove all listeners
       socket.off("SYSTEM", handleSystem);
-      socket.off("disconnect", handleDisconnect);
       socket.off("connect", handleConnect);
-      socket.off("reconnect", handleReconnect);
+      socket.off("connect_error", handleConnectError);
+      socket.off("disconnect", handleDisconnect);
       socket.off("USER", handleUser);
       socket.off("ServerToUser", handleServerToUser);
       socket.off("AIQUESTION", handleAIQuestion);
       socket.off("AIMessage", handleAIMessage);
+      socket.off("reconnect_attempt");
+      socket.off("reconnect_error");
+
+      // Disconnect if connected
+      if (socket.connected) {
+        socket.disconnect();
+      }
     };
-  }, []);
+  }, [id, name]);
 
   const showHideSideBar = () => {
     document.getElementById("sidebar").classList.toggle("-right-56");

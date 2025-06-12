@@ -21,8 +21,7 @@ cloudinary.config({
   secure: true,
 });
 
-// Log the configuration
-console.log(cloudinary.config());
+
 
 router.get("/getInfo", async (req, res) => {
   res.send(

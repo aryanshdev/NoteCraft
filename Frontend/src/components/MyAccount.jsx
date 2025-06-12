@@ -78,7 +78,7 @@ function ChangePFPPopup({ closePopup }) {
   return (
     <>
       <div
-        className="fixed w-screen  bg-black h-screen top-0 left-0 bg-opacity-50 backdrop-blur-sm backdrop-brightness-200 flex items-center align-middle justify-center !hidden z-[120]"
+        className="fixed w-screen  bg-black h-screen top-0 left-0 bg-opacity-50 backdrop-blur-sm backdrop-brightness-150 flex items-center align-middle justify-center !hidden z-[120]"
         id="pfpUpdateOverlay"
       >
         <div className="flex flex-col md:flex-row p-6 md:p-10 w-4/5 lg:w-1/2  h-auto z-50 bg-[#101010] rounded-xl gap-7 md:gap-1 absolute ">

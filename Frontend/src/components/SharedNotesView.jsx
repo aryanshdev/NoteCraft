@@ -48,7 +48,6 @@ function SharedNotes() {
       body: JSON.stringify({ uid: getids.userID, gid: getids.groupID }),
     })
       .then((res) => {
-        console.log(res);
         if (res.status == 401) {
           navigate("/401");
           return false;
@@ -60,7 +59,7 @@ function SharedNotes() {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
+        
         setUserNotes(res["notes"]);
         setIsEditor(res["editor"]);
         document.title = res["data"].title + " | NoteCraft - Shared Notes ";

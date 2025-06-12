@@ -6,9 +6,11 @@ const URL =
 
 export const socket = io("https://notecraftai-xct5.onrender.com/", {
   autoConnect: false,
-  reconnection: true, // default: true
-  reconnectionAttempts: Infinity, // try forever
-  reconnectionDelay: 1000, // start with 1s delay
-  reconnectionDelayMax: 2000, // max delay between attempts
-  timeout: 2500, // before connect_error
+  reconnection: true,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000, // Increased from 2000 to 5000 for better production scenarios
+  randomizationFactor: 0.5, // Adds randomness to avoid thundering herd problem
+  timeout: 20000, // Increased from 2500 (2.5s is too short for some networks)
+  transports: ["websocket", "polling"], // Explicitly specify transport order
 });

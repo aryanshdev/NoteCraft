@@ -13,7 +13,7 @@ const Groq = require("groq-sdk");
 const http = require("http"); // Create HTTP server
 const { Server } = require("socket.io");
 const cookieParser = require("cookie-parser");
-const session = require("express-session");
+
 
 require("dotenv").config();
 
@@ -23,9 +23,10 @@ const idgen = new ShortUniqueId({ length: 15 });
 
 // Socket.io server
 const io = new Server(app, {
-  cconnectionStateRecovery: {
-    maxDisconnectionDuration: 2 * 60 * 1000,
+  connectionStateRecovery: {
+    maxDisconnectionDuration: 2.5 * 60 * 1000,
     skipMiddlewares: true,
+    
   },
   cors: {
     origin: ["https://notecraftai-xct5.onrender.com/", "https://notecraft-ai.onrender.com"],
@@ -41,6 +42,7 @@ io.on("connection", (socket) => {
     socket.roomID = roomID;
     socket.userName = String(name).split(" ")[0];
     socket.emit("SYSTEM", "Welcome !!"); // to user joining the room
+    socket.emit("CONNEST", 200)
     socket.to(roomID).emit("SYSTEM", `${name} has joined the room`); // to everyone else
   });
 
@@ -73,7 +75,7 @@ io.on("connection", (socket) => {
   });
 });
 
-io.on("disconnection", () => {console.log("User Disconnected");});
+io.on("disconnection", () => {socket.broadcast.emit("SYSTEM", `${socket.userName} has left the room`);});
 
 // Middleware and security settings
 expressServer.use(bodyParser.json());
