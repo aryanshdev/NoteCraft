@@ -772,6 +772,10 @@ video {
   z-index: 99;
 }
 
+.z-\[\] {
+  z-index: ;
+}
+
 .m-0 {
   margin: 0px;
 }
@@ -1426,6 +1430,11 @@ video {
   border-bottom-left-radius: 0.375rem;
 }
 
+.rounded-b-none {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
 .rounded-l-none {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
@@ -1441,9 +1450,19 @@ video {
   border-bottom-right-radius: 0px;
 }
 
+.rounded-r-xl {
+  border-top-right-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
 .rounded-t-full {
   border-top-left-radius: 9999px;
   border-top-right-radius: 9999px;
+}
+
+.rounded-r-lg {
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
 }
 
 .border {
@@ -1478,12 +1497,36 @@ video {
   border-left-width: 2px;
 }
 
+.border-r-\[100px\] {
+  border-right-width: 100px;
+}
+
 .border-t-0 {
   border-top-width: 0px;
 }
 
 .border-t-4 {
   border-top-width: 4px;
+}
+
+.border-r-8 {
+  border-right-width: 8px;
+}
+
+.border-t-8 {
+  border-top-width: 8px;
+}
+
+.border-l-\[100px\] {
+  border-left-width: 100px;
+}
+
+.border-t-\[150px\] {
+  border-top-width: 150px;
+}
+
+.border-t-2 {
+  border-top-width: 2px;
 }
 
 .border-solid {
@@ -1523,6 +1566,19 @@ video {
   border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }
 
+.border-l-transparent {
+  border-left-color: transparent;
+}
+
+.border-r-transparent {
+  border-right-color: transparent;
+}
+
+.border-t-green-700 {
+  --tw-border-opacity: 1;
+  border-top-color: rgb(21 128 61 / var(--tw-border-opacity, 1));
+}
+
 .bg-\[\#0a0a0a\] {
   --tw-bg-opacity: 1;
   background-color: rgb(10 10 10 / var(--tw-bg-opacity, 1));
@@ -1546,6 +1602,11 @@ video {
 .bg-\[\#1a1a1a\] {
   --tw-bg-opacity: 1;
   background-color: rgb(26 26 26 / var(--tw-bg-opacity, 1));
+}
+
+.bg-\[\#1b1b1b\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(27 27 27 / var(--tw-bg-opacity, 1));
 }
 
 .bg-\[\#212121\] {
@@ -1660,11 +1721,6 @@ video {
 .bg-yellow-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(161 98 7 / var(--tw-bg-opacity, 1));
-}
-
-.bg-\[\#1b1b1b\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(27 27 27 / var(--tw-bg-opacity, 1));
 }
 
 .bg-opacity-10 {
@@ -2107,6 +2163,12 @@ video {
 
 .backdrop-brightness-75 {
   --tw-backdrop-brightness: brightness(.75);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+}
+
+.backdrop-hue-rotate-90 {
+  --tw-backdrop-hue-rotate: hue-rotate(90deg);
   -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
   backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
 }
@@ -2603,27 +2665,5 @@ video {
 
   .xl\:w-\[17\.5vw\] {
     width: 17.5vw;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .dark\:bg-\[\#0a0a0a\] {
-    --tw-bg-opacity: 1;
-    background-color: rgb(10 10 10 / var(--tw-bg-opacity, 1));
-  }
-
-  .dark\:bg-\[\#121212\] {
-    --tw-bg-opacity: 1;
-    background-color: rgb(18 18 18 / var(--tw-bg-opacity, 1));
-  }
-
-  .dark\:bg-\[\#1b1b1b\] {
-    --tw-bg-opacity: 1;
-    background-color: rgb(27 27 27 / var(--tw-bg-opacity, 1));
-  }
-
-  .dark\:text-white {
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255 / var(--tw-text-opacity, 1));
   }
 }

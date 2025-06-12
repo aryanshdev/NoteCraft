@@ -290,11 +290,10 @@ function Index() {
       >
         <h2 className="text-3xl "> What is NoteCraft?</h2>
         <p className="capitalize px-4 text-xl pb-10">
-          NoteCraft is an{" "}
-          <span className="font-bold italic">AI integrated</span> Note-Taking
-          cum Planner app that helps you organize your ideas. Use Notecraft ad
-          you want, as a study note taking platform, as a to-do planner, or as
-          sticky notes that you can access fropm anywhere!!
+          <span className="font-bold">NoteCraft</span> – an <span className="italic"> AI-powered </span>note-taking and planning app designed to
+          organize your ideas and collaborate effortlessly. Use it for study
+          notes, to-do lists, or digital sticky notes—accessible anytime,
+          anywhere!
         </p>
         <h2 className="text-3xl "> Salient Features</h2>
         <div className="relative lg:h-60 px-2 py-10 flex justify-center flex-col md:flex-row lg:block lg:pt-10 pt-90 ">

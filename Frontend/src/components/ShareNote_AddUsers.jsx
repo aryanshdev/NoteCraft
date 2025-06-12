@@ -140,7 +140,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   return (
     <>
       <div
-        className="w-screen h-screen  justify-center align-middle items-center flex fixed bg-black bg-opacity-40 backdrop-blur-sm z-40 !hidden"
+        className="w-screen h-screen  justify-center align-middle items-center flex fixed bg-black bg-opacity-40 backdrop-blur-sm z-[120] !hidden"
         id="shareOverlay"
       >
         <div className="bg-black rounded-xl px-6 py-4 z-30 absolute m-auto h-fit w-5/6 border-[1px] border-white md:h-fit md:w-1/2">
