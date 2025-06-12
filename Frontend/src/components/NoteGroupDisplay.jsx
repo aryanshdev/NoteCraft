@@ -57,8 +57,12 @@ const NoteGroupDisplay = ({
       id={id}
       className={`w-full h-52 rounded-md bg-${color}-500 bg-opacity-75 backdrop-blur-md hover:scale-[1.025] duration-300 relative`}
     >
-      
-      <div className="h-5/6 overflow-clip px-3 pt-2">
+      <div
+        className={`absolute -translate-y-full bg-${color}-500 top-1 left-0 -z-10 backdrop-hue-rotate-90 h-4 w-1/2 rounded-t-lg bg-opacity-70 backdrop-blur-md hover:scale-[1.025] duration-300`}
+      >
+        {" "}
+      </div>
+      <div className="h-5/6 overflow-clip px-3 pt-2 z-[1] border-t-4 rounded-t-lg border-white " >
         <h2 className="font-semibold text-xl mb-2">
           <span>{title}</span>
           <input
@@ -70,7 +74,7 @@ const NoteGroupDisplay = ({
             className="focus:outline-none outline-none bg-transparent border-b-[1px] border-solid border-gray-500 focus:border-white transition-all duration-150 hidden placeholder:text-gray-300"
           />
         </h2>
-               <p className="font-semibold text-lg text-wrap break-words overflow-y-auto h-48 scrollbar-invisible pb-20">
+        <p className="font-semibold text-lg text-wrap break-words overflow-y-auto h-48 scrollbar-invisible pb-20">
           <span>{description}</span>
           <textarea
             type="text"

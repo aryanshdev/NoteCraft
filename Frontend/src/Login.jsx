@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import NoteGroupDisplay from "./components/NoteGroupDisplay";
+import NoteDisplay from "./components/NoteDisplay";
 import { useNavigate } from "react-router-dom";
 function Login() {
   const [showButtons, setShowButtons] = useState(false);
@@ -114,90 +114,90 @@ function Login() {
         </div>
         <div className="flex flex-col gap-2 justify-center align-middle h-[30vh] md:h-full w-full md:w-3/5 relative ">
           <div className="absolute md:left-8  -rotate-6 z-[2] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="What is OAuth? - Why We Need? Where We Need? - PassportJS"
               _title="OAuth Basics"
               color={"purple"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute left-1/4 md:hidden xs:hidden rotate-3 z-[1] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="What is React? Why is it used? Difference From Angular"
               _title="Dev Notes"
               color={"yellow"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute left-1/2 md:hidden xs:hidden -rotate-6 z-[0] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="What is C++? Why High Level Language? Uses and Implementations"
               _title="C++ Notes"
               color={"blue"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute hidden lg:block md:right-44 xl:right-52 -rotate-6 z-[4] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
               _title="Web Dev Notes"
               color={"pink"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute hidden xl:block md:right-44 xl:left-56 -rotate-12 z-[3] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
               _title="Web Dev Notes"
               color={"green"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute hidden xl:block md:right-36 xl:left-80 rotate-6 z-[3] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="TOC-CD Basics, NFA-DFA, "
               _title="Theory Of Computation"
               color={"blue"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute hidden md:block md:-right-14 rotate-3 z-[1] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
               _title="Web Dev Notes"
               color={"yellow"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute -right-2 md:right-6 z-[1] w-52 -rotate-6">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="NodeJS Notes - JS Basics, Async Await"
               _title="Learning NodeJS"
               color={"green"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute rotate-3 right-16  md:left-32 z-[1] md:z-[2] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="To-Do For JAVA DSA - Basic, Intermediate and Advance DS and Basic Algorithms"
               _title="DSA To-Do"
               color={"orange"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute -rotate-12 md:right-14 left-32 z-[1] w-52 hidden md:visible">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="My Personal Notes"
               _title="Important Notes"
               color={"yellow"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
         </div>
       </section>

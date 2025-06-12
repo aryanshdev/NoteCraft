@@ -1,4 +1,4 @@
-import NoteGroupDisplay from "./components/NoteGroupDisplay";
+import NoteDisplay from "./components/NoteDisplay";
 import { Link } from "react-router-dom";
 import WordRotate from "./components/word-rotate";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
@@ -108,7 +108,7 @@ function Index() {
             className="absolute top-[20%] -translate-y-1/2 right-20 rotate-12 w-52"
           >
             {" "}
-            <NoteGroupDisplay
+            <NoteDisplay
               color={"purple"}
               _description={"Why Need Demo, Try Yourself And Find Out"}
               _title={"Demo?"}
@@ -129,7 +129,7 @@ function Index() {
             className="absolute top-[65%] -translate-y-1/2 right-12 rotate-12 w-52"
           >
             {" "}
-            <NoteGroupDisplay
+            <NoteDisplay
               color={"blue"}
               _description={
                 "Share Notes And Collaborate In Real Time! Chat, Plan, Create, Update!"
@@ -153,7 +153,7 @@ function Index() {
             className="absolute top-[60%] -translate-y-1/2 left-12 -rotate-12 w-52"
           >
             {" "}
-            <NoteGroupDisplay
+            <NoteDisplay
               color={"orange"}
               _description={
                 "Integrated AI To Help You With Your Notes, Ideas, And Plans."
@@ -176,7 +176,7 @@ function Index() {
             className="absolute top-[20%] -translate-y-1/2 left-20 -rotate-12 w-52"
           >
             {" "}
-            <NoteGroupDisplay
+            <NoteDisplay
               color={"green"}
               _description={"NoteCraft-AI : Note Taking Made Easier"}
               _title={"Welcome"}
@@ -199,88 +199,88 @@ function Index() {
           className="flex flex-col gap-2 justify-center align-middle h-[30vh] md:hidden"
         >
           <div className="absolute md:left-8  -rotate-6 z-[2] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="AGILE Methodology - Why We Need ? Where We Need?"
               _title="AGILE Notes"
               color={"orange"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute left-1/4 md:hidden xs:hidden rotate-3 z-[1] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="What is React? Why is it used? Difference From Angular"
               _title="Dev Notes"
               color={"purple"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute left-1/2 md:hidden xs:hidden -rotate-6 z-[0] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="What is C++? Why High Level Language? Uses and Implementations"
               _title="C++ Notes"
               color={"blue"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute hidden lg:block md:right-44 xl:right-52 -rotate-6 z-[4] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
               _title="Web Dev Notes"
               color={"pink"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute hidden xl:block md:right-44 xl:left-56 -rotate-12 z-[3] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
               _title="Web Dev Notes"
               color={"green"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute hidden xl:block md:right-36 xl:left-80 rotate-6 z-[3] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="TOC-CD Basics, NFA-DFA, "
               _title="Theory Of Computation"
               color={"blue"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute hidden md:block md:-right-14 rotate-3 z-[1] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
               _title="Web Dev Notes"
               color={"yellow"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
 
           <div className="absolute -right-2 md:right-6 z-[1] w-52 -rotate-6">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="NodeJS Notes - JS Basics, Async Await"
               _title="Learning NodeJS"
               color={"green"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute rotate-3 right-16  md:left-32 z-[1] md:z-[2] w-52">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="To-Do For JAVA DSA - Basic, Intermediate and Advance DS and Basic Algorithms"
               _title="DSA To-Do"
               color={"red"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
           <div className="absolute -rotate-12 md:right-14 left-32 z-[1] w-52 hidden md:visible ">
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="My Personal Notes"
               _title="Important Notes"
               color={"purple"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </div>
         </motion.div>
       </section>
@@ -303,12 +303,12 @@ function Index() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col md:flex-row gap-4 justify-center align-middle items-center lg:absolute md:w-72 mx-auto w-4/5"
           >
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="Notecraft Makes It Much Easy To Manage You Ideas With A Very Simple and pleasing Interface and Experience"
               _title="Easy To Use"
               color={"green"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </motion.div>{" "}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -316,12 +316,12 @@ function Index() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col md:flex-row gap-4 justify-center items-center w-4/5 md:w-72 mx-auto -rotate-12"
           >
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={true}
               _description="NoteCraft-AI is the helper you need to conquer your goals. NC-AI helps, optimize, and makes your life easier"
               _title="AI Integrated"
               color={"red"}
-            ></NoteGroupDisplay>{" "}
+            ></NoteDisplay>{" "}
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -329,12 +329,12 @@ function Index() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex flex-col md:flex-row gap-4 justify-center align-middle items-center lg:absolute md:w-72 rotate-6 right-5 top-10 mx-auto w-4/5"
           >
-            <NoteGroupDisplay
+            <NoteDisplay
               isFav={false}
               _description="Collab With Others, Share Your Notes, and Work Together to achieve your goals"
               _title="Collab With Others"
               color={"blue"}
-            ></NoteGroupDisplay>
+            ></NoteDisplay>
           </motion.div>
         </div>
       </section>
