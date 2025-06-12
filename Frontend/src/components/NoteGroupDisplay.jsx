@@ -55,10 +55,10 @@ const NoteGroupDisplay = ({
     <div
       ref={cardRef}
       id={id}
-      className={`w-full h-52 rounded-md bg-${color}-500 bg-opacity-75 backdrop-blur-md hover:scale-[1.025] duration-300 relative`}
+      className={`w-full h-52 rounded-md bg-${color}-500 bg-opacity-80 backdrop-brightness-200 backdrop-blur-[1px] hover:scale-[1.025] hover:bg-opacity-100 duration-300 relative`}
     >
       <div
-        className={`absolute -translate-y-full bg-${color}-500 top-1 left-0 -z-10 backdrop-hue-rotate-90 h-4 w-1/2 rounded-t-lg bg-opacity-70 backdrop-blur-md hover:scale-[1.025] duration-300`}
+        className={`absolute -translate-y-full bg-${color}-500 top-1 left-0 -z-10  h-4 w-1/2 rounded-t-lg bg-opacity-85 backdrop-blur-[1px] hover:scale-[1.025] duration-300 `}
       >
         {" "}
       </div>
