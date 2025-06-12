@@ -62,7 +62,7 @@ const NoteGroupDisplay = ({
       >
         {" "}
       </div>
-      <div className="h-5/6 overflow-clip px-3 pt-2 z-[1] border-t-4 rounded-t-lg border-white " >
+      <div className="h-5/6 overflow-clip px-3 pt-2 z-[1] border-t-4 rounded-t-lg border-white" >
         <h2 className="font-semibold text-xl mb-2">
           <span>{title}</span>
           <input

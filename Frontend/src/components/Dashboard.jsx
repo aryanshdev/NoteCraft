@@ -184,7 +184,7 @@ function Dashboard() {
             Take a look at your Note Groups or Create More Below
           </h3>
         </div>
-        <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-5 my-5 pb-16">
+        <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-5 my-5 pb-16">
           {userNotes.length < 8 ? (
             <CreateNoteGroup already={userNotes.length}></CreateNoteGroup>
           ) : (
