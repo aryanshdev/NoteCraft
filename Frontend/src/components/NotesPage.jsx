@@ -418,7 +418,7 @@ function NotesPage() {
               <h3 className="text-lg">{groupDetails.description}</h3>
             </div>
 
-            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 pb-10">
+            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 pb-16">
             { userNotes.length <= 19 ? <CreateNote
                 already={userNotes.length}
                 gid={gid.groupID}
