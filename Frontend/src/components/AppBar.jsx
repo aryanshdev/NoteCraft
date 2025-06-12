@@ -83,10 +83,11 @@ function AppBar() {
               </svg>
             </button>
 
-            <button className="w-full text-left " onClick={clickOperation}>
+            <button className="w-full text-left " >
               <Link
                 to="/dashboard"
                 className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center sidemenu-active"
+                onClick={clickOperation}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -100,10 +101,11 @@ function AppBar() {
                 Dashboard
               </Link>
             </button>
-            <button className="w-full text-left" onClick={clickOperation}>
+            <button className="w-full text-left" >
               <Link
                 to="/account"
                 className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
+                onClick={clickOperation}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -119,6 +121,7 @@ function AppBar() {
                 </svg>
                 Account
               </Link>
+              <div className="h-max w-auto flex-1"></div>
             </button>
             <button
               className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"

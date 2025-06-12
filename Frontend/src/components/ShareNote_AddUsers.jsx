@@ -59,7 +59,6 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
             navigate("/500");
           case 200:
             toast.success("Editor Removed");
-            console.log(editors);
             setEditors(editors.filter((ele) => ele != emailID));
             break;
         }

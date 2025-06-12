@@ -8,7 +8,7 @@ export default function StatusPage() {
         <h2 className="text-lg font-semibold mb-5"> Status Page For <Link to={'/'} className="italic text-sky-400">NoteCraft</Link> Services</h2>
         <div className="overflow-x-auto rounded-lg border border-gray">
           <table className="min-w-full divide-y divide-gray-700">
-            <thead className="bg-black bg-opacity-60">
+            <thead className="bg-black bg-opacity-65">
               <tr>
                 <th scope="col" className="px-6 py-4 text-left text-lg font-medium text-white uppercase tracking-wider">
                   Service
@@ -18,7 +18,7 @@ export default function StatusPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-gray-900 divide-y divide-gray-700 bg-opacity-30 text-lg">
+            <tbody className="bg-black divide-y divide-gray-700 bg-opacity-45  text-lg">
               <tr className="hover:bg-black hover:bg-opacity-50 transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-300">
                   Sharing

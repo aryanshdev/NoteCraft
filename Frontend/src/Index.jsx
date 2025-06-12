@@ -131,7 +131,9 @@ function Index() {
             {" "}
             <NoteGroupDisplay
               color={"blue"}
-              _description={"Share Notes And Collaborate In Real Time! Chat, Plan, Create, Update!"}
+              _description={
+                "Share Notes And Collaborate In Real Time! Chat, Plan, Create, Update!"
+              }
               _title={"Live Collaborations"}
             />
           </motion.div>
@@ -153,7 +155,9 @@ function Index() {
             {" "}
             <NoteGroupDisplay
               color={"orange"}
-              _description={"Integrated AI To Help You With Your Notes, Ideas, And Plans."}
+              _description={
+                "Integrated AI To Help You With Your Notes, Ideas, And Plans."
+              }
               _title={"NoteCraft-AI"}
             />
           </motion.div>
@@ -270,7 +274,7 @@ function Index() {
               color={"red"}
             ></NoteGroupDisplay>
           </div>
-          <div className="absolute -rotate-12 md:right-14 left-32 z-[1] w-52 hidden md:visible">
+          <div className="absolute -rotate-12 md:right-14 left-32 z-[1] w-52 hidden md:visible ">
             <NoteGroupDisplay
               isFav={false}
               _description="My Personal Notes"
@@ -281,34 +285,58 @@ function Index() {
         </motion.div>
       </section>
       <section
-        className="flex justify-center py-20 px-8 text-xl flex-col gap-5 bg-black"
+        className="flex justify-center py-12 px-8 text-xl flex-col gap-5 bg-black text-center bg-opacity-65"
         id="about"
       >
-        <h2 className="text-3xl font-semibold"> What is NoteCraft?</h2>
-        <p className="capitalize">
+        <h2 className="text-3xl "> What is NoteCraft?</h2>
+        <p className="capitalize px-4 text-xl pb-10">
           NoteCraft is an{" "}
-          <span className="font-bold italic">AI integrated</span> Note-Taking cum Planner app that helps you organize your ideas. Use Notecraft ad you want, as a study note taking platform, as a to-do planner, or as sticky notes that you can access fropm anywhere!!
+          <span className="font-bold italic">AI integrated</span> Note-Taking
+          cum Planner app that helps you organize your ideas. Use Notecraft ad
+          you want, as a study note taking platform, as a to-do planner, or as
+          sticky notes that you can access fropm anywhere!!
         </p>
-        <h2 className="text-3xl font-semibold"> Salient Features</h2>
-        <div className="grid w-auto h-auto grid-flow-row md:grid-flow-col grid-cols-1 lg:grid-cols-3 gap-5 mx-3">
-          <NoteGroupDisplay
-            isFav={false}
-            _description="Notecraft Makes It Much Easy To Manage You Ideas With A Very Simple and pleasing Interface and Experience"
-            _title="Easy To Use"
-            color={"green"}
-          ></NoteGroupDisplay>
-          <NoteGroupDisplay
-            isFav={true}
-            _description="NoteCraft-AI is the helper you need to conqure your goals. NC-AI helps, optemizes, and makes your life easier"
-            _title="AI Integrated"
-            color={"red"}
-          ></NoteGroupDisplay>
-          <NoteGroupDisplay
-            isFav={false}
-            _description="Collab With Others, Share Your Notes, and Work Together to achieve your goals"
-            _title="Collab With Others"
-            color={"blue"}
-          ></NoteGroupDisplay>
+        <h2 className="text-3xl "> Salient Features</h2>
+        <div className="relative lg:h-60 px-2 py-10 flex justify-center flex-col md:flex-row lg:block lg:pt-10 pt-90 ">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0, rotate: 8 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col md:flex-row gap-4 justify-center align-middle items-center lg:absolute md:w-72 mx-auto w-4/5"
+          >
+            <NoteGroupDisplay
+              isFav={false}
+              _description="Notecraft Makes It Much Easy To Manage You Ideas With A Very Simple and pleasing Interface and Experience"
+              _title="Easy To Use"
+              color={"green"}
+            ></NoteGroupDisplay>
+          </motion.div>{" "}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0, rotate: -12 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col md:flex-row gap-4 justify-center items-center w-4/5 md:w-72 mx-auto -rotate-12"
+          >
+            <NoteGroupDisplay
+              isFav={true}
+              _description="NoteCraft-AI is the helper you need to conquer your goals. NC-AI helps, optimize, and makes your life easier"
+              _title="AI Integrated"
+              color={"red"}
+            ></NoteGroupDisplay>{" "}
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0, rotate: 6 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex flex-col md:flex-row gap-4 justify-center align-middle items-center lg:absolute md:w-72 rotate-6 right-5 top-10 mx-auto w-4/5"
+          >
+            <NoteGroupDisplay
+              isFav={false}
+              _description="Collab With Others, Share Your Notes, and Work Together to achieve your goals"
+              _title="Collab With Others"
+              color={"blue"}
+            ></NoteGroupDisplay>
+          </motion.div>
         </div>
       </section>
       <section className="flex justify-center py-20 px-5 text-xl flex-col gap-10 text-center h-[75vh]">

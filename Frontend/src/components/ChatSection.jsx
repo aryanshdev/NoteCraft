@@ -353,14 +353,14 @@ function ChatSection({ id, openFunction }) {
     return (
       <>
         {" "}
-        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#121212]">
+        <aside className="z-20 lg:w-[40vw] w-screen absolute h-full md:relative transition-all duration-300  md:py-5 md:px-6 text-lg bg-[#0a0a0a] backdrop-blur-3xl bg-opacity-75">
           <div className="h-full w-full text-lg font-semibold p-5 flex flex-col justify-center align-middle text-center gap-5">
             <h2 className="text-2xl text-red-600 font-bold">
               Sign In Required
             </h2>
             You Need To Sign In to Chat
             <button
-              className="bg-white px-4 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md"
+              className="bg-white px-10 py-2 text-xl  lg:text-2xl text-black font-semibold rounded-md w-fit mx-auto"
               onClick={redirectLogin}
             >
               Login
