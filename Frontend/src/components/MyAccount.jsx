@@ -161,15 +161,15 @@ const showPFPChangeOptions = () => {
 function UserImage({ url }) {
   return (
     <>
-      <div className="relative w-24">
+      <div className="relative w-28">
         <img
           id="pfp"
           src={url}
-          className="w-full rounded-full max-w-24 max-h-24"
+          className="w-full rounded-full max-w-28 max-h-28"
           alt=""
         />
         <button
-          className="absolute w-7 h-7 bg-white right-0 rounded-full bottom-0 flex items-center  justify-center opacity-85 hover:opacity-100 duration-150"
+          className="absolute w-7 h-7 bg-white right-0 rounded-full bottom-0 flex items-center  justify-center opacity-90 hover:opacity-100 duration-150"
           onClick={showPFPChangeOptions}
         >
           <svg
@@ -299,35 +299,35 @@ function MyAccount() {
         <div className="flex flex-col gap-6 ">
           <ChangePFPPopup closePopup={showPFPChangeOptions}></ChangePFPPopup>{" "}
           {/*  USER NAME DETAIL DISPLAY */}
-          <div className="flex flex-row gap-3 py-2 ">
+          <div className="flex flex-row gap-3 py-2 bg-black bg-opacity-55 backdrop-blur-[1px] backdrop-brightness-150">
             <UserImage url={userInfo.pfp}></UserImage>
             <div className="flex flex-col justify-evenly">
-              <h2 className="text-2xl font-semibold break-words">
+              <h2 className="text-3xl font-semibold break-words">
                 {userInfo.name}
               </h2>
-              <h2 className="text-sm font-bold break-words">
+              <h2 className="text-lg font-bold break-words">
                 {userInfo.email}
               </h2>
             </div>
           </div>
           {/* Functions */}
-          <div className="flex flex-col gap-3 items-start ">
-            <h4 className="text-xl font-semibold">Reset Account</h4>
+          <div className="flex flex-col gap-4 items-start text-xl mt-2">
+            <h4 className="text-2xl font-semibold">Reset Account</h4>
             Resetting Account will delete all your Notes and NoteGroups, giving
             you a fresh start.
             <button
-              className="bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
+              className="text-red-400 hover:bg-red-600 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
               onClick={resetAccount}
             >
               Reset Account
             </button>
           </div>
-          <div className="flex flex-col gap-3 items-start">
-            <h4 className="text-xl font-semibold">Delete Your Account </h4>
+          <div className="flex flex-col gap-4 items-start text-lg mt-3">
+            <h4 className="text-2xl font-semibold">Delete Your Account </h4>
             Deleting Account will clear all your data and you won't be able to
             use NoteCraft. To use it again, you'll have to Sign-up again.
-            <button
-              className="bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
+           <button
+              className="text-red-400 hover:bg-red-600 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
               onClick={deleteAccount}
             >
               Delete Account

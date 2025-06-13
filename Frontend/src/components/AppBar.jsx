@@ -144,7 +144,7 @@ function AppBar() {
               Logout
             </button>
             <button
-              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center"
+              className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center mt-auto -mb-2"
               onClick={()=>{nav("/status")}}
             >
               <svg

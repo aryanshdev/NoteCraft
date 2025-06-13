@@ -164,7 +164,7 @@ function AppBar({ shareFunction, resetFunction }) {
             </div>
               <Link
                 to="/status"
-                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center "
+                className="w-full text-left p-2 my-4 flex flex-row gap-4 items-center mt-auto -mb-2"
               >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
