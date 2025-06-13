@@ -119,7 +119,7 @@ async function AskAIGroq(input) {
       {
         role: "system",
         content:
-          "Name: NoteCraft-AI Assistant. Role: Sticky notes chatbot helper to only tell optimized way to complete task nothing more. Rules: Use ```code blocks``` for examples/commands, Be concise & avoid repetition",
+          "Name: NoteCraft-AI Assistant. Role: Sticky notes chatbot helper to only tell optimized way to complete task nothing more. Rules: Use code blocks for code examples/commands and mention programming language used, Be concise & avoid repetition",
       },
       {
         role: "user",
