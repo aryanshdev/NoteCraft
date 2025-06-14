@@ -30,7 +30,7 @@ router.post("/sharedGetAll", async (req, res) => {
   try {
     jwt.decode(req.cookies._uid).sharedOpened[req.body.gid] = isEditor;
   } catch (error) {}
-  var metadata = {}
+  var metadata = {};
   metadata = await notesGroupCol.findOne(
     {
       ownerID: req.body.uid,
@@ -38,25 +38,31 @@ router.post("/sharedGetAll", async (req, res) => {
     },
     { projection: { title: 1, description: 1 } }
   );
-  metadata.ownerData = await usersCol.findOne(
-    { uuid: req.body.uid },
-  );
-  res.cookie("__sod", jwt.sign(
+  if (!metadata) {
+    return res.sendStatus(404);
+  }
+  metadata.ownerData = await usersCol.findOne({ uuid: req.body.uid });
+
+  res.cookie(
+    "__sod",
+    jwt.sign(
+      {
+        sharedOpened: [req.body.gid],
+      },
+      process.env.SIGNING_KEY
+    ),
     {
-      sharedOpened: [req.body.gid],
-    },
-    process.env.SIGNING_KEY
-  ),{
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       secure: true,
       sameSite: "none",
-    });
+    }
+  );
 
-  res.json({ notes: await cur.toArray(), editor: isEditor,  data: metadata });
+  res.json({ notes: await cur.toArray(), editor: isEditor, data: metadata });
 });
 
 router.post("/editFavouriteShared", async (req, res) => {
-  if(! jwt.decode(req.cookies.__sod).sharedOpened.includes(req.body.gid)) {
+  if (!jwt.decode(req.cookies.__sod).sharedOpened.includes(req.body.gid)) {
     return res.sendStatus(403);
   }
   notesCol
@@ -73,7 +79,6 @@ router.post("/editFavouriteShared", async (req, res) => {
 });
 
 router.post("/updateShared", async (req, res) => {
-  
   if (
     req.body.title &&
     req.body.description &&
