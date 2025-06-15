@@ -161,7 +161,7 @@ const showPFPChangeOptions = () => {
 function UserImage({ url }) {
   return (
     <>
-      <div className="relative w-28">
+      <div className="relative w-24">
         <img
           id="pfp"
           src={url}
@@ -302,7 +302,7 @@ function MyAccount() {
           <div className="flex flex-row gap-3 py-2 bg-black bg-opacity-55 backdrop-blur-[1px] backdrop-brightness-150">
             <UserImage url={userInfo.pfp}></UserImage>
             <div className="flex flex-col justify-evenly">
-              <h2 className="text-3xl font-semibold break-words">
+              <h2 className="text-2xl font-semibold break-words">
                 {userInfo.name}
               </h2>
               <h2 className="text-lg font-bold break-words">
@@ -311,12 +311,12 @@ function MyAccount() {
             </div>
           </div>
           {/* Functions */}
-          <div className="flex flex-col gap-4 items-start text-xl mt-2">
+          <div className="flex flex-col gap-4 items-start text-lg mt-2">
             <h4 className="text-2xl font-semibold">Reset Account</h4>
             Resetting Account will delete all your Notes and NoteGroups, giving
             you a fresh start.
             <button
-              className="text-red-400 hover:bg-red-600 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
+              className="text-red-400 hover:bg-red-500 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
               onClick={resetAccount}
             >
               Reset Account
@@ -327,7 +327,7 @@ function MyAccount() {
             Deleting Account will clear all your data and you won't be able to
             use NoteCraft. To use it again, you'll have to Sign-up again.
            <button
-              className="text-red-400 hover:bg-red-600 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
+              className="text-red-400 hover:bg-red-500 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
               onClick={deleteAccount}
             >
               Delete Account

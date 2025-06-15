@@ -59,7 +59,6 @@ function SharedNotes() {
         return res.json();
       })
       .then((res) => {
-        
         setUserNotes(res["notes"]);
         setIsEditor(res["editor"]);
         document.title = res["data"].title + " | NoteCraft - Shared Notes ";
@@ -77,20 +76,23 @@ function SharedNotes() {
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
-      const res = await fetch("https://notecraftai-xct5.onrender.com/sharing/updateShared", {
-        credentials: "include",
-        method: "POST",
-        body: JSON.stringify({
-          title: title,
-          description: desc,
-          gid: getids.groupID,
-          uid: getids.userID,
-          nid: id,
-        }), // Use JSON.stringify
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        "https://notecraftai-xct5.onrender.com/sharing/updateShared",
+        {
+          credentials: "include",
+          method: "POST",
+          body: JSON.stringify({
+            title: title,
+            description: desc,
+            gid: getids.groupID,
+            uid: getids.userID,
+            nid: id,
+          }), // Use JSON.stringify
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (res.status === 200) {
         toast.success("Details Updated");
@@ -285,18 +287,21 @@ function SharedNotes() {
     toast.warning("Ask Note Group Owner To Add You As Editor ");
   };
   const favouriteSet = async (noteID, isFav) => {
-    let res = await fetch("https://notecraftai-xct5.onrender.com/app/notes/editFavourite", {
-      credentials: "include",
-      body: JSON.stringify({
-        gid: getids.groupID,
-        nid: noteID,
-        favStatus: isFav,
-      }),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let res = await fetch(
+      "https://notecraftai-xct5.onrender.com/app/notes/editFavourite",
+      {
+        credentials: "include",
+        body: JSON.stringify({
+          gid: getids.groupID,
+          nid: noteID,
+          favStatus: isFav,
+        }),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (res.status == 200) {
       toast.success(isFav ? "Favourite Added" : "Favourite Removed");
@@ -313,18 +318,21 @@ function SharedNotes() {
 
   const deleteNote = async (nid) => {
     const deleteInnerFunc = async (inpid) => {
-      await fetch("https://notecraftai-xct5.onrender.com/sharing/deleteShared", {
-        credentials: "include",
-        body: JSON.stringify({
-          gid: getids.groupID,
-          uid: getids.userID,
-          nid: inpid,
-        }),
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => {
+      await fetch(
+        "https://notecraftai-xct5.onrender.com/sharing/deleteShared",
+        {
+          credentials: "include",
+          body: JSON.stringify({
+            gid: getids.groupID,
+            uid: getids.userID,
+            nid: inpid,
+          }),
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => {
         if (res.status == 200) {
           toast.success("Note Deleted.");
           socket.emit("shared_NoteDelete", inpid, loggedName);
@@ -388,8 +396,8 @@ function SharedNotes() {
           transition:Bounce
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 bg-purple-600 hidden h-0 w-0 "></div>
-        <div className="flex flex-row overflow-x-clip w-auto ">
-          <header className=" bg-[#0a0a0a] h-auto fixed text-white text-black p-2 w-full md:hidden flex justify-between z-10 px-5">
+        <div className="flex flex-row overflow-x-clip w-auto">
+          <header className=" bg-[#0a0a0a] bg-opacity-75 backdrop-blur-sm h-auto fixed text-white  p-2 w-full md:hidden flex justify-between z-10 px-6 py-3">
             {" "}
             {/* AI CHAT BUTTON */}
             <p className="my-auto text-xl"> NoteCraft</p>
@@ -398,8 +406,27 @@ function SharedNotes() {
               data-drawer-toggle="default-sidebar"
               aria-controls="default-sidebar"
               type="button"
+              onClick={()=>{window.location="/dashboard"}}
+              className="inline-flex items-center m-1 px-4 text-sm text-gray-300 rounded-lg  ml-auto mr-0 h-full"
+            >
+              {" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="size-6"
+              >
+                <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+              </svg>
+            </button>
+            <button
+              data-drawer-target="default-sidebar"
+              data-drawer-toggle="default-sidebar"
+              aria-controls="default-sidebar"
+              type="button"
               onClick={showChatSection}
-              className="inline-flex items-center m-1 px-4 text-sm text-gray-300 rounded-lg  ml-auto mr-0"
+              className="inline-flex items-center m-1 px-1 text-sm text-gray-300 rounded-lg  ml-4 mr-0  h-full"
             >
               {" "}
               <svg
@@ -417,9 +444,9 @@ function SharedNotes() {
             </button>
           </header>
           <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0 pb-10">
-            <div className="flex w-full px-4 py-2 bg-black bg-opacity-15 backdrop-blur-[1px] rounded-md flex-col md:flex-row justify-between items-center ">
+            <div className="flex w-full px-4 py-2 bg-black bg-opacity-15 backdrop-blur-[1px] rounded-md flex-col md:flex-row justify-between items-center">
               <div className="xl:w-4/5 w-full md:3/4">
-                <h1 className="font-semibold text-3xl mb-3">
+                <h1 className="font-semibold text-3xl mb-3 ">
                   {metaData.title} - Shared Notes
                 </h1>
                 <h3 className="text-lg">{metaData.description}</h3>
@@ -439,6 +466,9 @@ function SharedNotes() {
                   />
                 </div>
               </div>
+            </div>
+            <div className="bg-black bg-opacity-70  my-2   px-10 py-2 text-lg">
+              Return To Dashboard
             </div>
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4 pb-10">
               {loggedName ? (
