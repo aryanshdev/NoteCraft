@@ -397,16 +397,26 @@ function SharedNotes() {
         />
         <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 bg-purple-600 hidden h-0 w-0 "></div>
         <div className="flex flex-row overflow-x-clip w-auto">
-          <header className=" bg-[#0a0a0a] bg-opacity-75 backdrop-blur-sm h-auto fixed text-white  p-2 w-full md:hidden flex justify-between z-10 px-6 py-3">
+          <header className=" bg-[#1b1b1b] bg-opacity-80 backdrop-blur-sm h-auto fixed text-white  p-2 w-full md:hidden flex justify-between z-10 px-6 py-3">
             {" "}
             {/* AI CHAT BUTTON */}
-            <p className="my-auto text-xl"> NoteCraft</p>
+            <p
+              className="my-auto text-xl cursor-pointer"
+              onClick={() => {
+                window.location = "/dashboard";
+              }}
+            >
+              {" "}
+              NoteCraft
+            </p>
             <button
               data-drawer-target="default-sidebar"
               data-drawer-toggle="default-sidebar"
               aria-controls="default-sidebar"
               type="button"
-              onClick={()=>{window.location="/dashboard"}}
+              onClick={() => {
+                window.location = "/dashboard";
+              }}
               className="inline-flex items-center m-1 px-4 text-sm text-gray-300 rounded-lg  ml-auto mr-0 h-full"
             >
               {" "}
@@ -445,31 +455,42 @@ function SharedNotes() {
           </header>
           <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0 pb-10">
             <div className="flex w-full px-4 py-2 bg-black bg-opacity-15 backdrop-blur-[1px] rounded-md flex-col md:flex-row justify-between items-center">
-              <div className="xl:w-4/5 w-full md:3/4">
-                <h1 className="font-semibold text-3xl mb-3 ">
+              <div className="w-full md:3/4">
+                <h1 className="font-semibold text-3xl mb-3 items-center flex gap-8 ">
                   {metaData.title} - Shared Notes
+                  <div className="hidden md:flex ">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  onClick={() => {
+                    window.location = "/dashboard";}}
+                  class="size-8 fill-gray-300 hover:fill-white cursor-pointer"
+                >
+                  <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                  <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+                </svg>
+              </div>
                 </h1>
                 <h3 className="text-lg">{metaData.description}</h3>
               </div>
-              <div className="xl:w-1/5 w-full flex justify-center align-middle md:w-1/4 mt-5 md:mt-0 justify-items-center items-center">
+              
+              <div className="xl:w-3/12 w-full flex justify-center align-middle md:w-1/4 mt-5 md:mt-0 justify-items-center items-center">
                 <div className="w-full md:w-2/3 flex flex-col justify-center items-end mr-5">
                   <h3 className="font-light text-lg ">Created By</h3>
                   <h2 className="font-semibold text-lg">
                     {metaData.ownerData.name}
                   </h2>
                 </div>
-                <div className="md:w-1/3">
+                <div className="md:w-1/3 w-auto">
                   <img
                     src={metaData.ownerData.pfp}
-                    className="max-h-24 rounded-full "
+                    className="max-h-28 rounded-full min-h-16 min-w-16"
                     alt="PFP"
                   />
                 </div>
               </div>
             </div>
-            <div className="bg-black bg-opacity-70  my-2   px-10 py-2 text-lg">
-              Return To Dashboard
-            </div>
+
             <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4 pb-10">
               {loggedName ? (
                 isEditor ? (
