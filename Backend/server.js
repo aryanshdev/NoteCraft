@@ -126,7 +126,7 @@ async function AskAIGroq(input) {
         content: input,
       },
     ],
-    model: "llama3-8b-8192",
+    model="llama-3.1-8b-instant",
     temperature: 1.25,
     max_completion_tokens: 1024,
     top_p: 1,
