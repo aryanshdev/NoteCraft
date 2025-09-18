@@ -190,8 +190,11 @@ function ChatSection({ id, openFunction }) {
   };
 
   const sendMessage = () => {
-    const inpEleVal = document.getElementById("chatMSG").value;
+    let inpEleVal = document.getElementById("chatMSG").value;
+    inpEleVal = inpEleVal.trim();
     if (!inpEleVal) {
+      document.getElementById("chatMSG").value = "";
+
       return;
     }
     socket.emit("UserToServer", inpEleVal);
@@ -294,14 +297,26 @@ function ChatSection({ id, openFunction }) {
               </div>
               {/* Message Sending Area */}
               {isConnected ? (
-                <div className="flex w-full flex-row items-center">
+                <div className="flex w-full flex-row items-center ">
                   <button
-                    className="  bg-gray-500 bg-opacity-35 px-2 h-full  rounded-md rounded-r-none"
+                    className="  bg-gray-500 bg-opacity-35 px-2 h-full rounded-md rounded-r-none relative"
                     onClick={() => {
+                      document
+                        .getElementById("mentionAIhover")
+                        .classList.add("hidden");
                       document.getElementById("chatMSG").value =
                         "@NC-AI " + document.getElementById("chatMSG").value;
                     }}
                   >
+                    <div
+                      className="absolute  text-sm bg-yellow-500  font-medium px-4 -top-[150%] !m-0 left-0 rounded-lg py-2 !w-[500%]"
+                      id="mentionAIhover"
+                    >
+                      <div className="h-5 w-5 absolute border-green-600 z-0 rotate-45 bg-yellow-500 top-10 left-3"></div>
+                      Click Here To Mention{" "}
+                      <span className="font-bold">AI </span>In Chat
+                    </div>
+
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -316,8 +331,14 @@ function ChatSection({ id, openFunction }) {
                   </button>
                   <textarea
                     type="text"
+                    placeholder="@NC-AI...."
                     rows={1}
                     className=" w-full bg-white  bg-opacity-5 px-4 py-2 outline-none focus:outline-none rounded-md rounded-l-none "
+                    onFocus={() => {
+                      document
+                        .getElementById("mentionAIhover")
+                        .classList.add("hidden");
+                    }}
                     id="chatMSG"
                     onKeyDown={(key) => {
                       key.key === "Enter" && !key.shiftKey
