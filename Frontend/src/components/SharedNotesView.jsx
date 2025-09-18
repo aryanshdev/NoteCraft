@@ -256,7 +256,7 @@ function SharedNotes() {
       .getElementById("chatSectionContainer")
       .classList.remove("-right-[100vw]");
     document.getElementById("chatSectionContainer").classList.add("md:right-0");
-    socket.emit("ASKAI", task);
+    socket.emit("ASKAITASK", task);
   };
   const addNewNote = (title, bodyContent, newNoteID) => {
     setUserNotes((userNotes) => [

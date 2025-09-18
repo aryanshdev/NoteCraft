@@ -50,10 +50,7 @@ function ChatSection({ id, openFunction }) {
     };
 
     const handleDisconnect = (_) => {
-      setMessages((prev) => [
-        ...prev,
-        ["SYSTEM", `Disconnected From Server`],
-      ]);
+      setMessages((prev) => [...prev, ["SYSTEM", `Disconnected From Server`]]);
       setIsConnected(false);
 
       // Only attempt reconnect for non-intentional disconnects
@@ -72,8 +69,6 @@ function ChatSection({ id, openFunction }) {
           30000
         );
         reconnectAttempts.current += 1;
-
-    
 
         reconnectTimer.current = setTimeout(() => {
           if (!intentionalDisconnect.current) {
@@ -121,6 +116,7 @@ function ChatSection({ id, openFunction }) {
     };
 
     const handleAIQuestion = (msgObject) => {
+      console.log(messages);
       setMessages((prev) => [
         ...prev,
         ["USER", msgObject.message, msgObject.name],
@@ -142,8 +138,7 @@ function ChatSection({ id, openFunction }) {
     socket.on("AIMessage", handleAIMessage);
 
     // Debugging events
-    socket.on("reconnect_attempt", (attempt) => {
-    });
+    socket.on("reconnect_attempt", (attempt) => {});
 
     socket.on("reconnect_error", (error) => {
       console.error("Reconnection error:", error);
@@ -205,7 +200,10 @@ function ChatSection({ id, openFunction }) {
     document.getElementById("chatMSG").value = "";
 
     if (String(inpEleVal).startsWith("@NC-AI")) {
-      socket.emit("ASKAI", inpEleVal.slice(6));
+      var sendingMSG = messages
+        .filter((ele) => ele[0] !== "SYSTEM")
+        .slice(messages.length - 5);
+      socket.emit("ASKAI", [...sendingMSG, ["SELF", inpEleVal.slice(6)]]);
     }
   };
 
@@ -261,45 +259,47 @@ function ChatSection({ id, openFunction }) {
                 Clear Chat
               </button>
             </header>
-            {isConnected ? (
-              <>
-                {" "}
-                {/* Message Display Area */}
-                <div className="scrollbar-invisible flex overflow-y-auto w-full bg-transparent rounded-lg  py-2 flex-1 flex-col gap-5 ">
-                  {messages.map((msgItem, index) => {
-                    switch (msgItem[0]) {
-                      case "SYSTEM":
-                        return (
-                          <SystemMSG key={index} msg={msgItem[1]}></SystemMSG>
-                        );
-                      case "USER":
-                        return (
-                          <UserMSG
-                            key={index}
-                            msg={msgItem[1]}
-                            name={msgItem[2]}
-                          ></UserMSG>
-                        );
-                      case "SELF":
-                        return (
-                          <UserMSG
-                            key={index}
-                            msg={msgItem[1]}
-                            name={name}
-                            sending={true}
-                          ></UserMSG>
-                        );
-                      case "AI":
-                        return <AIMSG key={index} msg={msgItem[1]}></AIMSG>;
-                    }
-                  })}
-                </div>
-                {/* Message Sending Area */}
+
+            <>
+              {" "}
+              {/* Message Display Area */}
+              <div className="scrollbar-invisible flex overflow-y-auto w-full bg-transparent rounded-lg  py-2 flex-1 flex-col gap-5 ">
+                {messages.map((msgItem, index) => {
+                  switch (msgItem[0]) {
+                    case "SYSTEM":
+                      return (
+                        <SystemMSG key={index} msg={msgItem[1]}></SystemMSG>
+                      );
+                    case "USER":
+                      return (
+                        <UserMSG
+                          key={index}
+                          msg={msgItem[1]}
+                          name={msgItem[2]}
+                        ></UserMSG>
+                      );
+                    case "SELF":
+                      return (
+                        <UserMSG
+                          key={index}
+                          msg={msgItem[1]}
+                          name={name}
+                          sending={true}
+                        ></UserMSG>
+                      );
+                    case "AI":
+                      return <AIMSG key={index} msg={msgItem[1]}></AIMSG>;
+                  }
+                })}
+              </div>
+              {/* Message Sending Area */}
+              {isConnected ? (
                 <div className="flex w-full flex-row items-center">
                   <button
                     className="  bg-gray-500 bg-opacity-35 px-2 h-full  rounded-md rounded-r-none"
                     onClick={() => {
-                      document.getElementById("chatMSG").value = "@NC-AI "+ document.getElementById("chatMSG").value ;
+                      document.getElementById("chatMSG").value =
+                        "@NC-AI " + document.getElementById("chatMSG").value;
                     }}
                   >
                     <svg
@@ -341,10 +341,12 @@ function ChatSection({ id, openFunction }) {
                     </svg>
                   </button>
                 </div>
-              </>
-            ) : (
-              <LoaderDisplay></LoaderDisplay>
-            )}
+              ) : (
+                <div className="text-center font-semibold italic">
+                  Connecting To Chat
+                </div>
+              )}
+            </>
           </div>
         </aside>
       </>
