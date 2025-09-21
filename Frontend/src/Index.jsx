@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import WordRotate from "./components/word-rotate";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
+import DotGrid from "./components/DotGrid";
 
 function Index() {
   const noteRef = useRef(null);
@@ -22,6 +23,25 @@ function Index() {
 
   return (
     <>
+      <div
+        style={{
+          width: "100%",
+          height: "100vh",
+          position: "fixed",
+          zIndex: -10,
+        }}
+      >
+        <DotGrid
+          dotSize={5}
+          gap={20}
+          baseColor="#ffffff44"
+          proximity={120}
+          shockRadius={250}
+          shockStrength={5}
+          resistance={750}
+          returnDuration={1.5}
+        />
+      </div>
       <header className="h-auto fixed   mx-auto flex w-screen justify-center z-[100] flex-col">
         <div className="w-full bg-black bg-opacity-30 backdrop-blur-lg px-10 py-5  flex flex-row z-[100] align-middle items-center font-semibold text-lg mx-auto text-xl">
           <img
@@ -290,10 +310,11 @@ function Index() {
       >
         <h2 className="text-3xl "> What is NoteCraft?</h2>
         <p className="capitalize px-4 text-xl pb-10">
-          <span className="font-bold">NoteCraft</span> – an <span className="italic"> AI-powered </span>note-taking and planning app designed to
-          organize your ideas and collaborate effortlessly. Use it for study
-          notes, to-do lists, or digital sticky notes—accessible anytime,
-          anywhere!
+          <span className="font-bold">NoteCraft</span> – an{" "}
+          <span className="italic"> AI-powered </span>note-taking and planning
+          app designed to organize your ideas and collaborate effortlessly. Use
+          it for study notes, to-do lists, or digital sticky notes—accessible
+          anytime, anywhere!
         </p>
         <h2 className="text-3xl "> Salient Features</h2>
         <div className="relative lg:h-60 px-2 py-10 flex justify-center flex-col md:flex-row lg:block lg:pt-10 pt-90 ">
