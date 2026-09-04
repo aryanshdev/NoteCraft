@@ -136,7 +136,7 @@ async function AskAIGroq(inputs, onlyTask = false) {
           content: inp[1],
         })),
       ],
-      model: "llama-3.1-8b-instant",
+      model="openai/gpt-oss-120b",
       temperature: 1.25,
       max_completion_tokens: 1024,
       top_p: 1,
