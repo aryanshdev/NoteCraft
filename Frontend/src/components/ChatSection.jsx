@@ -205,7 +205,7 @@ function ChatSection({ id, openFunction }) {
     if (String(inpEleVal).startsWith("@NC-AI")) {
       var sendingMSG = messages
         .filter((ele) => ele[0] !== "SYSTEM")
-        .slice(messages.length - 5);
+        .slice(messages.length - 12);
       socket.emit("ASKAI", [...sendingMSG, ["SELF", inpEleVal.slice(6)]]);
     }
   };
