@@ -5,6 +5,8 @@ import CreateNote from "./CreateNewNote";
 import NotesPageSideBar from "./NotesPageSideBar.jsx";
 import NoteDisplay from "./NoteDisplay.jsx";
 import LoaderDisplay from "../LoaderDisplay.jsx";
+import { colorFor } from "../lib/utils";
+import Icon from "./Icons";
 import ChatSection from "./ChatSection.jsx";
 import { socket } from "../lib/socket.js";
 import ShareNote_AddUsers from "./ShareNote_AddUsers.jsx";
@@ -199,7 +201,7 @@ function NotesPage() {
         <div>Confirm Reset?</div>
         <div className="font-light italic text-sm">This Will Delete All Notes Within This Group</div>
         <button
-          className="bg-gray-800 py-2 my-2 px-3"
+          className="btn-danger !py-1.5 my-2 text-sm"
           onClick={() => {
             deleteInnerFunc();
             toast.dismiss(id);
@@ -208,7 +210,7 @@ function NotesPage() {
           Delete
         </button>
         <button
-          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          className="btn-ghost !py-1.5 my-2 ml-3 text-sm"
           onClick={() => {
             toast.dismiss(id);
           }}
@@ -221,7 +223,7 @@ function NotesPage() {
 
   const updateNote = useCallback(
     async (event) => {
-      var ele = event.target.parentElement.parentElement.parentElement;
+      var ele = event.target.closest("[data-card]");
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
@@ -353,7 +355,7 @@ function NotesPage() {
       <>
         <div>Confirm Delete?</div>
         <button
-          className="bg-gray-800 py-2 my-2 px-3"
+          className="btn-danger !py-1.5 my-2 text-sm"
           onClick={() => {
             deleteInnerFunc(nid);
             toast.dismiss(id);
@@ -362,7 +364,7 @@ function NotesPage() {
           Delete
         </button>
         <button
-          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          className="btn-ghost !py-1.5 my-2 ml-3 text-sm"
           onClick={() => {
             toast.dismiss(id);
           }}
@@ -403,22 +405,25 @@ function NotesPage() {
           theme="dark"
           transition:Bounce
         />
-        <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 bg-purple-600 hidden h-0 w-0"></div>
-        <div className="flex flex-row overflow-x-clip">
+                <div className="flex flex-row overflow-x-clip">
           <ShareNote_AddUsers
             gid={gid.groupID}
             closeFunction={showSharing}
           ></ShareNote_AddUsers>
           <NotesPageSideBar shareFunction={showSharing} resetFunction={resetGroup} />
-          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0  ">
-            <div className="bg-[#121212] rounded-lg bg-opacity-10 px-3 py-2 backdrop-blur-[1px] backdrop-brightness-200 w-full">
-              <h1 className="font-semibold text-3xl mb-3">
-                {groupDetails.title}
-              </h1>
-              <h3 className="text-lg">{groupDetails.description}</h3>
-            </div>
+          <div className="w-full min-w-0 h-screen overflow-y-auto py-5 px-4 md:pl-2 md:pr-6 pt-20 md:pt-5">
+            <header className="flex flex-col gap-1 border-b border-ink-700 pb-5 pt-2 md:flex-row md:items-end md:justify-between">
+              <div className="min-w-0">
+                <p className="eyebrow mb-2">Group</p>
+                <h1 className="page-title break-words">{groupDetails.title}</h1>
+                {groupDetails.description ? (
+                  <p className="mt-2 max-w-2xl text-ink-300">{groupDetails.description}</p>
+                ) : null}
+              </div>
+              <p className="eyebrow mt-3 md:mt-0 shrink-0">{userNotes.length} / 20 notes</p>
+            </header>
 
-            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 pb-16">
+            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-10 pb-16">
             { userNotes.length <= 19 ? <CreateNote
                 already={userNotes.length}
                 gid={gid.groupID}
@@ -436,17 +441,19 @@ function NotesPage() {
                   favFunction={favouriteSet}
                   delFunction={deleteNote}
                   aiChatFunction={showChatAndAsk}
-                  color={bgColors.current[index]}
+                  color={colorFor(note.noteID)}
                 ></NoteDisplay>
               ))}
             </div>
           </div>
           <button
-            className="hidden md:flex  bg-[#0a0a0a] lg:w-[3%] md:w-[5%] text-white justify-center items-center px-1 flex-col my-5 rounded-l-xl"
+            className="group hidden md:flex w-12 shrink-0 my-5 flex-col items-center justify-center gap-3 rounded-l-xl border border-r-0 border-ink-700 bg-ink-900 text-ink-300 hover:bg-ink-800 hover:text-ink-100"
             onClick={showChatSection}
+            aria-label="Open chat"
           >
-            <span className="origin-center rotate-90 text-lg font-semibold  transform block w-[100vh] ">
-              Open NoteCraft AI Chat
+            <Icon name="chat" className="size-5" />
+            <span className="[writing-mode:vertical-rl] font-mono text-xs uppercase tracking-[0.2em]">
+              Chat &amp; NC-AI
             </span>
           </button>
           <div

@@ -53,13 +53,13 @@ function CodeBlock({ children, className }) {
 
   const language = className?.replace("language-", "") || "plaintext";
   return (
-    <div className="relative text-white rounded-lg overflow-hidden my-2 codeblock">
-      <div className="px-4 py-2 bg-gray-900 bg-opacity-75 text-sm mb-0 flex justify-between items-center z-[15]">
+    <div className="relative text-white rounded-md overflow-hidden my-3 border border-ink-700 codeblock">
+      <div className="px-3 py-1.5 bg-ink-800 font-mono text-xs uppercase tracking-wider text-ink-300 mb-0 flex justify-between items-center z-[15]">
         <span>{language.slice(0, 1).toUpperCase() + language.slice(1)}</span>
         <div className="gap-5 flex">
           <button
             onClick={() => navigator.clipboard.writeText(children)}
-            className="text-blue-400 hover:text-blue-300"
+            className="normal-case tracking-normal text-ink-300 hover:text-ink-100"
           >
             Copy
           </button>
@@ -68,7 +68,7 @@ function CodeBlock({ children, className }) {
               onClick={() => {
                 runCode();
               }}
-              className="text-amber-400 hover:text-amber-300"
+              className="normal-case tracking-normal text-marker hover:brightness-110"
             >
               Run
             </button>
@@ -81,7 +81,9 @@ function CodeBlock({ children, className }) {
         wrapLongLines
         customStyle={{
           margin: 0,
-          borderRadius: "0 0 10px 10px",
+          borderRadius: 0,
+          background: "#0e1012",
+          fontSize: "13px",
           zIndex: "15",
           position: "relative",
         }}
@@ -90,8 +92,8 @@ function CodeBlock({ children, className }) {
       </SyntaxHighlighter>
 
       {output && (
-        <div className="-mt-3 z-[14] p-2 pt-4  text-green-500 rounded flex flex-col overflow-auto scrollbar-thin bg-gray-800 bg-opacity-50">
-          <strong className="text-white font-bold">Output:</strong>
+        <div className="z-[14] p-3 font-mono text-sm text-[#b0d99e] flex flex-col overflow-auto scrollbar-thin bg-black/50 border-t border-ink-700">
+          <strong className="eyebrow mb-1">Output</strong>
 
           <pre className="pr-5 mx-2">{output}</pre>
         </div>

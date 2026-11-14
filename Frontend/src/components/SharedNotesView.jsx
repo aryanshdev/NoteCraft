@@ -6,6 +6,8 @@ import CreateNoteShared from "./CreateNoteShared.jsx";
 import { Link } from "react-router-dom";
 import NoteDisplay from "./NoteDisplay.jsx";
 import LoaderDisplay from "../LoaderDisplay.jsx";
+import { colorFor } from "../lib/utils";
+import Icon from "./Icons";
 import ChatSection from "./ChatSection.jsx";
 import AppBar from "./AppBar.jsx";
 function SharedNotes() {
@@ -72,7 +74,7 @@ function SharedNotes() {
 
   const updateNoteInfo = useCallback(
     async (event) => {
-      var ele = event.target.parentElement.parentElement.parentElement;
+      var ele = event.target.closest("[data-card]");
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
@@ -345,7 +347,7 @@ function SharedNotes() {
       <>
         <div>Confirm Delete?</div>
         <button
-          className="bg-gray-800 py-2 my-2 px-3"
+          className="btn-danger !py-1.5 my-2 text-sm"
           onClick={() => {
             deleteInnerFunc(nid);
             toast.dismiss(id);
@@ -354,7 +356,7 @@ function SharedNotes() {
           Delete
         </button>
         <button
-          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          className="btn-ghost !py-1.5 my-2 ml-3 text-sm"
           onClick={() => {
             toast.dismiss(id);
           }}
@@ -395,13 +397,12 @@ function SharedNotes() {
           theme="dark"
           transition:Bounce
         />
-        <div className="bg-orange-600 bg-blue-600 bg-yellow-600 bg-green-600 bg-pink-600 bg-purple-600 hidden h-0 w-0 "></div>
-        <div className="flex flex-row overflow-x-clip w-auto">
-          <header className=" bg-[#1b1b1b] bg-opacity-80 backdrop-blur-sm h-auto fixed text-white  p-2 w-full md:hidden flex justify-between z-10 px-6 py-3">
+                <div className="flex flex-row overflow-x-clip w-auto">
+          <header className="fixed left-0 top-0 z-10 flex w-full items-center justify-between border-b border-ink-700 bg-ink-950/95 px-4 py-3 md:hidden">
             {" "}
             {/* AI CHAT BUTTON */}
             <p
-              className="my-auto text-xl cursor-pointer"
+              className="my-auto font-semibold cursor-pointer"
               onClick={() => {
                 window.location = "/dashboard";
               }}
@@ -453,45 +454,40 @@ function SharedNotes() {
               </svg>
             </button>
           </header>
-          <div className="w-full md:w-[97%] h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0 pb-10">
-            <div className="flex w-full px-4 py-2 bg-black bg-opacity-15 backdrop-blur-[1px] rounded-md flex-col md:flex-row justify-between items-center">
-              <div className="w-full md:3/4">
-                <h1 className="font-semibold text-3xl mb-3 items-center flex gap-8 ">
-                  {metaData.title} - Shared Notes
-                  <div className="hidden md:flex ">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  onClick={() => {
-                    window.location = "/dashboard";}}
-                  class="size-8 fill-gray-300 hover:fill-white cursor-pointer"
-                >
-                  <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
-                  <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
-                </svg>
-              </div>
-                </h1>
-                <h3 className="text-lg">{metaData.description}</h3>
-              </div>
-              
-              <div className="xl:w-3/12 w-full flex justify-center align-middle md:w-1/4 mt-5 md:mt-0 justify-items-center items-center">
-                <div className="w-full md:w-2/3 flex flex-col justify-center items-end mr-5">
-                  <h3 className="font-light text-lg ">Created By</h3>
-                  <h2 className="font-semibold text-lg">
-                    {metaData.ownerData.name}
-                  </h2>
+          <div className="w-full min-w-0 h-screen overflow-y-auto py-5 px-4 md:px-8 pt-20 md:pt-6">
+            <header className="flex flex-col gap-4 border-b border-ink-700 pb-5 pt-2 md:flex-row md:items-end md:justify-between">
+              <div className="min-w-0">
+                <div className="mb-2 flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      window.location = "/dashboard";
+                    }}
+                    className="hidden md:inline-flex items-center gap-1.5 text-sm text-ink-300 hover:text-ink-100"
+                  >
+                    <Icon name="home" className="size-4" /> Dashboard
+                  </button>
+                  <span className="eyebrow hidden md:inline">/</span>
+                  <span className="eyebrow">Shared group</span>
                 </div>
-                <div className="md:w-1/3 w-auto">
-                  <img
-                    src={metaData.ownerData.pfp}
-                    className="max-h-28 rounded-full min-h-16 min-w-16"
-                    alt="PFP"
-                  />
+                <h1 className="page-title break-words">{metaData.title}</h1>
+                {metaData.description ? (
+                  <p className="mt-2 max-w-2xl text-ink-300">{metaData.description}</p>
+                ) : null}
+              </div>
+              <div className="flex shrink-0 items-center gap-3 rounded-lg border border-ink-700 bg-ink-900 py-2 pl-2 pr-4">
+                <img
+                  src={metaData.ownerData.pfp}
+                  className="h-10 w-10 rounded-full object-cover"
+                  alt=""
+                />
+                <div className="leading-tight">
+                  <p className="eyebrow !text-[10px]">Owned by</p>
+                  <p className="font-semibold">{metaData.ownerData.name}</p>
                 </div>
               </div>
-            </div>
+            </header>
 
-            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 my-5 px-4 pb-10">
+            <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-10 px-1 pb-16">
               {loggedName ? (
                 isEditor ? (
                   userNotes.length <= 19 ? (
@@ -507,12 +503,12 @@ function SharedNotes() {
                   )
                 ) : (
                   <div
-                    className={`w-full h-52 rounded-md border-2 border-dotted p-2  bg-black backdrop-blur-[1px] backdrop-brightness-200 bg-opacity-10 text-center flex items-center gap-6 flex-col justify-center`}
+                    className="slot flex flex-col items-center justify-center gap-3 text-center"
                   >
-                    <h2 className="text-lg font-semibold m-auto">
+                    <h2 className="font-hand text-2xl font-bold">
                       You Need To Be An Editor To Create New Notes
                     </h2>
-                    <p className="h-auto m-auto">
+                    <p className="text-sm text-ink-400">
                       {" "}
                       Ask Note Group Owner To Add Your Email In Editors List
                     </p>
@@ -520,14 +516,14 @@ function SharedNotes() {
                 )
               ) : (
                 <div
-                  className={`w-full h-52 rounded-md border-2 border-dotted p-2 bg-black backdrop-blur-[1px] backdrop-brightness-200 bg-opacity-10  text-center flex items-center gap-7 flex-col justify-center`}
+                  className="slot flex flex-col items-center justify-center gap-4 text-center"
                 >
-                  <h2 className="text-lg font-semibold my-auto">
+                  <h2 className="font-hand text-2xl font-bold">
                     You Need To Login To Add Notes To This Group
                   </h2>
 
                   <button
-                    className="bg-white px-4 py-2 text-xl  text-black font-semibold rounded-md my-auto"
+                    className="btn-primary"
                     onClick={() => {
                       var path = document.location.href.split("shared")[1];
                       localStorage.setItem("__rdi", path);
@@ -561,17 +557,19 @@ function SharedNotes() {
                       : loginWarning
                   }
                   aiChatFunction={showChatAndAsk}
-                  color={bgColors.current[index]}
+                  color={colorFor(note.noteID)}
                 ></NoteDisplay>
               ))}
             </div>
           </div>
           <button
-            className="hidden md:flex  bg-[#0a0a0a] lg:w-[3%] md:w-[5%] text-white justify-center items-center px-1 flex-col my-5 rounded-l-xl"
+            className="group hidden md:flex w-12 shrink-0 my-5 flex-col items-center justify-center gap-3 rounded-l-xl border border-r-0 border-ink-700 bg-ink-900 text-ink-300 hover:bg-ink-800 hover:text-ink-100"
             onClick={showChatSection}
+            aria-label="Open chat"
           >
-            <span className="origin-center rotate-90 text-lg font-semibold  transform block w-[100vh] ">
-              Open NoteCraft AI Chat
+            <Icon name="chat" className="size-5" />
+            <span className="[writing-mode:vertical-rl] font-mono text-xs uppercase tracking-[0.2em]">
+              Chat &amp; NC-AI
             </span>
           </button>
           <div

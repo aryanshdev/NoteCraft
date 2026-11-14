@@ -20,7 +20,7 @@ const MainLayout = () => {
   />
     <div className="flex flex-row">
       <AppBar />
-      <div className="w-full h-screen py-5 px-4 md:pl-0 md:pr-4 mt-16 md:mt-0">
+      <div className="w-full min-w-0 h-screen overflow-y-auto px-4 pb-5 pt-20 md:px-8 md:pt-6">
         <Outlet />
       </div>
     </div>

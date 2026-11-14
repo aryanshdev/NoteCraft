@@ -1,377 +1,175 @@
-import NoteDisplay from "./components/NoteDisplay";
 import { Link } from "react-router-dom";
-import WordRotate from "./components/word-rotate";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
+import WordRotate from "./components/word-rotate";
 import DotGrid from "./components/DotGrid";
+import PaperNote from "./components/PaperNote";
+
+const heroNotes = [
+  { title: "Welcome", body: "NoteCraft: note taking, made a little easier.", color: "green", tilt: -5, pos: "left-0 top-6", depth: 1 },
+  { title: "Live collab", body: "Share a group, edit together, chat in real time.", color: "blue", tilt: 4, pos: "right-0 top-0", depth: 2 },
+  { title: "@NC-AI", body: "Mention the assistant in chat to ask about any note.", color: "yellow", tilt: -2, pos: "left-2 top-64", depth: 3 },
+  { title: "Demo?", body: "Why watch one — try it yourself and find out.", color: "pink", tilt: 6, pos: "right-0 top-[21rem]", depth: 1.5 },
+];
+
+const steps = [
+  { n: "01", title: "Make a group", body: "One folder per subject, project or week. Up to eight." },
+  { n: "02", title: "Stick notes in it", body: "Twenty notes a group. Star the ones that matter, edit in place." },
+  { n: "03", title: "Share & ask", body: "Invite up to three editors, or @mention NC-AI to summarise, quiz or explain." },
+];
+
+function HeroNote({ note, index, drift }) {
+  const y = useTransform(drift, (v) => v * note.depth * 0.5);
+  return (
+    <motion.div className={`absolute w-48 md:w-56 ${note.pos}`} style={{ y }}>
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 + index * 0.12, type: "spring", stiffness: 140, damping: 14 }}
+      >
+        <PaperNote title={note.title} body={note.body} color={note.color} tilt={note.tilt} />
+      </motion.div>
+    </motion.div>
+  );
+}
 
 function Index() {
-  const noteRef = useRef(null);
-
-  // Get scroll progress relative to container
-  const { scrollYProgress } = useScroll({
-    target: noteRef,
-    offset: ["start end", "end start"],
-  });
-
-  const moveX = useTransform(scrollYProgress, [0, 1], [0, 100]); // Moves 100px right
-  const scrollY = useTransform(scrollYProgress, [0, 1], [0, -35]);
-  const springY = useSpring(scrollY, {
-    stiffness: 100,
-    damping: 5,
-  });
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const drift = useSpring(useTransform(scrollYProgress, [0, 1], [0, -120]), { stiffness: 120, damping: 20 });
 
   return (
     <>
-      <div
-        style={{
-          width: "100%",
-          height: "100vh",
-          position: "fixed",
-          zIndex: -10,
-        }}
-      >
+      <div className="fixed inset-0 -z-10 opacity-70">
         <DotGrid
-          dotSize={5}
-          gap={20}
-          baseColor="#ffffff44"
-          proximity={120}
-          shockRadius={250}
-          shockStrength={5}
+          dotSize={3}
+          gap={26}
+          baseColor="#2a2f36"
+          activeColor="#ffd43b"
+          proximity={110}
+          shockRadius={220}
+          shockStrength={4}
           resistance={750}
           returnDuration={1.5}
         />
       </div>
-      <header className="h-auto fixed   mx-auto flex w-screen justify-center z-[100] flex-col">
-        <div className="w-full bg-black bg-opacity-30 backdrop-blur-lg px-10 py-5  flex flex-row z-[100] align-middle items-center font-semibold text-lg mx-auto text-xl">
-          <img
-            src="./notecraft-icon-transparent.png"
-            className="h-10 w-10 md:h-12 md:w-12 -mt-2 -mb-1 mr-2"
-          ></img>
-          NoteCraft
-          <ul className="hidden md:flex flex-row gap-10 mr-0 ml-auto z-[100] font-light text-xl">
-            <li>
-              <a href="#about">About</a>
-            </li>
-            <li>
-              <a href="/Dashboard">Dashboard</a>
-            </li>
-          </ul>
+
+      <header className="fixed z-[100] w-full border-b border-ink-700/70 bg-ink-950/90">
+        <div className="mx-auto flex max-w-6xl items-center gap-6 px-5 py-3">
+          <Link to="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+            <img src="./notecraft-icon-transparent.png" alt="" className="h-9 w-9" />
+            NoteCraft
+          </Link>
+          <nav className="ml-auto hidden items-center gap-7 text-sm text-ink-300 md:flex">
+            <a href="#how" className="hover:text-ink-100">How it works</a>
+            <Link to="/status" className="hover:text-ink-100">Status</Link>
+            <a href="/Dashboard" className="btn-primary !py-1.5 text-sm">Open dashboard</a>
+          </nav>
           <button
-            onClick={() => {
-              document.getElementById("mobileMenu").classList.toggle("!hidden");
-            }}
-            className="ml-auto mr-1 md:hidden"
+            onClick={() => document.getElementById("mobileMenu").classList.toggle("!hidden")}
+            className="ml-auto grid h-9 w-9 place-items-center rounded-md text-ink-300 md:hidden"
+            aria-label="Menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class="size-6"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
-                clip-rule="evenodd"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.7} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
         </div>
-        <div
-          className="!hidden md:!hidden w-full md:w-1/2 bg-black bg-opacity-40 backdrop-blur-lg px-4 py-2 rounded-b-3xl flex flex-row  align-middle items-center font-semibold text-lg mx-auto -mt-7 pt-10 z-[99] "
-          id="mobileMenu"
-        >
-          <ul className="flex-col flex gap-6 text-center w-full z-[100]">
-            <li>
-              <a href="#about" className="hover:text-purple-700">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="/login">Get Started</a>
-            </li>
-            <li>
-              <a href="/Dashboard">Dashboard</a>
-            </li>
+        <div id="mobileMenu" className="!hidden border-t border-ink-700 px-5 py-4 md:!hidden">
+          <ul className="flex flex-col gap-4">
+            <li><a href="#how">How it works</a></li>
+            <li><a href="/login">Get started</a></li>
+            <li><a href="/Dashboard">Dashboard</a></li>
           </ul>
         </div>
       </header>
-      <section className="flex justify-center align-middle flex-col md:flex-row h-screen overflow-hidden  relative ">
-        {/* Desktop view */}
-        <div className="flex flex-col gap-4 justify-center align-middle h-[60vh] w-full text-center p-5 md:px-7 lg:px-10 md:py-16 md:h-full ">
-          <div className="bg-gray-600 absolute top-1/3 md:top-1/2 right-1/2 -z-10 translate-x-1/2 -translate-y-1/2 w-80 h-56 rounded-full blur-3xl opacity-25"></div>
 
-          <h1 className="text-5xl font-normal w-full">NoteCraft</h1>
-          <h3 className="flex flex-row align-middle items-center gap-2 text-2xl w-full justify-center">
-            AI Integrated{" "}
-            <WordRotate
-              duration={2000}
-              words={["Digital Notes.", "To-Do Listing.", "Daily Planner."]}
-            ></WordRotate>
-          </h3>
+      {/* Hero */}
+      <section ref={heroRef} className="relative mx-auto flex min-h-screen max-w-6xl flex-col justify-center gap-14 px-5 pb-16 pt-28 md:flex-row md:items-center md:gap-8">
+        <div className="max-w-xl md:w-[55%]">
+          <p className="eyebrow mb-5">Notes · To-dos · Planner</p>
+          <h1 className="text-5xl font-semibold leading-[1.02] tracking-tight md:text-7xl">
+            A desk for
+            <br />
+            your{" "}
+            <span className="inline-flex align-bottom">
+              <WordRotate
+                duration={2200}
+                words={["notes.", "to-dos.", "plans."]}
+                className="marked !pb-1"
+              />
+            </span>
+          </h1>
+          <p className="mt-6 max-w-md text-lg text-ink-300">
+            Group your notes, pin them up, and work through them with friends — or with
+            an assistant you can <span className="font-mono text-[0.9em] text-ink-100">@mention</span> right
+            inside the chat.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link to="/login" className="btn-primary !px-6 !py-3 text-lg">
+              Start writing
+            </Link>
+            <a href="#how" className="btn-ghost !px-5 !py-3">
+              How it works
+            </a>
+          </div>
+          <p className="mt-5 text-sm text-ink-400">Free. Sign in with Google or GitHub.</p>
         </div>
-        {/* Desktop viwe divider */}
-        <div className="md:block hidden">
-          <motion.div
-            ref={noteRef}
-            x:moveX
-            style={{ y: springY }} // Scroll-based parallax
-            initial={{ opacity: 0, y: -40, rotate: -12 }}
-            animate={{ opacity: 1, y: 0, rotate: -12 }}
-            transition={{
-              duration: 0.75,
-              delay: 0.25,
-              type: "spring",
-              stiffness: 100,
-              damping: 5,
-            }}
-            className="absolute top-[20%] -translate-y-1/2 right-20 rotate-12 w-52"
-          >
-            {" "}
-            <NoteDisplay
-              color={"purple"}
-              _description={"Why Need Demo, Try Yourself And Find Out"}
-              _title={"Demo?"}
-            />
-          </motion.div>
-          <motion.div
-            ref={noteRef}
-            style={{ y: springY }} // Scroll-based parallax
-            initial={{ opacity: 0, y: -40, rotate: 12 }}
-            animate={{ opacity: 1, y: 0, rotate: 12 }}
-            transition={{
-              duration: 0.75,
-              delay: 0.25,
-              type: "spring",
-              stiffness: 100,
-              damping: 5,
-            }}
-            className="absolute top-[65%] -translate-y-1/2 right-12 rotate-12 w-52"
-          >
-            {" "}
-            <NoteDisplay
-              color={"blue"}
-              _description={
-                "Share Notes And Collaborate In Real Time! Chat, Plan, Create, Update!"
-              }
-              _title={"Live Collaborations"}
-            />
-          </motion.div>
 
-          <motion.div
-            ref={noteRef}
-            style={{ y: springY }} // Scroll-based parallax
-            initial={{ opacity: 0, y: -40, rotate: -12 }}
-            animate={{ opacity: 1, y: 0, rotate: -12 }}
-            transition={{
-              duration: 0.75,
-              delay: 0.25,
-              type: "spring",
-              stiffness: 100,
-              damping: 5,
-            }}
-            className="absolute top-[60%] -translate-y-1/2 left-12 -rotate-12 w-52"
-          >
-            {" "}
-            <NoteDisplay
-              color={"orange"}
-              _description={
-                "Integrated AI To Help You With Your Notes, Ideas, And Plans."
-              }
-              _title={"NoteCraft-AI"}
-            />
-          </motion.div>
-          <motion.div
-            ref={noteRef}
-            style={{ y: springY }} // Scroll-based parallax
-            initial={{ opacity: 0, y: -40, rotate: 12 }}
-            animate={{ opacity: 1, y: 0, rotate: 12 }}
-            transition={{
-              duration: 0.75,
-              delay: 0.25,
-              type: "spring",
-              stiffness: 100,
-              damping: 5,
-            }}
-            className="absolute top-[20%] -translate-y-1/2 left-20 -rotate-12 w-52"
-          >
-            {" "}
-            <NoteDisplay
-              color={"green"}
-              _description={"NoteCraft-AI : Note Taking Made Easier"}
-              _title={"Welcome"}
-            />
-          </motion.div>
-        </div>
-        {/* Mobile View Notes Divider */}
-        <motion.div
-          ref={noteRef}
-          style={{ y: springY }} // Scroll-based parallax
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.75,
-            delay: 0.25,
-            type: "spring",
-            stiffness: 100,
-            damping: 5,
-          }}
-          className="flex flex-col gap-2 justify-center align-middle h-[30vh] md:hidden"
-        >
-          <div className="absolute md:left-8  -rotate-6 z-[2] w-52">
-            <NoteDisplay
-              isFav={true}
-              _description="AGILE Methodology - Why We Need ? Where We Need?"
-              _title="AGILE Notes"
-              color={"orange"}
-            ></NoteDisplay>
-          </div>
-          <div className="absolute left-1/4 md:hidden xs:hidden rotate-3 z-[1] w-52">
-            <NoteDisplay
-              isFav={true}
-              _description="What is React? Why is it used? Difference From Angular"
-              _title="Dev Notes"
-              color={"purple"}
-            ></NoteDisplay>
-          </div>
-          <div className="absolute left-1/2 md:hidden xs:hidden -rotate-6 z-[0] w-52">
-            <NoteDisplay
-              isFav={true}
-              _description="What is C++? Why High Level Language? Uses and Implementations"
-              _title="C++ Notes"
-              color={"blue"}
-            ></NoteDisplay>
-          </div>
-          <div className="absolute hidden lg:block md:right-44 xl:right-52 -rotate-6 z-[4] w-52">
-            <NoteDisplay
-              isFav={false}
-              _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
-              _title="Web Dev Notes"
-              color={"pink"}
-            ></NoteDisplay>
-          </div>
-
-          <div className="absolute hidden xl:block md:right-44 xl:left-56 -rotate-12 z-[3] w-52">
-            <NoteDisplay
-              isFav={true}
-              _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
-              _title="Web Dev Notes"
-              color={"green"}
-            ></NoteDisplay>
-          </div>
-
-          <div className="absolute hidden xl:block md:right-36 xl:left-80 rotate-6 z-[3] w-52">
-            <NoteDisplay
-              isFav={true}
-              _description="TOC-CD Basics, NFA-DFA, "
-              _title="Theory Of Computation"
-              color={"blue"}
-            ></NoteDisplay>
-          </div>
-
-          <div className="absolute hidden md:block md:-right-14 rotate-3 z-[1] w-52">
-            <NoteDisplay
-              isFav={false}
-              _description="HTML Basics - CSS Basics - JS Basics - pHp Basics"
-              _title="Web Dev Notes"
-              color={"yellow"}
-            ></NoteDisplay>
-          </div>
-
-          <div className="absolute -right-2 md:right-6 z-[1] w-52 -rotate-6">
-            <NoteDisplay
-              isFav={false}
-              _description="NodeJS Notes - JS Basics, Async Await"
-              _title="Learning NodeJS"
-              color={"green"}
-            ></NoteDisplay>
-          </div>
-          <div className="absolute rotate-3 right-16  md:left-32 z-[1] md:z-[2] w-52">
-            <NoteDisplay
-              isFav={false}
-              _description="To-Do For JAVA DSA - Basic, Intermediate and Advance DS and Basic Algorithms"
-              _title="DSA To-Do"
-              color={"red"}
-            ></NoteDisplay>
-          </div>
-          <div className="absolute -rotate-12 md:right-14 left-32 z-[1] w-52 hidden md:visible ">
-            <NoteDisplay
-              isFav={false}
-              _description="My Personal Notes"
-              _title="Important Notes"
-              color={"purple"}
-            ></NoteDisplay>
-          </div>
-        </motion.div>
-      </section>
-      <section
-        className="flex justify-center py-12 px-8 text-xl flex-col gap-5 bg-black text-center bg-opacity-65"
-        id="about"
-      >
-        <h2 className="text-3xl "> What is NoteCraft?</h2>
-        <p className="capitalize px-4 text-xl pb-10">
-          <span className="font-bold">NoteCraft</span> – an{" "}
-          <span className="italic"> AI-powered </span>note-taking and planning
-          app designed to organize your ideas and collaborate effortlessly. Use
-          it for study notes, to-do lists, or digital sticky notes—accessible
-          anytime, anywhere!
-        </p>
-        <h2 className="text-3xl "> Salient Features</h2>
-        <div className="relative lg:h-60 px-2 py-10 flex justify-center flex-col md:flex-row lg:block lg:pt-10 pt-90 ">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0, rotate: 8 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col md:flex-row gap-4 justify-center align-middle items-center lg:absolute md:w-72 mx-auto w-4/5"
-          >
-            <NoteDisplay
-              isFav={false}
-              _description="Notecraft Makes It Much Easy To Manage You Ideas With A Very Simple and pleasing Interface and Experience"
-              _title="Easy To Use"
-              color={"green"}
-            ></NoteDisplay>
-          </motion.div>{" "}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0, rotate: -12 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col md:flex-row gap-4 justify-center items-center w-4/5 md:w-72 mx-auto -rotate-12"
-          >
-            <NoteDisplay
-              isFav={true}
-              _description="NoteCraft-AI is the helper you need to conquer your goals. NC-AI helps, optimize, and makes your life easier"
-              _title="AI Integrated"
-              color={"red"}
-            ></NoteDisplay>{" "}
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0, rotate: 6 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col md:flex-row gap-4 justify-center align-middle items-center lg:absolute md:w-72 rotate-6 right-5 top-10 mx-auto w-4/5"
-          >
-            <NoteDisplay
-              isFav={false}
-              _description="Collab With Others, Share Your Notes, and Work Together to achieve your goals"
-              _title="Collab With Others"
-              color={"blue"}
-            ></NoteDisplay>
-          </motion.div>
+        <div className="relative h-[26rem] w-full md:h-[34rem] md:w-[45%]">
+          {heroNotes.map((n, i) => (
+            <HeroNote key={n.title} note={n} index={i} drift={drift} />
+          ))}
         </div>
       </section>
-      <section className="flex justify-center py-20 px-5 text-xl flex-col gap-10 text-center h-[75vh]">
-        <span className="text-3xl font-normal">
-          Being Your Note Making Journey
-        </span>
-        <Link to="/login">
-          <button className="hover:bg-green-500 border-green-500 bg-black bg-opacity-5 border-[2px] rounded-md px-20 md:px-32 backdrop-blur-[2px] backdrop-brightness-200 py-3 text-xl hover:text-white font-semibold m-auto ">
-            Get Started
-          </button>
+
+      {/* How it works */}
+      <section id="how" className="border-y border-ink-700 bg-ink-950/85">
+        <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+          <div className="grid gap-12 md:grid-cols-[1fr_2fr]">
+            <div>
+              <p className="eyebrow mb-3">What is NoteCraft?</p>
+              <h2 className="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
+                Sticky notes, minus the fridge.
+              </h2>
+              <p className="mt-4 text-ink-300">
+                Study notes, to-do lists, a weekly plan — keep them as notes on a board you can
+                open from anywhere.
+              </p>
+            </div>
+            <ol className="grid gap-px overflow-hidden rounded-xl border border-ink-700 bg-ink-700 sm:grid-cols-3">
+              {steps.map((s) => (
+                <li key={s.n} className="flex flex-col gap-3 bg-ink-900 p-6">
+                  <span className="font-mono text-sm text-marker">{s.n}</span>
+                  <h3 className="text-xl font-semibold">{s.title}</h3>
+                  <p className="text-sm leading-relaxed text-ink-300">{s.body}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="mt-20 grid gap-10 sm:grid-cols-3">
+            <PaperNote color="green" tilt={-2} title="Easy to use" body="A plain board of notes. Click to edit, star to keep on top. That's most of it." />
+            <PaperNote color="orange" tilt={1.5} title="Assistant on call" body="Type @NC-AI in a group's chat and it answers with your notes as context." />
+            <PaperNote color="blue" tilt={-1} title="Work together" body="Share a view-only link, or add editors and watch changes land live." />
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-5 py-24 md:flex-row md:items-center md:justify-between">
+        <h2 className="font-hand text-4xl font-bold md:text-5xl">Begin your note-making journey.</h2>
+        <Link to="/login" className="btn-primary !px-8 !py-3 text-lg">
+          Get started
         </Link>
       </section>
-      <section className="text-center mb-10 ">
-        &copy; 2025 NoteCraft. All rights reserved.
-      </section>
+
+      <footer className="border-t border-ink-700">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-6 text-sm text-ink-400">
+          <span>&copy; 2025 NoteCraft</span>
+          <Link to="/status" className="hover:text-ink-100">Service status</Link>
+        </div>
+      </footer>
     </>
   );
 }

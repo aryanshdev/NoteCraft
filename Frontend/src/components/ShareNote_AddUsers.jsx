@@ -6,7 +6,7 @@ function editorDisplay(emailID, delEdFunction) {
   return (
     <>
       <div
-        className="bg-[#1a1a1a] text-white font-semibold px-3 py-1 w-fit rounded-full flex flex-row gap-2 "
+        className="flex w-fit flex-row items-center gap-2 rounded-md border border-ink-600 bg-ink-800 py-1 pl-3 pr-1 font-mono text-sm text-ink-100"
         key={emailID}
       >
         {" "}
@@ -140,25 +140,25 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
   return (
     <>
       <div
-        className="w-screen h-screen  justify-center align-middle items-center flex fixed bg-black bg-opacity-40 backdrop-blur-sm z-[120] !hidden"
+        className="w-screen h-screen justify-center items-center flex fixed inset-0 bg-black/70 z-[120] !hidden p-4"
         id="shareOverlay"
       >
-        <div className="bg-black rounded-xl px-6 py-4 z-30 absolute m-auto h-fit w-5/6 border-[1px] border-white md:h-fit md:w-1/2">
-          <h2 className="text-2xl font-semibold">
-            Share Notes And Allow Editors
-          </h2>
-          <div className="py-3">
+        <div className="panel relative z-30 w-full max-w-xl p-6 shadow-2xl">
+          <p className="eyebrow mb-1">Share</p>
+          <h2 className="text-2xl font-semibold">Share this group</h2>
+          <div className="py-5">
             {" "}
-            <h3 className="text-lg font-semibold">Share a View-Only Link </h3>
+            <h3 className="font-semibold">View-only link</h3>
+            <p className="text-sm text-ink-400">Anyone with the link can read these notes.</p>
             <div className="flex flex-row h-auto w-full align-center items-center justify-around">
               <input
                 type="text"
                 readOnly
-                className="outline-none w-full bg-[#101010] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
+                className="field my-3 rounded-r-none font-mono text-sm"
                 value={link}
               />
               <button
-                className="rounded-l-none rounded-full px-3 py-2 bg-[#212121] flex flex-row gap-2"
+                className="btn-primary !rounded-l-none !shadow-none !py-[7px] shrink-0"
                 onClick={copyToClipboard}
               >
                 <svg
@@ -180,17 +180,18 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold">Editors</h3>
-            Add Upto 3 Editors
+            <h3 className="font-semibold">Editors</h3>
+            <p className="text-sm text-ink-400">Up to 3 people who can add and change notes.</p>
             <div className="flex flex-row h-auto w-full align-center items-center justify-around">
               {editors.length < 3 ? (
                 <>
                   <input
                     type="email"
-                    className="outline-none w-full bg-[#101010] my-4 text-white px-3 py-2 rounded-full rounded-r-none"
+                    placeholder="name@example.com"
+                    className="field my-3 rounded-r-none font-mono text-sm"
                   />
                   <button
-                    className="rounded-l-none rounded-full px-3 py-2 bg-[#212121] flex flex-row gap-2 align-middle items-center"
+                    className="btn-primary !rounded-l-none !shadow-none !py-[7px] shrink-0"
                     onClick={addEditor}
                   >
                     <svg
@@ -210,7 +211,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
             </div>
             <div className="flex flex-row w-full flex-wrap gap-3 pt-2 pb-4">
               <div className="flex-grow w-full">
-                {editors.length + " Editor(s) Added"}
+                <span className="eyebrow">{editors.length} / 3 editors</span>
               </div>
               {editors.map((email, index) =>
                 editorDisplay(email, deleteEditor)
@@ -219,7 +220,7 @@ function ShareNote_AddUsers({ gid, closeFunction }) {
           </div>
           <button
             onClick={closeFunction}
-            className="border-2  hover:bg-white hover:text-black ml-auto mr-0 flex rounded-md px-6 py-2 font-semibold text-base"
+            className="btn-paper ml-auto mr-0 flex"
           >
             Done
           </button>
