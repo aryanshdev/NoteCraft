@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import Icon from "./Icons";
 import { useNavigate } from "react-router-dom";
 import LoaderDisplay from "../LoaderDisplay";
 import { toast } from "react-toastify";
@@ -79,34 +80,30 @@ function ChangePFPPopup({ closePopup }) {
   return (
     <>
       <div
-        className="fixed w-screen  bg-black h-screen top-0 left-0 bg-opacity-50 backdrop-blur-sm backdrop-brightness-150 flex items-center align-middle justify-center !hidden z-[120]"
+        className="fixed w-screen h-screen top-0 left-0 bg-black/70 flex items-center justify-center !hidden z-[120] p-4"
         id="pfpUpdateOverlay"
       >
-        <div className="flex flex-col md:flex-row p-6 md:p-10 w-4/5 lg:w-1/2  h-auto z-50 bg-[#101010] rounded-xl gap-7 md:gap-1 absolute ">
+        <div className="relative flex flex-col md:flex-row p-6 md:p-8 w-full max-w-2xl z-50 panel gap-6 shadow-2xl">
           <div
-            className="right-0 translate-x-3 -translate-y-4 absolute top-0 w-6 h-6  bg-white rounded-full flex align-middle items-center justify-center"
+            className="absolute right-3 top-3 grid h-8 w-8 cursor-pointer place-items-center rounded-md text-ink-300 hover:bg-white/5 hover:text-ink-100"
             onClick={closePopup}
           >
-            <img
-              width="15"
-              height="15"
-              src="https://img.icons8.com/ios-filled/20/000000/delete-sign--v1.png"
-              alt="delete-sign--v1"
-            />
+            <Icon name="x" className="size-5" />
           </div>
           {showLoading ? (
             <>
-              <div className="w-20 h-20 border-2 border-white border-t-0 border-l-0 animate-spin rounded-full flex mx-auto abs"></div>
+              <div className="mx-auto"><LoaderDisplay /></div>
             </>
           ) : (
             <>
               <div className=" md:w-1/2 flex flex-col items-center gap-0 relative">
                 <div className="w-full flex flex-col gap-10 my-auto text-center">
-                  <span className="text-lg font-semibold w-full">
-                    Use Gravatar Profile Image{" "}
+                  <span className="w-full">
+                    <span className="eyebrow block mb-1">Option A</span>
+                    <span className="text-lg font-semibold">Use your Gravatar</span>
                   </span>
                   <button
-                    className="hover:bg-white hover:text-black font-semibold border-2 w-auto px-4 py-2 rounded-lg m-auto "
+                    className="btn-paper m-auto"
                     onClick={changeToGravatarImage}
                   >
                     Use Gravatar Image
@@ -120,11 +117,11 @@ function ChangePFPPopup({ closePopup }) {
               Use Google Profile Image
             </button> */}
               </div>
-              <hr className="w-40 md:rotate-90 m-auto" />
+              <div className="flex md:flex-col items-center gap-3 eyebrow"><span className="h-px w-full md:h-full md:w-px bg-ink-700"></span>or<span className="h-px w-full md:h-full md:w-px bg-ink-700"></span></div>
               <div className="w-full md:w-3/5 flex flex-col items-center justify-center text-center align-middle">
                 <div
                   {...getRootProps()}
-                  className="w-full h-full p-6 border-dashed border-2 rounded-lg items-center justify-center flex-col flex gap-2 cursor-pointer*"
+                  className="slot !h-auto min-h-48 items-center justify-center flex-col flex gap-2 cursor-pointer text-center"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +129,7 @@ function ChangePFPPopup({ closePopup }) {
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="currentColor"
-                    class="size-20"
+                    class="size-10"
                   >
                     <path
                       stroke-linecap="round"
@@ -141,15 +138,13 @@ function ChangePFPPopup({ closePopup }) {
                     />
                   </svg>
                   <input {...getInputProps()} />
-                  Drop Your Image Here To Upload
-                  <br />
-                  Or Click To Select Image
+                  <span className="font-semibold text-ink-100">Drop an image here</span>
+                  <span className="text-sm">or click to choose a file</span>
                 </div>
               </div>
             </>
           )}
         </div>
-        <button className="bg-white py-4 px-2 z[60]">Done</button>
       </div>
     </>
   );
@@ -165,11 +160,11 @@ function UserImage({ url }) {
         <img
           id="pfp"
           src={url}
-          className="w-full rounded-full max-w-28 max-h-28"
+          className="h-24 w-24 rounded-full object-cover ring-2 ring-ink-700"
           alt=""
         />
         <button
-          className="absolute w-7 h-7 bg-white right-0 rounded-full bottom-0 flex items-center  justify-center opacity-90 hover:opacity-100 duration-150"
+          className="absolute w-8 h-8 bg-marker right-0 rounded-full bottom-0 flex items-center justify-center border-2 border-ink-900 hover:brightness-110"
           onClick={showPFPChangeOptions}
         >
           <svg
@@ -230,7 +225,7 @@ function MyAccount() {
       <>
         <div>Confirm Reset?</div>
         <button
-          className="bg-gray-800 py-2 my-2 px-3"
+          className="btn-danger !py-1.5 my-2 text-sm"
           onClick={() => {
             resetInnerFunc();
             toast.dismiss(id);
@@ -239,7 +234,7 @@ function MyAccount() {
           Delete
         </button>
         <button
-          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          className="btn-ghost !py-1.5 my-2 ml-3 text-sm"
           onClick={() => {
             toast.dismiss(id);
           }}
@@ -272,7 +267,7 @@ function MyAccount() {
       <>
         <div>Confirm Account Deletion?</div>
         <button
-          className="bg-gray-800 py-2 my-2 px-3"
+          className="btn-danger !py-1.5 my-2 text-sm"
           onClick={() => {
             resetInnerFunc();
             toast.dismiss(id);
@@ -281,7 +276,7 @@ function MyAccount() {
           Delete
         </button>
         <button
-          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          className="btn-ghost !py-1.5 my-2 ml-3 text-sm"
           onClick={() => {
             toast.dismiss(id);
           }}
@@ -296,43 +291,48 @@ function MyAccount() {
   } else {
     return (
       <>
-        <div className="flex flex-col gap-6 ">
-          <ChangePFPPopup closePopup={showPFPChangeOptions}></ChangePFPPopup>{" "}
-          {/*  USER NAME DETAIL DISPLAY */}
-          <div className="flex flex-row gap-3 py-2 bg-black bg-opacity-55 backdrop-blur-[1px] backdrop-brightness-150">
+        <div className="mx-auto flex max-w-3xl flex-col gap-8 pb-16">
+          <ChangePFPPopup closePopup={showPFPChangeOptions}></ChangePFPPopup>
+          <header className="border-b border-ink-700 pb-5 pt-2">
+            <p className="eyebrow mb-2">Settings</p>
+            <h1 className="page-title">Your account</h1>
+          </header>
+
+          <section className="panel flex flex-col gap-5 p-5 sm:flex-row sm:items-center">
             <UserImage url={userInfo.pfp}></UserImage>
-            <div className="flex flex-col justify-evenly">
-              <h2 className="text-2xl font-semibold break-words">
-                {userInfo.name}
-              </h2>
-              <h2 className="text-lg font-bold break-words">
-                {userInfo.email}
-              </h2>
+            <div className="min-w-0">
+              <h2 className="break-words text-2xl font-semibold">{userInfo.name}</h2>
+              <p className="break-words font-mono text-sm text-ink-300">{userInfo.email}</p>
             </div>
-          </div>
-          {/* Functions */}
-          <div className="flex flex-col gap-4 items-start text-lg mt-2">
-            <h4 className="text-2xl font-semibold">Reset Account</h4>
-            Resetting Account will delete all your Notes and NoteGroups, giving
-            you a fresh start.
-            <button
-              className="text-red-400 hover:bg-red-500 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
-              onClick={resetAccount}
-            >
-              Reset Account
-            </button>
-          </div>
-          <div className="flex flex-col gap-4 items-start text-lg mt-3">
-            <h4 className="text-2xl font-semibold">Delete Your Account </h4>
-            Deleting Account will clear all your data and you won't be able to
-            use NoteCraft. To use it again, you'll have to Sign-up again.
-           <button
-              className="text-red-400 hover:bg-red-500 border-red-500 border-2 bg-black bg-opacity-60 backdrop-blur-[1px]  hover:text-white font-semibold px-4 py-2 rounded-md"
-              onClick={deleteAccount}
-            >
-              Delete Account
-            </button>
-          </div>
+          </section>
+
+          <section className="flex flex-col gap-3">
+            <p className="eyebrow text-red-300/80">Danger zone</p>
+            <div className="panel divide-y divide-ink-700 border-red-400/25">
+              <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="max-w-md">
+                  <h4 className="font-semibold">Reset account</h4>
+                  <p className="text-sm text-ink-300">
+                    Deletes every note and note group, giving you a clean slate. Your login stays.
+                  </p>
+                </div>
+                <button className="btn-danger shrink-0" onClick={resetAccount}>
+                  Reset account
+                </button>
+              </div>
+              <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="max-w-md">
+                  <h4 className="font-semibold">Delete account</h4>
+                  <p className="text-sm text-ink-300">
+                    Removes all your data permanently. You'd need to sign up again to come back.
+                  </p>
+                </div>
+                <button className="btn-danger shrink-0" onClick={deleteAccount}>
+                  Delete account
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
       </>
     );

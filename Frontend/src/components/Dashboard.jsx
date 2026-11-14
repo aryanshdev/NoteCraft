@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import LoaderDisplay from "../LoaderDisplay";
+import { colorFor } from "../lib/utils";
 
 function Dashboard() {
   const [userNotes, setUserNotes] = useState([]);
@@ -72,7 +73,7 @@ function Dashboard() {
 
   const updateGroupInfo = useCallback(
     async (event) => {
-      var ele = event.target.parentElement.parentElement.parentElement;
+      var ele = event.target.closest("[data-card]");
       var title = ele.querySelector("input").value;
       var desc = ele.querySelector("textarea").value;
       var id = ele.getAttribute("id");
@@ -149,7 +150,7 @@ function Dashboard() {
       <>
         <div>Confirm Delete?</div>
         <button
-          className="bg-gray-800 py-2 my-2 px-3"
+          className="btn-danger !py-1.5 my-2 text-sm"
           onClick={() => {
             deleteInnerFunc(groupID);
             toast.dismiss(id);
@@ -158,7 +159,7 @@ function Dashboard() {
           Delete
         </button>
         <button
-          className="bg-gray-800 py-2 my-2 px-3 ml-7"
+          className="btn-ghost !py-1.5 my-2 ml-3 text-sm"
           onClick={() => {
             toast.dismiss(id);
           }}
@@ -174,24 +175,39 @@ function Dashboard() {
   } else {
     return (
       <>
-        <div className="bg-orange-500 bg-blue-500 bg-yellow-500 bg-red-500 bg-purple-500 bg-green-500 bg-pink-500 hidden h-0 w-0"></div>
-
-        <div className="bg-[#121212] rounded-lg bg-opacity-10 px-3 py-2 backdrop-blur-[1px] backdrop-brightness-200 w-full">
-          <h1 className="font-semibold text-3xl mb-3">
-            Good {Greeting}, {name}
-          </h1>
-          <h3 className="text-lg">
-            Take a look at your Note Groups or Create More Below
-          </h3>
-        </div>
-        <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-5 my-5 pb-16">
+        <header className="flex flex-col gap-1 border-b border-ink-700 pb-5 pt-2 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="eyebrow mb-2">
+              {new Date().toLocaleDateString(undefined, {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+              })}
+            </p>
+            <h1 className="page-title">
+              Good {Greeting.toLowerCase()}
+              {name ? (
+                <>
+                  , <span className="marked">{name}</span>
+                </>
+              ) : null}.
+            </h1>
+            <p className="mt-2 text-ink-300">
+              Pick up a group where you left off, or start a fresh one.
+            </p>
+          </div>
+          <p className="eyebrow mt-3 md:mt-0">
+            {userNotes.length} / 8 groups
+          </p>
+        </header>
+        <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-6 gap-y-10 mt-10 pb-16">
           {userNotes.length < 8 ? (
-            <CreateNoteGroup already={userNotes.length}></CreateNoteGroup>
-          ) : (
-            " "
-          )}
+            <div className="mt-4">
+              <CreateNoteGroup already={userNotes.length}></CreateNoteGroup>
+            </div>
+          ) : null}
 
-          {userNotes.map((noteGroup, index) => (
+          {userNotes.map((noteGroup) => (
             <NoteGroupDisplay
               updateFunc={updateGroupInfo}
               id={noteGroup.groupID}
@@ -201,11 +217,7 @@ function Dashboard() {
               isFav={noteGroup.favourite}
               favFunction={favouriteSet}
               delFunction={deleteNoteGroup}
-              color={
-                ["orange", "blue", "yellow", "green", "pink"][
-                  Math.floor(Math.random() * 5)
-                ]
-              }
+              color={colorFor(noteGroup.groupID)}
             />
           ))}
         </div>

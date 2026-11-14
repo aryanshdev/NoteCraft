@@ -1,42 +1,29 @@
 function UserMSG({ msg, name = "User", sending = false }) {
+  const text = String(msg);
+  const mentionsAI = text.startsWith("@NC-AI");
 
   return (
-    <>
-      <div className="w-full h-fit rounded-2xl flex flex-col text-white text-center bg-opacity-35 gap-2">
-        <div
-          className={`flex ${
-            sending ? "flex-row-reverse" : "flex-row"
-          } text-sm font-bold text-gray-400 flex-1 items-center gap-2`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="size-4"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          {name}
-        </div>
-        <div className="bg-white bg-opacity-5 text-left flex-1 text-base px-3 py-2 rounded-lg AICHAT">
-         
-          {String(msg).startsWith("@NC-AI") ? (
-            <>
-              <span className="bg-[#0c3e5e] px-1 py-[2px] font-bold rounded-lg">
-                @NC-AI
-              </span>{" "}
-              {String(msg).slice(6)}
-            </>
-          ) : (
-            msg
-          )}
-        </div>
+    <div className={`flex w-full flex-col gap-1.5 ${sending ? "items-end pl-10" : "items-start pr-10"}`}>
+      <span className="text-xs font-semibold text-ink-400">{sending ? "You" : name}</span>
+      <div
+        className={`AICHAT max-w-full break-words px-4 py-2.5 text-left text-[15px] ${
+          sending
+            ? "rounded-lg rounded-tr-sm bg-ink-100 text-ink-950"
+            : "rounded-lg rounded-tl-sm border border-ink-700 bg-ink-800 text-ink-100"
+        }`}
+      >
+        {mentionsAI ? (
+          <>
+            <span className="mr-1 rounded bg-marker px-1 py-px font-mono text-xs font-medium text-ink-950">
+              @NC-AI
+            </span>
+            {text.slice(6)}
+          </>
+        ) : (
+          msg
+        )}
       </div>
-    </>
+    </div>
   );
 }
 

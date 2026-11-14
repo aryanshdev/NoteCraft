@@ -1,102 +1,64 @@
 import { Link } from "react-router-dom";
 
+const services = [
+  { name: "Sharing", state: "up" },
+  { name: "Login & auth", state: "up" },
+  { name: "Notes & groups", detail: "Creating, managing, updating, deleting", state: "up" },
+  { name: "AI chat", state: "up" },
+  { name: "Code runners", state: "partial" },
+];
+
+const states = {
+  up: { label: "Operational", dot: "bg-[#b0d99e]", text: "text-[#b0d99e]" },
+  partial: { label: "Partially down", dot: "bg-marker", text: "text-marker" },
+  down: { label: "Down", dot: "bg-[#f19a8f]", text: "text-[#f19a8f]" },
+};
+
 export default function StatusPage() {
+  const allUp = services.every((s) => s.state === "up");
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-semibold text-white mb-6 md:mb-8">Service Status</h1>
-        <h2 className="text-lg font-semibold mb-5"> Status Page For <Link to={'/'} className="italic text-sky-400">NoteCraft</Link> Services</h2>
-        <div className="overflow-x-auto rounded-lg border border-gray">
-          <table className="min-w-full divide-y divide-gray-700">
-            <thead className="bg-black bg-opacity-65">
-              <tr>
-                <th scope="col" className="px-6 py-4 text-left text-lg font-medium text-white uppercase tracking-wider">
-                  Service
-                </th>
-                <th scope="col" className="px-6 py-4 text-left text-lg font-medium text-white uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-black divide-y divide-gray-700 bg-opacity-45  text-lg">
-              <tr className="hover:bg-black hover:bg-opacity-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-300">
-                  Sharing
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="flex items-center gap-2 text-green-400">
-                    <div className="bg-green-500 w-3 h-3 rounded-full"></div>
-                    Operational
-                  </span>
-                </td>
-              </tr>
-              
-              <tr className="hover:bg-black hover:bg-opacity-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-300">
-                  Login-Auth
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="flex items-center gap-2 text-green-400">
-                    <div className="bg-green-500 w-3 h-3 rounded-full"></div>
-                    Operational
-                  </span>
-                </td>
-              </tr>
-              
-              <tr className="hover:bg-black hover:bg-opacity-50 transition-colors">
-                <td className="px-6 py-4 text-lg font-medium text-gray-300">
-                  Notes And Groups (Creation, Managing, Updating, Deleting)
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="flex items-center gap-2 text-green-400">
-                    <div className="bg-green-500 w-3 h-3 rounded-full"></div>
-                    Operational
-                  </span>
-                </td>
-              </tr>
-              
-              <tr className="hover:bg-black hover:bg-opacity-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-300">
-                  AI Chat
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="flex items-center gap-2 text-green-400">
-                    <div className="bg-green-500 w-3 h-3 rounded-full"></div>
-                    Operational
-                  </span>
-                </td>
-              </tr>
-              
-              <tr className="hover:bg-black hover:bg-opacity-50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap text-lg font-medium text-gray-300">
-                  Compilers
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="flex items-center gap-2 text-yellow-400">
-                    <div className="bg-yellow-500 w-3 h-3 rounded-full"></div>
-                    Partially Down
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div className="min-h-screen px-4 py-10 md:px-8 md:py-16">
+      <div className="mx-auto max-w-3xl">
+        <Link to="/" className="mb-10 inline-flex items-center gap-2 font-semibold">
+          <img src="/notecraft-icon-transparent.png" alt="" className="h-8 w-8" />
+          NoteCraft
+        </Link>
+        <p className="eyebrow mb-2">System status</p>
+        <h1 className="page-title mb-2">
+          {allUp ? "Everything's running." : "Mostly running — one hiccup."}
+        </h1>
+        <p className="mb-8 text-ink-300">Live state of the services behind NoteCraft.</p>
+
+        <ul className="panel divide-y divide-ink-700 overflow-hidden">
+          {services.map((s) => {
+            const st = states[s.state];
+            return (
+              <li key={s.name} className="flex items-center justify-between gap-4 px-5 py-4">
+                <div className="min-w-0">
+                  <p className="font-medium text-ink-100">{s.name}</p>
+                  {s.detail ? <p className="text-sm text-ink-400">{s.detail}</p> : null}
+                </div>
+                <span className={`flex shrink-0 items-center gap-2 font-mono text-xs uppercase tracking-wider ${st.text}`}>
+                  <span className={`h-2.5 w-2.5 rounded-full ${st.dot}`}></span>
+                  {st.label}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="mt-5 flex flex-wrap gap-5">
+          {Object.values(states).map((st) => (
+            <span key={st.label} className="flex items-center gap-2 text-sm text-ink-400">
+              <span className={`h-2 w-2 rounded-full ${st.dot}`}></span>
+              {st.label}
+            </span>
+          ))}
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-4">
-          <div className="flex items-center">
-            <div className="bg-green-500 w-3 h-3 rounded-full mr-2"></div>
-            <span className="text-sm text-gray-300">Operational</span>
-          </div>
-          <div className="flex items-center">
-            <div className="bg-yellow-500 w-3 h-3 rounded-full mr-2"></div>
-            <span className="text-sm text-gray-300">Partially Down</span>
-          </div>
-          <div className="flex items-center">
-            <div className="bg-red-500 w-3 h-3 rounded-full mr-2"></div>
-            <span className="text-sm text-gray-300">Down</span>
-          </div>
-        </div>
-        <Link to={'/dashboard'}><button className="border-white border-2 px-10 py-2 text-lg rounded-lg bg-black bg-opacity-15 my-10 flex mx-auto hover:text-black hover:bg-white font-semibold">Back To Dashboard </button></Link>
+        <Link to="/dashboard" className="btn-paper mt-12">
+          Back to dashboard
+        </Link>
       </div>
     </div>
   );
