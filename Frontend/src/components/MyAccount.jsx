@@ -92,7 +92,7 @@ function ChangePFPPopup({ closePopup }) {
           </div>
           {showLoading ? (
             <>
-              <div className="mx-auto"><LoaderDisplay /></div>
+              <div className="mx-auto py-6"><LoaderDisplay label="Updating your photo…" /></div>
             </>
           ) : (
             <>
@@ -287,7 +287,7 @@ function MyAccount() {
     );
   };
   if (Loading) {
-    return <LoaderDisplay />;
+    return <LoaderDisplay label="Loading your account…" />;
   } else {
     return (
       <>

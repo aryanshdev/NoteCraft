@@ -378,7 +378,7 @@ function NotesPage() {
   if (Loading) {
     return (
       <div className="w-screen h-screen flex">
-        <LoaderDisplay />
+        <LoaderDisplay label="Loading notes…" />
       </div>
     );
   } else {
