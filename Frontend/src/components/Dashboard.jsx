@@ -171,7 +171,7 @@ function Dashboard() {
   };
 
   if (Loading) {
-    return <LoaderDisplay />;
+    return <LoaderDisplay label="Loading your groups…" />;
   } else {
     return (
       <>

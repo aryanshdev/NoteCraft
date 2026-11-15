@@ -369,7 +369,7 @@ function SharedNotes() {
   if (Loading) {
     return (
       <div className="w-screen h-screen flex">
-        <LoaderDisplay />
+        <LoaderDisplay label="Loading shared notes…" />
       </div>
     );
   } else {
